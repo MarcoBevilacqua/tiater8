@@ -79,7 +79,6 @@ class BookingController extends Controller
             'half_price_qnt' => 'required|numeric',
             'paid' => 'required',
             'place_code' => 'required'
-
         );
 
         $validator = Validator::make($request->all(), $rules);
