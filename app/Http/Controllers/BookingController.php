@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Booking;
-use App\Show;
-use App\Viewer;
+use App\Models\Booking;
+use App\Models\Show;
+use App\Models\Viewer;
 use Faker\Factory;
-use Illuminate\Support\Facades\Input;
 use Illuminate\View\View;
 use Validator;
 use Log;

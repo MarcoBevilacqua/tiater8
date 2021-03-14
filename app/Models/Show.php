@@ -1,9 +1,13 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * App\Show
@@ -29,6 +33,7 @@ use Illuminate\Support\Collection;
  */
 class Show extends Model
 {
+    use HasFactory, Notifiable;
 
     public $timestamps = false;
 

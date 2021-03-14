@@ -1,8 +1,11 @@
 <?php
 
-use Illuminate\Database\Seeder;
+namespace Database\Seeders;
 
-class viewerSeeder extends Seeder
+use Illuminate\Database\Seeder;
+use App\Models\Viewer;
+
+class ViewerSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,7 +14,8 @@ class viewerSeeder extends Seeder
      */
     public function run()
     {
-        //
-        factory(\App\Viewer::class, 20)->create();
+        
+        Viewer::factory(5)
+        ->create();
     }
 }

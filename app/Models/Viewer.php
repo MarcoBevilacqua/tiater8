@@ -1,10 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use App\Booking;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use DB;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -30,7 +31,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Viewer extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     public $timestamps = false;
     protected $dates = ['deleted_at'];

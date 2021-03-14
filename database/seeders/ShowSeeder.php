@@ -1,7 +1,10 @@
 <?php
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
-use App\ShowEvent;
+use App\Models\Show;
+use App\Models\ShowEvent;
 
 class ShowSeeder extends Seeder
 {
@@ -12,14 +15,11 @@ class ShowSeeder extends Seeder
      */
     public function run()
     {
-        factory(\App\Show::class, 12)->create()->each(/**
-         * @param \App\Show $show
-         */
-            function (\App\Show $show){
-
-            /** @var \Faker\Generator $faker */
-            $faker = Faker\Factory::create();
-
+        Show::factory()
+                
+        ->count(30)->create()
+        ->each(function (Show $show){            
+            $faker = \Faker\Factory::create();
             for($i = 0; $i <= mt_rand(1,3); $i++){
                 $date = $faker->dateTimeBetween('-2 months', '+1 year');
                 //datetime
@@ -30,7 +30,7 @@ class ShowSeeder extends Seeder
                 $fullPriceQnt = $faker->numberBetween(20, $show->full_price_qnt);
                 $halfPriceQnt = $faker->numberBetween(1, $show->half_price_qnt);
                 $totalQnt = $fullPriceQnt + $halfPriceQnt;
-                App\ShowEvent::create(
+                ShowEvent::create(
                     array(
                         'show_id'           => $show->id,
                         'show_date'         => $date,

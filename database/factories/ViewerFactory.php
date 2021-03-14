@@ -1,24 +1,28 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: marco.bevilacqua
- * Date: 28/09/2016
- * Time: 16:05
- */
 
-$factory->define(\App\Viewer::class, function (Faker\Generator $faker) {
+namespace Database\Factories;
 
-    $firstName = $faker->firstName;
-    $lastName  = $faker->lastName;
-    $fullName  = $firstName . " " . $lastName;
+use App\Models\Viewer;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-    return [
-        'first_name'    => $firstName,
-        'last_name'     => $lastName,
-        'full_name'     => $fullName,
-        'email'         => $faker->safeEmail,
-        'quota'         => $faker->randomElement(array('S', 'N')),
-        'phone'         => $faker->phoneNumber,
-        'sign_date'     => $faker->dateTimeThisDecade
-    ];
-});
+class ViewerFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Viewer::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            
+        ];
+    }
+}
