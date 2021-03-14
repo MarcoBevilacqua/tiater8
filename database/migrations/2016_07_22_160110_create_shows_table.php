@@ -14,7 +14,7 @@ class CreateShowsTable extends Migration
     {
         Schema::create('shows', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer("id", true);
+            $table->id();
             $table->string("name");
             $table->string("description");
             $table->integer("places");

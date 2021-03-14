@@ -15,9 +15,8 @@ class ShowSeeder extends Seeder
      */
     public function run()
     {
-        Show::factory()
-                
-        ->count(30)->create()
+        Show::factory()                
+        ->count(5)->create()
         ->each(function (Show $show){            
             $faker = \Faker\Factory::create();
             for($i = 0; $i <= mt_rand(1,3); $i++){
@@ -30,7 +29,7 @@ class ShowSeeder extends Seeder
                 $fullPriceQnt = $faker->numberBetween(20, $show->full_price_qnt);
                 $halfPriceQnt = $faker->numberBetween(1, $show->half_price_qnt);
                 $totalQnt = $fullPriceQnt + $halfPriceQnt;
-                ShowEvent::create(
+                ShowEvent::factory()->create(
                     array(
                         'show_id'           => $show->id,
                         'show_date'         => $date,

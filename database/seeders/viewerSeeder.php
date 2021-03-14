@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\ShowEvent;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use App\Models\Viewer;
 
@@ -14,8 +16,6 @@ class ViewerSeeder extends Seeder
      */
     public function run()
     {
-        
-        Viewer::factory(5)
-        ->create();
+        Viewer::factory(15)->create();
     }
 }

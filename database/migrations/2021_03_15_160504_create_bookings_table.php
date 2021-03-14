@@ -16,7 +16,7 @@ class CreateBookingsTable extends Migration
 
             $table->engine = 'InnoDB';
             $table->id();
-            $table->unsignedBigInteger('view_id');        
+            $table->unsignedBigInteger('viewer_id');        
             $table->enum('paid', array(0,1));
             $table->integer('full_price_qnt');
             $table->integer('half_price_qnt');
@@ -27,7 +27,7 @@ class CreateBookingsTable extends Migration
             $table->string('public_code', 10);
             $table->timestamps();
 
-            $table->foreign('view_id')->references('id')->on('views');            
+            $table->foreign('viewer_id')->references('id')->on('viewers');            
         });
     }
 

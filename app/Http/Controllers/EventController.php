@@ -237,7 +237,7 @@ class EventController extends Controller
         }
 
         $bookingsWithViewers = Booking::where('event_id', '=', $id)
-            ->join('viewers', 'bookings.viewer_id', '=', 'viewers.id')
+            ->join('viewer', 'bookings.viewer_id', '=', 'viewer.id')
             ->get();
 
         if($bookingsWithViewers->count() > 0){

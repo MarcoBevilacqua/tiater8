@@ -31,6 +31,10 @@ use Illuminate\Notifications\Notifiable;
 class ShowEvent extends Model
 {
     use HasFactory, Notifiable;
+
+    public function show(){
+        $this->belongsTo(Show::class);
+    }
     
     public function getShowDateAttribute($value)
     {

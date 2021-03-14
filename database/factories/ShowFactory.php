@@ -20,11 +20,7 @@ class ShowFactory extends Factory
      * @return array
      */
     public function definition()
-    {
-        $name = $this->faker->words(mt_rand(1, 3), true);
-        $url = str_replace(" ", "-", $name);
-        $url = str_replace(".", "", $url);
-    
+    {        
         $fullPriceQnt   = $this->faker->numberBetween(20, 60);
         $halfPriceQnt   = $this->faker->numberBetween(1, $fullPriceQnt);
         $totalQnt       = $fullPriceQnt + $halfPriceQnt;
@@ -32,7 +28,7 @@ class ShowFactory extends Factory
         $image          = $this->faker->imageUrl(480, 640);
 
         return [
-            'name'              => $name,
+            'name'              => $this->faker->words(mt_rand(1, 3), true),
             'description'       => $this->faker->realText(),
             'places'            => $this->faker->numberBetween(0, 50),
             'full_price_qnt'    => $fullPriceQnt,
@@ -41,7 +37,7 @@ class ShowFactory extends Factory
             'full_price'        => $this->faker->randomFloat(0, 1, 12),
             'half_price'        => $this->faker->randomFloat(0, 1, 6),
             'image'             => $image,
-            'url'               => strtolower($url)
+            'url'               => $this->faker->url
         ];
     }
 }

@@ -11,8 +11,6 @@ use Illuminate\Notifications\Notifiable;
  *
  * @property integer $id
  * @property integer $viewer_id
- * @property integer $show_id
- * @property integer $event_id
  * @property string $paid
  * @property integer $full_price_qnt
  * @property integer $half_price_qnt
@@ -46,15 +44,8 @@ class Booking extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function getShow(){
-        return $this->hasOne(Show::class, 'id', 'show_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function event(){
-        return $this->hasOne(ShowEvent::class, 'id', 'event_id');
+    public function viewer(){
+        return $this->belongsTo(Viewer::class);
     }
 
     /**

@@ -36,6 +36,14 @@ class Viewer extends Model
     public $timestamps = false;
     protected $dates = ['deleted_at'];
 
+    public function user(){
+        $this->belongsTo(User::class);
+    }
+
+    public function showEvent(){
+        $this->belongsTo(ShowEvent::class);
+    }
+
     public function hasBookings(){
 
         $usersBookingIds = Booking::where('viewer_id', '=', $this->id)->get();

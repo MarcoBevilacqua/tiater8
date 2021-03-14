@@ -15,7 +15,7 @@ class CreateEventsTable extends Migration
         Schema::create('show_events', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id();
-            $table->integer("show_id")->unsigned;
+            $table->unsignedBigInteger("show_id");
             $table->dateTime("show_date");
             $table->tinyInteger('full_price_qnt');
             $table->tinyInteger('half_price_qnt');
