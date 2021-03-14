@@ -14,9 +14,15 @@ class CreateEventsTable extends Migration
     {
         Schema::create('show_events', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer("id", true);
+            $table->id();
             $table->integer("show_id")->unsigned;
             $table->dateTime("show_date");
+            $table->tinyInteger('full_price_qnt');
+            $table->tinyInteger('half_price_qnt');
+            $table->tinyInteger('total_qnt');
+            $table->tinyInteger('full_price');
+            $table->tinyInteger('half_price');
+
             $table->timestamps();
 
             $table->foreign("show_id")->references("id")->on("shows")->onDelete('cascade');

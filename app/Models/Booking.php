@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * App\Booking
@@ -39,7 +41,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Booking extends Model
 {
-    //public $timestamps = false;
+    use HasFactory, Notifiable;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -61,7 +63,7 @@ class Booking extends Model
      * @return bool
      * @throws \Exception
      */
-    public function removePlacesFromEvent(\App\ShowEvent $event, $places){
+    public function removePlacesFromEvent(ShowEvent $event, $places){
 
         try{
             $event->full_price_qnt -= $places['full_price_qnt'];

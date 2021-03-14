@@ -1,36 +1,53 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: marco.bevilacqua
- * Date: 28/09/2016
- * Time: 17:50
- */
 
-$factory->define(\App\Booking::class, function(\Faker\Generator $faker){
+namespace Database\Factories;
 
-    $show = App\Show::all()->random(1);
-    $event = App\ShowEvent::whereShowId($show->id)->inRandomOrder()->take(1)->get();
-    $viewer = App\Viewer::all()->random(1);
-    Log::debug("ShowEvent: {$event}");
+use App\Models\Booking;
+use App\Models\Show;
+use App\Models\ShowEvent;
+use App\Models\Viewer;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Log;
 
-    $int = $faker->numberBetween(1,4);
-    $half = $faker->numberBetween(1,4);
-    $tot = $int + $half;
+class BookingFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Booking::class;
 
-    return [
-
-        'viewer_id'         => $viewer->id,
-        'show_id'           => $show->id,
-        'event_id'          => $event[0]->id,
-        'paid'              => $faker->randomElement(array(0, 1)),
-        'full_price_qnt'    => $int,
-        'half_price_qnt'    => $half,
-        'total_qnt'         => $tot,
-        'booking_date'      => $faker->dateTimeThisYear,
-        'place_code'        => strtoupper($faker->randomDigit.$faker->randomLetter),
-        'booking_code'      => $faker->sha1,
-        'public_code'       => strtoupper(md5(uniqid(rand(), true)))
-        
-    ];
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        $show = Show::all()->random(1);
+        $event = ShowEvent::whereShowId($show->id)->inRandomOrder()->take(1)->get();
+        $viewer = Viewer::all()->random(1);
+        Log::debug("ShowEvent: {$event}");
     
-});
+        $int = $this->faker->numberBetween(1,4);
+        $half = $this->faker->numberBetween(1,4);
+        $tot = $int + $half;
+    
+        return [
+    
+            'viewer_id'         => $viewer->id,
+            'show_id'           => $show->id,
+            'event_id'          => $event[0]->id,
+            'paid'              => $this->faker->randomElement(array(0, 1)),
+            'full_price_qnt'    => $int,
+            'half_price_qnt'    => $half,
+            'total_qnt'         => $tot,
+            'booking_date'      => $this->faker->dateTimeThisYear,
+            'place_code'        => strtoupper($this->faker->randomDigit.$this->faker->randomLetter),
+            'booking_code'      => $this->faker->sha1,
+            'public_code'       => strtoupper(md5(uniqid(rand(), true)))
+            
+        ];
+    }
+}

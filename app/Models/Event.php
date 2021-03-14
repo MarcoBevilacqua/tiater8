@@ -3,7 +3,9 @@
 namespace App;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * App\Event
@@ -28,7 +30,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Event extends Model
 {
-    //public $timestamps = false;
+    use HasFactory, Notifiable;
 
     public function getShowDateAttribute($value)
     {

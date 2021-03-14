@@ -20,6 +20,11 @@ class CreateShowsTable extends Migration
             $table->integer("places");
             $table->float("full_price", 8, 2);
             $table->float("half_price", 8, 2);
+            $table->string('image');
+            $table->string('url');
+            $table->tinyInteger('full_price_qnt');
+            $table->tinyInteger('half_price_qnt');
+            $table->tinyInteger('total_qnt');
         });
     }
 

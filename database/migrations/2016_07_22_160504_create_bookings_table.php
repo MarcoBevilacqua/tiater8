@@ -15,10 +15,8 @@ class CreateBookingsTable extends Migration
         Schema::create('bookings', function (Blueprint $table) {
 
             $table->engine = 'InnoDB';
-            $table->increments('id');
-            $table->integer('viewer_id')->unsigned;
-            $table->integer('show_id')->unsigned;
-            $table->integer('event_id')->unsigned;
+            $table->id();
+            $table->unsignedBigInteger('view_id');        
             $table->enum('paid', array(0,1));
             $table->integer('full_price_qnt');
             $table->integer('half_price_qnt');
@@ -26,11 +24,10 @@ class CreateBookingsTable extends Migration
             $table->timestamp('booking_date');
             $table->string('place_code');
             $table->string('booking_code');
+            $table->string('public_code', 10);
             $table->timestamps();
 
-            $table->foreign('viewer_id')->references('id')->on('viewers');
-            $table->foreign('show_id')->references('id')->on('shows');
-            $table->foreign('event_id')->references('id')->on('show_events')->onDelete('cascade');
+            $table->foreign('view_id')->references('id')->on('views');            
         });
     }
 

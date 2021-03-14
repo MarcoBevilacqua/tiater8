@@ -12,7 +12,7 @@ class AddSoftDeleteToViewer extends Migration
      */
     public function up()
     {
-        Schema::table('viewers', function (Blueprint $table) {
+        Schema::table('views', function (Blueprint $table) {
             $table->softDeletes();
 
         });
@@ -25,7 +25,7 @@ class AddSoftDeleteToViewer extends Migration
      */
     public function down()
     {
-        Schema::table('viewers', function (Blueprint $table) {
+        Schema::table('views', function (Blueprint $table) {
             $table->dropSoftDeletes();
         });
     }
