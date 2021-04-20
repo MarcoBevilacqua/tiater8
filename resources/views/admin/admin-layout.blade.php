@@ -5,35 +5,12 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="description" content="" />
 		<meta name="keywords" content="" />
-		<!--[if lte IE 8]><script src="js/html5shiv.js"></script><![endif]-->
 		<script type="text/javascript">
         var APP_URL = "{{(url('/'))}}";
         </script>
-		<script type="text/javascript" src="{{ URL::asset('javascripts/jquery-1.11.1.js')}}"></script>
-		<script type="text/javascript" src="{{ URL::asset('javascripts/bootstrap.js')}}"></script>
-		<script type="text/javascript" src="{{ URL::asset('javascripts/clndr/underscore-min.js')}}"></script>
-		<script type="text/javascript" src="{{ URL::asset('javascripts/clndr/moment-2.8.3.js')}}"></script>
-		<script type="text/javascript" src="{{ URL::asset('javascripts/clndr/clndr.js')}}"></script>
-		<script type="text/javascript" src="{{ URL::asset('javascripts/clndr/home-calendar.js')}}"></script>
-
-		<script type="text/javascript" src="{{ URL::asset('javascripts/admin/sb-admin-2.js')}}"></script>
-		<script type="text/javascript" src="{{ URL::asset('javascripts/admin/plugins/metisMenu/metisMenu.min.js')}}"></script>
-		<link rel="stylesheet" href="{{ URL::asset('stylesheets/bootstrap.css') }}" >
-		<link rel="stylesheet" href="{{ URL::asset('stylesheets/bootstrap-theme.css') }}" media="screen">
-		<link rel="stylesheet" href="{{ URL::asset('stylesheets/bootstrap-sticky-footer.css') }}" media="screen">
-		<link rel="stylesheet" href="{{ URL::asset('stylesheets/admin/sb-admin-2.css') }}" >
-		<link rel="stylesheet" href="{{ URL::asset('stylesheets/clndr/clndr.css') }}" >
-		<link rel="stylesheet" href="{{ URL::asset('stylesheets/style.css') }}" >
-		{{--
-		<link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
-		<link rel="stylesheet" href="{{ URL::asset('stylesheets/admin/plugins/dataTables.bootstrap.css') }}" >
-        --}}
 		<link href='http://fonts.googleapis.com/css?family=Raleway:300,500' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
         <link href="https://fonts.googleapis.com/css?family=Abel|Raleway:200,300" rel="stylesheet" type="text/css">
-
-		<link rel="stylesheet" href="{{ URL::asset('stylesheets/admin/plugins/metisMenu/metisMenu.min.css') }}" >
-		<link rel="stylesheet" href="{{ URL::asset('stylesheets/admin/fonts/font-awesome/css/font-awesome.min.css') }}"  type="text/css">
 		<noscript>
 
 		</noscript>
@@ -87,10 +64,10 @@
                             <i class="fa fa-table fa-fw"></i> Amministrazione<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="{{URL::to("show")}}">Spettacoli</a>
+                                    <a href="{{URL::to('show')}}">Spettacoli</a>
                                 </li>
                                 <li>
-                                    <a href="{{URL::to("viewer")}}">Soci</a>
+                                    <a href="{{URL::to('viewer')}}">Soci</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->

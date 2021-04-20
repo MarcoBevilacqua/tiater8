@@ -7,9 +7,3 @@
         <div id="default" class="cal1"></div>
      </div>
  </div>
-
- <script type="text/javascript">
-     $(document).ready(function(){
-         putEventsOnCalendar();
-     });
- </script>

@@ -6,17 +6,17 @@
 		<meta name="description" content="" />
 		<meta name="keywords" content="" />
 		<!--[if lte IE 8]><script src="js/html5shiv.js"></script><![endif]-->
-		<script type="text/javascript" src="{{ URL::asset('javascripts/jquery-1.11.1.js')}}"></script>
-		<script type="text/javascript" src="{{ URL::asset('javascripts/bootstrap.js')}}"></script>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
 		<script type="text/javascript" src="{{ URL::asset('javascripts/bootstrap-datepicker.js')}}"></script>
-		<link rel="stylesheet" href="{{ URL::asset('stylesheets/bootstrap.css') }}" >
-		<link rel="stylesheet" href="{{ URL::asset('stylesheets/bootstrap-theme.css') }}" media="screen">
+		<link rel="stylesheet" href="{{ URL::asset('css/bootstrap-theme.css') }}" media="screen">
 		<link rel="stylesheet" href="{{ URL::asset('stylesheets/bootstrap-sticky-footer.css') }}" media="screen">
 		<link rel="stylesheet" href="{{ URL::asset('stylesheets/admin/fonts/font-awesome/css/font-awesome.min.css') }}"  type="text/css">
 		<noscript>
 
 		</noscript>
-		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie8.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie8." /><![endif]-->
 	</head>
     <body>
 

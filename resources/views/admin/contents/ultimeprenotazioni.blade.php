@@ -15,14 +15,14 @@
                 <div class="col-lg-9">
                     <ul class="list-unstyled">
                         <li>
-                            <strong>{{\App\Viewer::find($booking->viewer_id)->first_name}}
-                                {{\App\Viewer::find($booking->viewer_id)->last_name}}
+                            <strong>{{\App\Models\Viewer::find($booking->viewer_id)->first_name}}
+                                {{\App\Models\Viewer::find($booking->viewer_id)->last_name}}
                             </strong>
                         </li>
                         <li>
-                            <span>{{Show::find($booking->show_id)->name}}
+                            <span>
                                 <small>(
-                                    {{\Carbon\Carbon::parse($booking->show_date)->format('d/m/Y')}}
+                                    
                                     )</small>
                             </span>
                         </li>

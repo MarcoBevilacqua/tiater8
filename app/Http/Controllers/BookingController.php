@@ -27,7 +27,7 @@ class BookingController extends Controller
         return view('helper.bookingList', ['show' => $show, 'events' => $events, ]);
     }
 
-    public function show($code){
+    public function show($code){		
         $booking = Booking::where('public_code', $code)->get();
         return view('crud/prenotazioni.show', array('booking' => $booking));
     }
