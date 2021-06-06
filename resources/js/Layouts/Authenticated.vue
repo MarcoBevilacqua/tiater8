@@ -19,6 +19,11 @@
                                     Dashboard
                                 </breeze-nav-link>
                             </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <breeze-nav-link :href="route('users')" :active="route().current('users')">
+                                    Users
+                                </breeze-nav-link>
+                            </div>                            
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
