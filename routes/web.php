@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CustomerController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -28,8 +29,6 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/customers', function () {
-    return Inertia::render('Customers');
-})->middleware(['auth', 'verified'])->name('customers');
+Route::get('/customers', [CustomerController::class, 'index']);
 
 require __DIR__.'/auth.php';
