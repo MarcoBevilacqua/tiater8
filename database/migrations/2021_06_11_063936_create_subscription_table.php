@@ -14,13 +14,14 @@ class CreateSubscriptionTable extends Migration
      */
     public function up()
     {
-        Schema::create('subscription', function (Blueprint $table) {
-            $table->id();
+        Schema::create('subscriptions', function (Blueprint $table) {
+            $table->id();            
+            $table->unsignedBigInteger('customer_id')->nullable(true);
+            $table->string('token')->nullable(false);
+            $table->integer('status')->nullable(false)->default(0);
+            $table->dateTime('expires_at')->nullable(true);
+            $table->string('form_url')->nullable(false)->default('');
             $table->timestamps();
-            $table->unsignedBigInteger('customer_id')->nullable(false);
-            $table->string('token');
-            $table->integer('status');
-            $table->dateTime('expires_at');
         });
     }
 
@@ -31,6 +32,6 @@ class CreateSubscriptionTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('subscription');
+        Schema::dropIfExists('subscriptions');
     }
 }

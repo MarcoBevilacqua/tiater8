@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\SubscriptionController;
+use App\Models\Subscription;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -28,6 +30,8 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::post('/subscriptions/init', [SubscriptionController::class, 'init']);
 
 Route::get('/customers', [CustomerController::class, 'index']);
 

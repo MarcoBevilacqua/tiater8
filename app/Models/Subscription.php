@@ -9,8 +9,18 @@ class Subscription extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'customer_id',
+        'token',
+        'status'
+    ];
+
     /**
      * the subscription statuses
+     * 
+     * Pending: a subscription that has to be confermed
+     * Blocked: an expired subscription (user has not completed the subscription before the expiration)
+     * Complete: a completed subscription
      */
     public const STATUSES = [
         0 => 'PENDING',
@@ -42,7 +52,7 @@ class Subscription extends Model
       */
     public function setStatusAttribute($value)
     {
-        $statusId = $this->getStatusAttribute($value);
+        $statusId = $this->getStatusID($value);
         if ($statusId) {
             $this->attributes['status'] = $statusId;
         }
