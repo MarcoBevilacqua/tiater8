@@ -31,7 +31,12 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+//the init subscription
 Route::post('/subscriptions/init', [SubscriptionController::class, 'init']);
+//the subscription form visualization
+Route::get('/subscriptions/{token}', [SubscriptionController::class, 'fill']);
+//the subscription submit
+Route::post('/subscriptions/complete', [SubscriptionController::class, 'complete']);
 
 Route::get('/customers', [CustomerController::class, 'index']);
 

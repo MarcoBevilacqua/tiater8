@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Hash;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Response;
 
 class SubscriptionController extends Controller
 {
@@ -43,20 +43,29 @@ class SubscriptionController extends Controller
         }
 
         //the url to be returned
-        $formUrl = URL::to('/subscriptions/') . substr(str_shuffle(MD5(microtime())), 0, 8);
+        $formUrl = URL::to('/subscriptions') . "/" . substr(str_shuffle(MD5(microtime())), 0, 8);
 
         //create a to-be-confirmed subscription
         $pendingSub = Subscription::create([            
             'token' => Hash::make($request->customer_email . "|" . time()),
-            'status' => 'PENDING',
+            'status' => 0,
             'form_url' => $formUrl,
             'customer_id' => null
         ]);
 
         if(!$pendingSub){        
+            //TODO: refactor the error management
             abort(500);
         }
 
         return $formUrl;
+    }
+
+    public function fill(string $token){
+        return Response::HTTP_OK;
+    }
+
+    public function complete(){
+        return true;
     }
 }
