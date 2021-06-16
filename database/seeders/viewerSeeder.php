@@ -16,6 +16,6 @@ class ViewerSeeder extends Seeder
      */
     public function run()
     {
-        Viewer::factory(15)->create();
+        Viewer::factory(5)->create();
     }
 }
