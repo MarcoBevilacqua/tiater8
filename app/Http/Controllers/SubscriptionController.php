@@ -37,13 +37,20 @@ class SubscriptionController extends Controller
      * @return string
      */
     public function init(Request $request){
+
         if(!$request->has('customer_email') || !$request->customer_email) {
             //TODO: refactor the error management
             abort(400);
         }
 
+        //check if email has already been taken 
+        $shouldBeBlocked = Subscription::where('email', $request->customer_email)->first();
+        if($shouldBeBlocked){
+            abort(403);
+        }
+
         //the url to be returned
-        $formUrl = URL::to('/subscriptions') . "/" . substr(str_shuffle(MD5(microtime())), 0, 8);
+        $formUrl = URL::to('/subscriptions') . "/" . substr(str_shuffle(MD5(microtime())), 0, 22);
 
         //create a to-be-confirmed subscription
         $pendingSub = Subscription::create([            
@@ -59,6 +66,17 @@ class SubscriptionController extends Controller
         }
 
         return $formUrl;
+    }
+
+    public function generate(Request $request){
+
+        $token = $request->session()->token();
+        $token = csrf_token();
+
+        return Inertia::render(
+            'Subscription/GenerateLink', [
+                'token' => $token
+            ]);
     }
 
     public function fill(string $token){

@@ -31,7 +31,7 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-//the init subscription generation link
+//the init subscription generation link view
 Route::get('/subscriptions/generate', [SubscriptionController::class, 'generate']);
 //the init subscription
 Route::post('/subscriptions/init', [SubscriptionController::class, 'init']);
