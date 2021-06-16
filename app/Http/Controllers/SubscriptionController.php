@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Services\SubscriptionService;
 use App\Models\Subscription;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class SubscriptionController extends Controller
 {
@@ -61,7 +63,7 @@ class SubscriptionController extends Controller
         $pendingSub = Subscription::create([            
             'subscription_email' => $request->customer_email,
             'status' => 0,
-            'form_url' => $formUrl,
+            'token' => $randomString,
             'customer_id' => null
         ]);
 
@@ -74,6 +76,14 @@ class SubscriptionController extends Controller
     }
 
     public function fill(string $token){
+        Log::info("TOKEN {$token} is in use, setting expiration date to token");
+        
+        Subscription::where('token', '=', $token)
+        ->where('status', '=', 0)
+        ->update([
+            'expires_at' => Carbon::now()->addMinutes(10),
+            'status' => 1
+        ]);
         return Response::HTTP_OK;
     }
 

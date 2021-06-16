@@ -13,7 +13,7 @@ class Subscription extends Model
         'customer_id',
         'subscription_email',
         'status',
-        'form_url'
+        'token'
     ];
 
     /**

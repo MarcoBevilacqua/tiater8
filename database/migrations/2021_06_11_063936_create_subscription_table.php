@@ -20,7 +20,7 @@ class CreateSubscriptionTable extends Migration
             $table->string('subscription_email')->nullable(false)->default("");
             $table->integer('status')->nullable(false)->default(0);
             $table->dateTime('expires_at')->nullable(true);
-            $table->string('form_url')->nullable(false)->default('');
+            $table->string('token')->nullable(false)->default('');
             $table->timestamps();
         });
     }
