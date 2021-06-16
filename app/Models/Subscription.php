@@ -11,7 +11,7 @@ class Subscription extends Model
 
     protected $fillable = [
         'customer_id',
-        'token',
+        'subscription_email',
         'status',
         'form_url'
     ];

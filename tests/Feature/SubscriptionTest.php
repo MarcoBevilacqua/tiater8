@@ -2,10 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\Subscription;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
 class SubscriptionTest extends TestCase
@@ -26,7 +24,8 @@ class SubscriptionTest extends TestCase
         $this->assertDatabaseCount('subscriptions', 1);
         $this->assertDatabaseHas('subscriptions', [
             'customer_id' => null,
-            'status' => 0
+            'status' => 0,
+            'subscription_email' => 'abc123'
         ]);
         $response->assertStatus(200);
     }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\SubscriptionService;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
-use Hash;
 use Illuminate\Http\Response;
 
 class SubscriptionController extends Controller
@@ -30,6 +30,10 @@ class SubscriptionController extends Controller
         );
     }
 
+    public function generate(Request $request){
+        return Inertia::render('Subscription/GenerateLink', []);
+    }
+
     /**
      * the subscription init (return the form url)
      * 
@@ -44,17 +48,18 @@ class SubscriptionController extends Controller
         }
 
         //check if email has already been taken 
-        $shouldBeBlocked = Subscription::where('email', $request->customer_email)->first();
+        $shouldBeBlocked = SubscriptionService::getSubscriptionByEmail($request->customer_email);
         if($shouldBeBlocked){
             abort(403);
         }
 
         //the url to be returned
-        $formUrl = URL::to('/subscriptions') . "/" . substr(str_shuffle(MD5(microtime())), 0, 22);
+        $randomString = substr(str_shuffle(MD5(microtime())), 0, 22);
+        $formUrl = URL::to('/subscriptions') . "/" . $randomString;
 
         //create a to-be-confirmed subscription
         $pendingSub = Subscription::create([            
-            'token' => Hash::make($request->customer_email . "|" . time()),
+            'subscription_email' => $request->customer_email,
             'status' => 0,
             'form_url' => $formUrl,
             'customer_id' => null
@@ -66,17 +71,6 @@ class SubscriptionController extends Controller
         }
 
         return $formUrl;
-    }
-
-    public function generate(Request $request){
-
-        $token = $request->session()->token();
-        $token = csrf_token();
-
-        return Inertia::render(
-            'Subscription/GenerateLink', [
-                'token' => $token
-            ]);
     }
 
     public function fill(string $token){

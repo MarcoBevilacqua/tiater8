@@ -27,7 +27,7 @@ class SubscriptionFactory extends Factory
         $customer = Customer::factory()->create();
         return [
             'status' => 'PENDING',
-            'token' => Hash::make($customer->email . '|' . time())           
+            'subscription_email' => $customer->email 
         ];
     }
 

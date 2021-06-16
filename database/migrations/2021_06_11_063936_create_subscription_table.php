@@ -17,7 +17,7 @@ class CreateSubscriptionTable extends Migration
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();            
             $table->unsignedBigInteger('customer_id')->nullable(true);
-            $table->string('token')->nullable(false);
+            $table->string('subscription_email')->nullable(false)->default("");
             $table->integer('status')->nullable(false)->default(0);
             $table->dateTime('expires_at')->nullable(true);
             $table->string('form_url')->nullable(false)->default('');
