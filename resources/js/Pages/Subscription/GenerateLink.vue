@@ -33,7 +33,7 @@
           </div>
           <form class="mt-8 space-y-6" action="/subscriptions/init" method="POST">
             <input type="hidden" name="remember" value="true" />
-            <input type="hidden" name="_token" value="{{ token }}" />
+            <input type="hidden" name="_token" v-bind:value="token" />
             <div class="rounded-md shadow-sm -space-y-px">
               <div>
                 <label for="customer_email" class="sr-only">Email address</label>

@@ -21,6 +21,7 @@
                         >First name</label
                       >
                       <input
+                        v-model="form.first_name"
                         type="text"
                         name="first_name"
                         id="first_name"
@@ -46,6 +47,7 @@
                         >Last name</label
                       >
                       <input
+                        v-model="form.last_name"
                         type="text"
                         name="last_name"
                         id="last_name"
@@ -71,6 +73,7 @@
                         >Email address</label
                       >
                       <input
+                        v-model="form.email"
                         type="text"
                         name="email_address"
                         id="email_address"
@@ -183,9 +186,9 @@
                           sm:text-sm
                           border-gray-300
                           rounded-md
-                        "
-                      />
+                        " />
                     </div>
+                    <input type="hidden" :value="sub_token" name="sub_token" id="sub_token" />
                   </div>
                 </div>
                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
@@ -223,8 +226,8 @@
 <script>
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
 import Container from "@/Layouts/Container";
-import { reactive } from 'vue'
-import { Inertia } from '@inertiajs/inertia'
+import { reactive } from "vue";
+import { Inertia } from "@inertiajs/inertia";
 
 export default {
   components: {
@@ -232,18 +235,23 @@ export default {
     Container,
   },
 
-  setup () {
+  props: {
+    sub_token: String,
+  },
+
+  setup() {
     const form = reactive({
       first_name: null,
       last_name: null,
-      email_address: null,
-    })
+      email: null,
+      sub_token: null,
+    });
 
     function submit() {
-      Inertia.post('/subscriptions/complete', form)
+      Inertia.post("/subscriptions/complete", form);
     }
 
-    return { form, submit }
+    return { form, submit };
   },
 };
 </script>

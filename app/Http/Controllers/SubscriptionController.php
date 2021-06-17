@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Services\SubscriptionService;
 use App\Models\Subscription;
 use Carbon\Carbon;
@@ -14,7 +15,17 @@ use Illuminate\Support\Facades\Log;
 
 class SubscriptionController extends Controller
 {
+    private $rules;
 
+    public function __construct()
+    {
+        $rules = ['complete' => [
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email_address' => 'required|email',
+        ]];
+    }
+    
     /**
      * the subscription index
      * @return Inertia view
@@ -97,11 +108,34 @@ class SubscriptionController extends Controller
         ]);
 
         //should return form
-        return Inertia::render('Subscription/CompleteSubscription', []);
+        return Inertia::render('Subscription/CompleteSubscription', ['sub_token' => $token]);
     }
 
     public function complete(Request $request)
     {
         dd($request);
+        /**
+         * 1. check if subscription is valid
+         * 2. create the customer
+         * 3. complete the subscription (should be another status such as TO_BE_CONFIRMED)
+         * 4. return the response
+         */
+
+         //TODO: check if subscription is valid
+
+         //Create the customer
+         if(!$request->validate($this->rules['complete'])){
+             abort(400);
+         }
+
+         $customer = Customer::create([
+             'first_name' => $request->first_name,
+             'last_name' => $request->last_name,
+             'email' => $request->email_address,
+         ]);
+
+         //complete the subscription
+
+
     }
 }
