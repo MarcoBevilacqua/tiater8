@@ -95,7 +95,7 @@
                     value="generate"
                   />
                 </span>
-                Sign in
+                Generate Link
               </button>
             </div>
           </form>
