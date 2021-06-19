@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Customer;
 use App\Models\Subscription;
 use Carbon\Carbon;
 use Hash;
@@ -24,26 +23,56 @@ class SubscriptionFactory extends Factory
      */
     public function definition()
     {
-        $customer = Customer::factory()->create();
         return [
-            'status' => 'PENDING',
-            'subscription_email' => $customer->email 
+            'subscription_email' => 'example@example.com',
+            'token' => 'abc123',
+            'expires_at' => Carbon::now()->addHour()
         ];
     }
 
     /**
-     * An expired subscription
+     * A pending subscription
      *
      * @return array
      */
-    public function expired()
+    public function pending()
     {
-        $customer = Customer::all()->random(1);
-        return [
-            'customer_id' => $customer->id,
-            'token' => Hash::make($customer->email . '|' . time()),
-            'expires_at' => Carbon::now()->subDay(),
-            'status' => Subscription::getStatusID('BLOCKED'),
-        ];
+        return $this->state(function(array $attributes){
+            return [
+                'status' => Subscription::PENDING
+            ];
+            
+        });
+    }
+
+        /**
+     * A pending subscription
+     *
+     * @return array
+     */
+    public function toBeCompleted()
+    {
+        return $this->state(function(array $attributes){
+            return [
+                'status' => Subscription::TO_BE_COMPLETED,
+                'expires_at' => Carbon::now()->addHour(),
+            ];
+            
+        });
+    }
+
+        /**
+     * A subscription to be confirmed
+     *
+     * @return array
+     */
+    public function toBeConfirmed()
+    {
+        return $this->state(function(array $attributes){
+            return [
+                'status' => Subscription::TO_BE_CONFIRMED
+            ];
+            
+        });
     }
 }

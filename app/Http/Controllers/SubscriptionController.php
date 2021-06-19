@@ -7,11 +7,9 @@ use App\Services\SubscriptionService;
 use App\Models\Subscription;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
 class SubscriptionController extends Controller
@@ -20,10 +18,10 @@ class SubscriptionController extends Controller
 
     public function __construct()
     {
-        $rules = ['complete' => [
+        $this->rules = ['complete' => [
             'first_name' => 'required',
             'last_name' => 'required',
-            'email_address' => 'required|email',
+            'customer_email' => 'required|email',
         ]];
     }
     
@@ -91,21 +89,19 @@ class SubscriptionController extends Controller
     }
 
     public function fill(string $token)
-    {
-        Log::info("TOKEN {$token} is in use, setting expiration date to token");
-        
+    {           
         try {
             $subscriptionToFill = Subscription::where('token', '=', $token)
             ->where('status', '=', 0)
             ->firstOrFail();
         } catch (Exception $modelNotFoundException) {
             Log::error("Cannot Find Subscription to fill: {$modelNotFoundException->getCode()}");
-            abort(404);
+            abort(403);
         }
 
         $subscriptionToFill->update([
             'expires_at' => Carbon::now()->addMinutes(10),
-            //'status' => Subscription::TO_BE_COMPLETED
+            'status' => Subscription::TO_BE_COMPLETED
         ]);
 
         //should return form
@@ -120,22 +116,49 @@ class SubscriptionController extends Controller
          * 3. complete the subscription (should be another status such as TO_BE_CONFIRMED)
          * 4. return the response
          */
+        
+        //TODO: check if subscription is valid
+        if (!$request->has('sub_token') || !$request->input('sub_token')) {
+            Log::error("Cannot retrieve Token from request, aborting");
+            abort(400);
+        }
+        $canHandleSubscription = SubscriptionService::subscriptionCanBeConfirmed($request->input('sub_token'));
 
-         //TODO: check if subscription is valid
+        if (!$canHandleSubscription) {
+            Log::error("Cannot find subscription with token " . $request->input('sub_token'));
+            abort(400);
+        }
+        
+        //validate the request
+        if (!$request->validate($this->rules['complete'])) {
+            Log::info("Cannot validate Request");
+            abort(400);
+        }
 
-         //Create the customer
-         if(!$request->validate($this->rules['complete'])){
-             abort(400);
-         }
-
-         $customer = Customer::create([
-             'first_name' => $request->first_name,
-             'last_name' => $request->last_name,
-             'email' => $request->email_address,
+        //Create the customer
+        $customer = Customer::create([
+             'first_name' => $request->input('first_name'),
+             'last_name' => $request->input('last_name'),
+             'email' => $request->input('customer_email'),
          ]);
 
-         //complete the subscription
+         if(!$customer){
+             Log::error("Cannot create customer");
+         }
 
+        //complete the subscription
+        $subToBeCompleted = Subscription::where('token', $request->input('sub_token'))
+         ->first()->update([
+             'customer' => $customer->id,
+             'status' => Subscription::TO_BE_CONFIRMED,
+         ]);
 
+        return Inertia::render('Subscriptions', ['subs' => Subscription::all()->map(function (Subscription $sub) {
+            return [
+                 'email' => $sub->customer_email,
+                 'status' => $sub->status
+             ];
+        })
+         ]);
     }
 }
