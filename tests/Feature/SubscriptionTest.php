@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Subscription;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;

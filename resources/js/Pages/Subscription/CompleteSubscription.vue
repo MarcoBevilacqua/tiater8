@@ -188,7 +188,7 @@
                           rounded-md
                         " />
                     </div>
-                    <input type="hidden" :value="sub_token" name="sub_token" id="sub_token" />
+                    <input type="hidden" v-model="form.sub_token" name="sub_token" id="sub_token" />
                   </div>
                 </div>
                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
@@ -253,5 +253,9 @@ export default {
 
     return { form, submit };
   },
+
+  mounted(){
+    this.form.sub_token = this.sub_token;
+  }
 };
 </script>

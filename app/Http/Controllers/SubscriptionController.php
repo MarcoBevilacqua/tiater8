@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Services\SubscriptionService;
 use App\Models\Subscription;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
@@ -76,7 +77,7 @@ class SubscriptionController extends Controller
         //create a to-be-confirmed subscription
         $pendingSub = Subscription::create([
             'subscription_email' => $request->customer_email,
-            'status' => 0,
+            'status' => Subscription::PENDING,
             'token' => $randomString,
             'customer_id' => null
         ]);
@@ -97,14 +98,14 @@ class SubscriptionController extends Controller
             $subscriptionToFill = Subscription::where('token', '=', $token)
             ->where('status', '=', 0)
             ->firstOrFail();
-        } catch (ModelNotFoundException $modelNotFoundException) {
+        } catch (Exception $modelNotFoundException) {
             Log::error("Cannot Find Subscription to fill: {$modelNotFoundException->getCode()}");
             abort(404);
         }
 
         $subscriptionToFill->update([
             'expires_at' => Carbon::now()->addMinutes(10),
-            'status' => 1
+            //'status' => Subscription::TO_BE_COMPLETED
         ]);
 
         //should return form
@@ -113,7 +114,6 @@ class SubscriptionController extends Controller
 
     public function complete(Request $request)
     {
-        dd($request);
         /**
          * 1. check if subscription is valid
          * 2. create the customer
