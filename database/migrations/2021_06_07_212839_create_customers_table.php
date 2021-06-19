@@ -18,9 +18,9 @@ class CreateCustomersTable extends Migration
             $table->timestamps();
             $table->string('first_name')->nullable(false);
             $table->string('last_name')->nullable(false);
-            $table->string('email')->nullable(false);
+            $table->string('email')->nullable(false)->unique();
             $table->string('password')->nullable(true);
-            $table->string('phone')->nullable(true);            
+            $table->string('phone')->nullable(true)->default("000");            
         });
     }
 

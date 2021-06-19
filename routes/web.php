@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SubscriptionController;
-use App\Models\Subscription;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -39,6 +38,8 @@ Route::post('/subscriptions/init', [SubscriptionController::class, 'init']);
 Route::get('/subscriptions/{token}', [SubscriptionController::class, 'fill']);
 //the subscription submit
 Route::post('/subscriptions/complete', [SubscriptionController::class, 'complete']);
+
+Route::resource('/subscriptions', SubscriptionController::class);
 
 Route::get('/customers', [CustomerController::class, 'index']);
 

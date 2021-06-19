@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 
 class SubscriptionController extends Controller
 {
@@ -21,7 +22,7 @@ class SubscriptionController extends Controller
         $this->rules = ['complete' => [
             'first_name' => 'required',
             'last_name' => 'required',
-            'customer_email' => 'required|email',
+            'email' => 'required|email',
         ]];
     }
     
@@ -35,8 +36,8 @@ class SubscriptionController extends Controller
             'Subscriptions',
             ['subscriptions' => Subscription::all()->map(function (Subscription $subscription) {
                 return [
-                    'token' => $subscription->token,
-                    'customer' => $subscription->customer_id,
+                    'email' => $subscription->subscription_email,
+                    'created' => $subscription->created_at->format('d/m/Y'),
                     'status' => $subscription->status
                 ];
             })
@@ -85,23 +86,23 @@ class SubscriptionController extends Controller
             abort(500);
         }
 
-        return $formUrl;
+        return '<a href="' . $formUrl . '">This is your link</a>';
     }
 
     public function fill(string $token)
     {           
         try {
             $subscriptionToFill = Subscription::where('token', '=', $token)
-            ->where('status', '=', 0)
+            ->where('status', Subscription::PENDING)
             ->firstOrFail();
         } catch (Exception $modelNotFoundException) {
-            Log::error("Cannot Find Subscription to fill: {$modelNotFoundException->getCode()}");
+            Log::error("Cannot Findsdaffas Subscription to fill: {$modelNotFoundException->getCode()}");
             abort(403);
         }
 
         $subscriptionToFill->update([
             'expires_at' => Carbon::now()->addMinutes(10),
-            'status' => Subscription::TO_BE_COMPLETED
+            //'status' => Subscription::TO_BE_COMPLETED
         ]);
 
         //should return form
@@ -139,7 +140,7 @@ class SubscriptionController extends Controller
         $customer = Customer::create([
              'first_name' => $request->input('first_name'),
              'last_name' => $request->input('last_name'),
-             'email' => $request->input('customer_email'),
+             'email' => $request->input('email'),
          ]);
 
          if(!$customer){
@@ -153,12 +154,7 @@ class SubscriptionController extends Controller
              'status' => Subscription::TO_BE_CONFIRMED,
          ]);
 
-        return Inertia::render('Subscriptions', ['subs' => Subscription::all()->map(function (Subscription $sub) {
-            return [
-                 'email' => $sub->customer_email,
-                 'status' => $sub->status
-             ];
-        })
-         ]);
+        return redirect('/subscriptions');
+
     }
 }

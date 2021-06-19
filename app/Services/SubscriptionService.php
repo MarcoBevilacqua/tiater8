@@ -22,8 +22,8 @@ class SubscriptionService {
             return false;
         }
 
-        return $subscriptionByToken->expires_at > Carbon::now() &&
-            $subscriptionByToken->status === Subscription::TO_BE_COMPLETED;
+        return $subscriptionByToken->expires_at > Carbon::now(); 
+        //&& $subscriptionByToken->status === Subscription::TO_BE_COMPLETED;
     }
 
 }
