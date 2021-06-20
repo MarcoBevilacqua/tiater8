@@ -10,7 +10,7 @@ class SubscriptionService {
     public static function getSubscriptionByEmail(string $email) {
 
         return Subscription::where('subscription_email', '=', $email)
-        ->where('status', '=', 0)
+        ->where('status', Subscription::PENDING)
         ->count() > 0;
     }
 

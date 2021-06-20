@@ -19,25 +19,18 @@
       >
         <div class="max-w-md w-full space-y-8">
           <div>
-            <img
-              class="mx-auto h-12 w-auto"
-              src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-              alt="Workflow"
-            />
             <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-              Sign in to your account
+              Generate Link
             </h2>
-            <p class="mt-2 text-center text-sm text-gray-600">
-              <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">start your 14-day free trial</a>
-            </p>
           </div>
-          <form class="mt-8 space-y-6" action="/subscriptions/init" method="POST">
+          <form class="mt-8 space-y-6" @submit.prevent="submit">
             <input type="hidden" name="remember" value="true" />
             <input type="hidden" name="_token" v-bind:value="token" />
             <div class="rounded-md shadow-sm -space-y-px">
               <div>
                 <label for="customer_email" class="sr-only">Email address</label>
                 <input
+                  v-model="form.customer_email"
                   id="customer_email"
                   name="customer_email"
                   type="email"
@@ -98,6 +91,9 @@
                 Generate Link
               </button>
             </div>
+            <div>
+              <h1 v-if="form_url">Vue is awesome!</h1>
+            </div>
           </form>
         </div>
       </div>
@@ -108,6 +104,8 @@
 <script>
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
 import Container from "@/Layouts/Container";
+import { reactive } from "vue";
+import { Inertia } from '@inertiajs/inertia'
 
 export default {
   components: {
@@ -115,8 +113,21 @@ export default {
     Container,
   },
 
+  setup() {
+    const form = reactive({
+      customer_email: null
+    });
+
+    function submit(e){
+      Inertia.post('/subscriptions/init', {'customer_email': form.customer_email}) ;    
+    }
+
+    return {form, submit}
+  },
+
   props: {
     token: String,
-  },
+    form_url: String
+  }
 };
 </script>

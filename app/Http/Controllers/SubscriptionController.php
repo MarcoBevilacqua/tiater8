@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
+use Route;
 
 class SubscriptionController extends Controller
 {
@@ -47,7 +48,7 @@ class SubscriptionController extends Controller
 
     public function generate(Request $request)
     {
-        return Inertia::render('Subscription/GenerateLink', []);
+        return Inertia::render('Subscription/GenerateSubscriptionLink', []);
     }
 
     /**
@@ -86,7 +87,7 @@ class SubscriptionController extends Controller
             abort(500);
         }
 
-        return '<a href="' . $formUrl . '">This is your link</a>';
+        return Redirect::route('subscriptions.index');
     }
 
     public function fill(string $token)
@@ -96,7 +97,7 @@ class SubscriptionController extends Controller
             ->where('status', Subscription::PENDING)
             ->firstOrFail();
         } catch (Exception $modelNotFoundException) {
-            Log::error("Cannot Findsdaffas Subscription to fill: {$modelNotFoundException->getCode()}");
+            Log::error("Cannot Find pending Subscription to fill");
             abort(403);
         }
 
