@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\SubscriptionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -28,8 +30,17 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/users', function () {
-    return Inertia::render('Users');
-})->middleware(['auth', 'verified'])->name('users');
+//the init subscription generation link view
+Route::get('/subscriptions/generate', [SubscriptionController::class, 'generate']);
+//the init subscription
+Route::post('/subscriptions/init', [SubscriptionController::class, 'init']);
+//the subscription form visualization
+Route::get('/subscriptions/{token}', [SubscriptionController::class, 'fill']);
+//the subscription submit
+Route::post('/subscriptions/complete', [SubscriptionController::class, 'complete']);
+
+Route::resource('/subscriptions', SubscriptionController::class);
+
+Route::get('/customers', [CustomerController::class, 'index']);
 
 require __DIR__.'/auth.php';
