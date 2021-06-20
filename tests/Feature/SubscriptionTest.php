@@ -58,9 +58,10 @@ class SubscriptionTest extends TestCase
     public function shouldUpdateSubscriptionWhenPageIsReached()
     {
         $response = $this->post('/subscriptions/init', ['customer_email' => 'abc123@gmail.com']);
+        $this->assertDatabaseCount('subscriptions', 1);
         $this->assertDatabaseHas('subscriptions', ['expires_at' => null]);
         //assert response
-        $getFormResponse = $this->get($response->getContent());
+        $getFormResponse = $this->get(URL::to('/subscriptions') . '/' . Subscription::all()->first()->token);
         $getFormResponse->assertStatus(200);
         //assert subscription has changed
         $this->assertDatabaseHas('subscriptions', [
