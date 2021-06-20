@@ -2,12 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\ShowEvent;
-use App\Models\User;
+use App\Models\Subscription;
 use Illuminate\Database\Seeder;
-use App\Models\Viewer;
 
-class ViewerSeeder extends Seeder
+class SubscriptionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,6 +14,8 @@ class ViewerSeeder extends Seeder
      */
     public function run()
     {
-        Viewer::factory(5)->create();
+        Subscription::factory()
+        ->count(3)
+        ->create();
     }
 }

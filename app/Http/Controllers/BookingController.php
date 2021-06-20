@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Show;
+use App\Models\ShowEvent;
 use App\Models\Viewer;
 use Faker\Factory;
 use Illuminate\View\View;
@@ -113,11 +114,9 @@ class BookingController extends Controller
                     Log::error("cannot update booking: {$ex->getMessage()}");
                     return redirect('prenotazioni/'. $code . '/edit');
                 }
-            }
 
-            //redirect
-            //\Session::flash('message', 'prenotazione modificata con successo');
             return redirect('book/get/list/' . $show->url);
+            }
             
         }
 
@@ -173,7 +172,7 @@ class BookingController extends Controller
 
             $returnVars['token'] = $token;
 
-            $event = \ShowShowEvent::find($data['date']);
+            $event = ShowEvent::find($data['date']);
             $show = Show::find($data['show']);
 
             $returnVars['event'] = $event;
