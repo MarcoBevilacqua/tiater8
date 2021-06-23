@@ -57,7 +57,7 @@ class SubscriptionTest extends TestCase
      */
     public function shouldUpdateSubscriptionWhenPageIsReached()
     {
-        $response = $this->post('/subscriptions/init', ['customer_email' => 'abc123@gmail.com']);
+        $this->post('/subscriptions/init', ['customer_email' => 'abc123@gmail.com']);
         $this->assertDatabaseCount('subscriptions', 1);
         $this->assertDatabaseHas('subscriptions', ['expires_at' => null]);
         //assert response
@@ -65,8 +65,7 @@ class SubscriptionTest extends TestCase
         $getFormResponse->assertStatus(200);
         //assert subscription has changed
         $this->assertDatabaseHas('subscriptions', [
-            'expires_at' => Carbon::now()->addMinutes(10),
-            //'status' => 1
+            'expires_at' => Carbon::now()->addMinutes(10)
             ]);
     }
 

@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
-use Route;
 
 class SubscriptionController extends Controller
 {
@@ -39,11 +38,18 @@ class SubscriptionController extends Controller
                 return [
                     'email' => $subscription->subscription_email,
                     'created' => $subscription->created_at->format('d/m/Y'),
-                    'status' => $subscription->status
+                    'status' => $subscription->status,
+                    'edit' => URL::route('subscriptions.edit', $subscription)
                 ];
             })
         ]
         );
+    }
+
+    public function edit(int $id)
+    {
+        $subscription = Subscription::find($id)->firstOrFail();
+        return Inertia::render('Subscriptions/Form', $subscription);
     }
 
     public function generate(Request $request)
