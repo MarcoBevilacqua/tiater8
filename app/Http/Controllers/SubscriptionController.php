@@ -41,7 +41,8 @@ class SubscriptionController extends Controller
                     'status' => $subscription->status,
                     'edit' => URL::route('subscriptions.edit', $subscription)
                 ];
-            })
+            }),
+            'generateLink' => URL::route('subscriptions.generate')
         ]
         );
     }
@@ -52,7 +53,7 @@ class SubscriptionController extends Controller
         return Inertia::render('Subscriptions/Form', $subscription);
     }
 
-    public function generate(Request $request)
+    public function generate()
     {
         return Inertia::render('Subscription/GenerateSubscriptionLink', []);
     }
@@ -73,12 +74,12 @@ class SubscriptionController extends Controller
         //check if email has already been taken
         $shouldBeBlocked = SubscriptionService::getSubscriptionByEmail($request->customer_email);
         if ($shouldBeBlocked) {
+            Log::error("Subscription with email {$request->customer_email} has already been stored");
             abort(403);
         }
 
         //the url to be returned
-        $randomString = substr(str_shuffle(MD5(microtime())), 0, 22);
-        $formUrl = URL::to('/subscriptions') . "/" . $randomString;
+        $randomString = substr(str_shuffle(MD5(microtime())), 0, 22);        
 
         //create a to-be-confirmed subscription
         $pendingSub = Subscription::create([
@@ -90,9 +91,11 @@ class SubscriptionController extends Controller
 
         if (!$pendingSub) {
             //TODO: refactor the error management
+            Log::error("Cannot create pending subscription with email {$request->customer_email} and token {$randomString}");
             abort(500);
         }
 
+        Log::info("Pending Subscription for email {$request->customer_email} has been created!");
         return Redirect::route('subscriptions.index');
     }
 
@@ -108,12 +111,11 @@ class SubscriptionController extends Controller
         }
 
         $subscriptionToFill->update([
-            'expires_at' => Carbon::now()->addMinutes(10),
-            //'status' => Subscription::TO_BE_COMPLETED
+            'expires_at' => Carbon::now()->addMinutes(10),            
         ]);
 
         //should return form
-        return Inertia::render('Subscription/CompleteSubscription', ['sub_token' => $token]);
+        return Inertia::render('Public/CompleteSubscription', ['sub_token' => $token]);
     }
 
     public function complete(Request $request)
