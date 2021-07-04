@@ -30,6 +30,6 @@ class SubscriptionToComplete extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.complete-subscription', ['url' => $this->url]);
+        return $this->markdown('emails.complete-subscription', ['url' => $this->url]);
     }
 }
