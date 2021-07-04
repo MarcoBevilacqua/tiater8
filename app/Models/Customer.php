@@ -17,7 +17,13 @@ class Customer extends Model
         'first_name',
         'last_name',
         'email',
-        'password'
+        'password',
+        'city',
+        'resident',
+        'address',
+        'postal_code',
+        'contact_type',
+        'activity'
     ];
 
     protected $hidden = [
