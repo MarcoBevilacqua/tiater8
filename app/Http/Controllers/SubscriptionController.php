@@ -151,7 +151,10 @@ class SubscriptionController extends Controller
             abort(400);
         }
 
+        Log::info($request->all());
+
         //Create the customer
+        /**TODO: check phone and birth field */
         $customer = Customer::create([
              'first_name' => $request->input('first_name'),
              'last_name' => $request->input('last_name'),
