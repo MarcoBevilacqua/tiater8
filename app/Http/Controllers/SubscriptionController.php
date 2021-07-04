@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SubscriptionToComplete;
 use App\Models\Customer;
 use App\Services\SubscriptionService;
 use App\Models\Subscription;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 
 class SubscriptionController extends Controller
@@ -96,6 +98,7 @@ class SubscriptionController extends Controller
         }
 
         Log::info("Pending Subscription for email {$request->customer_email} has been created!", [__CLASS__, __FUNCTION__]);
+        Mail::to($request->customer_email)->send(new SubscriptionToComplete(URL::to('/public/subscriptions/' . $randomString)));
         return Redirect::route('subscriptions.index');
     }
 
