@@ -155,8 +155,16 @@ class SubscriptionController extends Controller
         $customer = Customer::create([
              'first_name' => $request->input('first_name'),
              'last_name' => $request->input('last_name'),
+             'city' => $request->input('city'),
              'email' => $request->input('email'),
-         ]);
+             'phone' => $request->input('phone'),
+             'birth' => $request->input('birth'),
+             'resident' => $request->input('city_res'),
+             'address' => $request->input('address'),
+             'postal_code' => $request->input('postal_code'),
+             'contact_type' => $request->input('contact_type'),
+             'activity' => $request->input('activity')         
+            ]);
 
          if(!$customer){
              Log::error("Cannot create customer");
@@ -171,7 +179,7 @@ class SubscriptionController extends Controller
              'status' => Subscription::TO_BE_CONFIRMED,
          ]);
 
+         /** TODO: Redirect on public simple view */
         return redirect('/subscriptions');
-
     }
 }
