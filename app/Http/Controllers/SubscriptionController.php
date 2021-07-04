@@ -95,15 +95,16 @@ class SubscriptionController extends Controller
             abort(500);
         }
 
-        Log::info("Pending Subscription for email {$request->customer_email} has been created!");
+        Log::info("Pending Subscription for email {$request->customer_email} has been created!", [__CLASS__, __FUNCTION__]);
         return Redirect::route('subscriptions.index');
     }
 
     public function fill(string $token)
-    {           
+    { 
+
         try {
             $subscriptionToFill = Subscription::where('token', '=', $token)
-            ->where('status', Subscription::PENDING)
+            ->where('status', Subscription::getStatusID('PENDING'))
             ->firstOrFail();
         } catch (Exception $modelNotFoundException) {
             Log::error("Cannot Find pending Subscription to fill");
@@ -113,6 +114,8 @@ class SubscriptionController extends Controller
         $subscriptionToFill->update([
             'expires_at' => Carbon::now()->addMinutes(10),            
         ]);
+
+        Log::info("Can Complete Subscription!!!", [__CLASS__, __FUNCTION__]);
 
         //should return form
         return Inertia::render('Public/CompleteSubscription', ['sub_token' => $token]);
@@ -155,6 +158,8 @@ class SubscriptionController extends Controller
          if(!$customer){
              Log::error("Cannot create customer");
          }
+
+         Log::info("Customer with ID {$customer->id} successfully created", [__CLASS__, __FUNCTION__]);
 
         //complete the subscription
         $subToBeCompleted = Subscription::where('token', $request->input('sub_token'))
