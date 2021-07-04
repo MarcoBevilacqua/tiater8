@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
-use Route;
 
 class SubscriptionController extends Controller
 {
@@ -39,14 +38,22 @@ class SubscriptionController extends Controller
                 return [
                     'email' => $subscription->subscription_email,
                     'created' => $subscription->created_at->format('d/m/Y'),
-                    'status' => $subscription->status
+                    'status' => $subscription->status,
+                    'edit' => URL::route('subscriptions.edit', $subscription)
                 ];
-            })
+            }),
+            'generateLink' => URL::route('subscriptions.generate')
         ]
         );
     }
 
-    public function generate(Request $request)
+    public function edit(int $id)
+    {
+        $subscription = Subscription::find($id)->firstOrFail();
+        return Inertia::render('Subscriptions/Form', $subscription);
+    }
+
+    public function generate()
     {
         return Inertia::render('Subscription/GenerateSubscriptionLink', []);
     }
@@ -67,12 +74,12 @@ class SubscriptionController extends Controller
         //check if email has already been taken
         $shouldBeBlocked = SubscriptionService::getSubscriptionByEmail($request->customer_email);
         if ($shouldBeBlocked) {
+            Log::error("Subscription with email {$request->customer_email} has already been stored");
             abort(403);
         }
 
         //the url to be returned
-        $randomString = substr(str_shuffle(MD5(microtime())), 0, 22);
-        $formUrl = URL::to('/subscriptions') . "/" . $randomString;
+        $randomString = substr(str_shuffle(MD5(microtime())), 0, 22);        
 
         //create a to-be-confirmed subscription
         $pendingSub = Subscription::create([
@@ -84,17 +91,20 @@ class SubscriptionController extends Controller
 
         if (!$pendingSub) {
             //TODO: refactor the error management
+            Log::error("Cannot create pending subscription with email {$request->customer_email} and token {$randomString}");
             abort(500);
         }
 
+        Log::info("Pending Subscription for email {$request->customer_email} has been created!", [__CLASS__, __FUNCTION__]);
         return Redirect::route('subscriptions.index');
     }
 
     public function fill(string $token)
-    {           
+    { 
+
         try {
             $subscriptionToFill = Subscription::where('token', '=', $token)
-            ->where('status', Subscription::PENDING)
+            ->where('status', Subscription::getStatusID('PENDING'))
             ->firstOrFail();
         } catch (Exception $modelNotFoundException) {
             Log::error("Cannot Find pending Subscription to fill");
@@ -102,12 +112,13 @@ class SubscriptionController extends Controller
         }
 
         $subscriptionToFill->update([
-            'expires_at' => Carbon::now()->addMinutes(10),
-            //'status' => Subscription::TO_BE_COMPLETED
+            'expires_at' => Carbon::now()->addMinutes(10),            
         ]);
 
+        Log::info("Can Complete Subscription!!!", [__CLASS__, __FUNCTION__]);
+
         //should return form
-        return Inertia::render('Subscription/CompleteSubscription', ['sub_token' => $token]);
+        return Inertia::render('Public/CompleteSubscription', ['sub_token' => $token]);
     }
 
     public function complete(Request $request)
@@ -147,6 +158,8 @@ class SubscriptionController extends Controller
          if(!$customer){
              Log::error("Cannot create customer");
          }
+
+         Log::info("Customer with ID {$customer->id} successfully created", [__CLASS__, __FUNCTION__]);
 
         //complete the subscription
         $subToBeCompleted = Subscription::where('token', $request->input('sub_token'))

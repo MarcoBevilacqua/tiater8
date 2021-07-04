@@ -1,7 +1,7 @@
 <template>
   <breeze-authenticated-layout>
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">Users</h2>
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">Subsription</h2>
     </template>
     <container>
       <div class="mt-10 sm:mt-5 px-24">
@@ -10,7 +10,7 @@
             <form @submit.prevent="submit">
               <div class="shadow overflow-hidden sm:rounded-md">
                 <div class="px-4 py-3 bg-gray-50 text-center sm:px-6">
-                  <p>Completa la tua iscrizione</p>
+                  <p>Modifica Sottoscrizione</p>
                 </div>
                 <div class="px-4 py-5 bg-white sm:p-6">
                   <div class="grid grid-cols-6 gap-6">
@@ -21,10 +21,10 @@
                         >First name</label
                       >
                       <input
-                        v-model="form.first_name"
+                        v-model="form.subscription_email"
                         type="text"
-                        name="first_name"
-                        id="first_name"
+                        name="subscription_email"
+                        id="subscription_email"
                         autocomplete="given-name"
                         class="
                           mt-1

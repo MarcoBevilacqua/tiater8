@@ -19,7 +19,17 @@
                                     Dashboard
                                 </breeze-nav-link>
                             </div>
-                            <!-- TODO: Add link in navs + add full width to this component -->                       
+                            <!-- TODO: Add link in navs + add full width to this component -->   
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <breeze-nav-link :href="route('customers')" :active="route().current('customers')">
+                                    Customers
+                                </breeze-nav-link>
+                            </div>             
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <breeze-nav-link :href="route('subscriptions.index')" :active="route().current('subscriptions.index')">
+                                    Subscriptions
+                                </breeze-nav-link>
+                            </div>         
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -112,6 +122,10 @@
             BreezeDropdownLink,
             BreezeNavLink,
             BreezeResponsiveNavLink,
+        },
+
+        mounted(){
+            console.log(Ziggy.routes);
         },
 
         data() {

@@ -30,17 +30,21 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-//the init subscription generation link view
-Route::get('/subscriptions/generate', [SubscriptionController::class, 'generate']);
-//the init subscription
-Route::post('/subscriptions/init', [SubscriptionController::class, 'init']);
-//the subscription form visualization
-Route::get('/subscriptions/{token}', [SubscriptionController::class, 'fill']);
-//the subscription submit
-Route::post('/subscriptions/complete', [SubscriptionController::class, 'complete']);
+Route::prefix('public')->group(function(){
+    //the subscription form visualization (should be public)
+    Route::get('/subscriptions/{token}', [SubscriptionController::class, 'fill']);
+    //the subscription submit (should be public)
+    Route::post('/subscriptions/complete', [SubscriptionController::class, 'complete']);
+});
 
-Route::resource('/subscriptions', SubscriptionController::class);
-
-Route::get('/customers', [CustomerController::class, 'index']);
+Route::middleware(['auth', 'verified'])->group(function () {
+    //the init subscription generation link view
+    Route::get('/subscriptions/generate', [SubscriptionController::class, 'generate'])->name('subscriptions.generate');
+    //the init subscription
+    Route::post('/subscriptions/init', [SubscriptionController::class, 'init']);
+    Route::resource('/subscriptions', SubscriptionController::class);
+    
+    Route::get('/customers', [CustomerController::class, 'index'])->name('customers');
+});
 
 require __DIR__.'/auth.php';
