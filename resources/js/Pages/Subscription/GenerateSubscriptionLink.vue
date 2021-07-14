@@ -18,8 +18,8 @@
       >
         <div class="max-w-md w-full space-y-8">
           <div>
-            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-              Generate Link
+            <h2 class="mt-6 text-center text-2xl font-extrabold text-gray-900">
+              Genera Link sottoscrizione
             </h2>
           </div>
           <form class="mt-8 space-y-6" @submit.prevent="submit">
@@ -46,14 +46,14 @@
                     border border-gray-300
                     placeholder-gray-500
                     text-gray-900
-                    rounded-t-md
+                    rounded-md
                     focus:outline-none
                     focus:ring-indigo-500
                     focus:border-indigo-500
                     focus:z-10
                     sm:text-sm
                   "
-                  placeholder="Email address"
+                  placeholder="Inserisci indirizzo mail"
                 />
               </div>
             </div>
@@ -87,11 +87,8 @@
                     value="generate"
                   />
                 </span>
-                Generate Link
+                Genera Link
               </button>
-            </div>
-            <div>
-              <h1 v-if="form_url">Vue is awesome!</h1>
             </div>
           </form>
         </div>

@@ -27,7 +27,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    return Inertia::render('Dashboard')->with('generateLink', URL::route('subscriptions.generate'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::prefix('public')->group(function(){
