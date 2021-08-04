@@ -52,7 +52,31 @@ class SubscriptionController extends Controller
     public function edit(int $id)
     {
         $subscription = Subscription::find($id)->firstOrFail();
-        return Inertia::render('Subscriptions/Form', $subscription);
+        return Inertia::render('Subscription/Form', [
+            'subscription' => [
+            'id' => $subscription->id,
+            'subscription_email' => $subscription->subscription_email,
+            'status' => $subscription->status
+        ],
+            '_method'  => 'put',
+            'av_statuses' => Subscription::STATUSES
+    ]);
+    }
+
+    public function update(Request $request)
+    {
+        //dd($request->all());
+        Log::info("Trying to set status = {$request->input('status')} on subsription");
+        Subscription::updateOrCreate (
+            ['id' => $request->id],
+            [
+            'status' => Subscription::STATUSES[$request->input('status')],
+            'subscription_email' => $request->input('subscription_email'),
+        ]
+        );
+
+        return Redirect::route('subscriptions.index');
+
     }
 
     public function generate()
@@ -81,7 +105,7 @@ class SubscriptionController extends Controller
         }
 
         //the url to be returned
-        $randomString = substr(str_shuffle(MD5(microtime())), 0, 22);        
+        $randomString = substr(str_shuffle(MD5(microtime())), 0, 22);
 
         //create a to-be-confirmed subscription
         $pendingSub = Subscription::create([
@@ -103,8 +127,7 @@ class SubscriptionController extends Controller
     }
 
     public function fill(string $token)
-    { 
-
+    {
         try {
             $subscriptionToFill = Subscription::where('token', '=', $token)
             ->where('status', Subscription::getStatusID('PENDING'))
@@ -115,7 +138,7 @@ class SubscriptionController extends Controller
         }
 
         $subscriptionToFill->update([
-            'expires_at' => Carbon::now()->addMinutes(10),            
+            'expires_at' => Carbon::now()->addMinutes(10),
         ]);
 
         Log::info("Can Complete Subscription!!!", [__CLASS__, __FUNCTION__]);
@@ -166,14 +189,14 @@ class SubscriptionController extends Controller
              'address' => $request->input('address'),
              'postal_code' => $request->input('postal_code'),
              'contact_type' => $request->input('contact_type'),
-             'activity' => $request->input('activity')         
+             'activity' => $request->input('activity')
             ]);
 
-         if(!$customer){
-             Log::error("Cannot create customer");
-         }
+        if (!$customer) {
+            Log::error("Cannot create customer");
+        }
 
-         Log::info("Customer with ID {$customer->id} successfully created", [__CLASS__, __FUNCTION__]);
+        Log::info("Customer with ID {$customer->id} successfully created", [__CLASS__, __FUNCTION__]);
 
         //complete the subscription
         $subToBeCompleted = Subscription::where('token', $request->input('sub_token'))
@@ -182,7 +205,7 @@ class SubscriptionController extends Controller
              'status' => Subscription::TO_BE_CONFIRMED,
          ]);
 
-         /** TODO: Redirect on public simple view */
+        /** TODO: Redirect on public simple view */
         return redirect('/subscriptions');
     }
 }
