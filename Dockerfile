@@ -1,65 +1,50 @@
-#++++++++++++++++++++++++++++++++++++++
-# PHP application Docker container
-#++++++++++++++++++++++++++++++++++++++
-#
-# PHP-Versions:
-#  ubuntu-12.04 -> PHP 5.3         (precise)  LTS
-#  ubuntu-14.04 -> PHP 5.5         (trusty)   LTS
-#  ubuntu-15.04 -> PHP 5.6         (vivid)
-#  ubuntu-15.10 -> PHP 5.6         (wily)
-#  ubuntu-16.04 -> PHP 7.0         (xenial)   LTS
-#  centos-7     -> PHP 5.4
-#  debian-7     -> PHP 5.4         (wheezy)
-#  debian-8     -> PHP 5.6 and 7.x (jessie)
-#  debian-9     -> PHP 7.0         (stretch)
-#
-# Apache:
-#   webdevops/php-apache-dev:5.6
-#   webdevops/php-apache-dev:7.0
-#   webdevops/php-apache-dev:7.1
-#   webdevops/php-apache-dev:ubuntu-12.04
-#   webdevops/php-apache-dev:ubuntu-14.04
-#   webdevops/php-apache-dev:ubuntu-15.04
-#   webdevops/php-apache-dev:ubuntu-15.10
-#   webdevops/php-apache-dev:ubuntu-16.04
-#   webdevops/php-apache-dev:centos-7
-#   webdevops/php-apache-dev:debian-7
-#   webdevops/php-apache-dev:debian-8
-#   webdevops/php-apache-dev:debian-8-php7
-#   webdevops/php-apache-dev:debian-9
-#
-# Nginx:
-#   webdevops/php-nginx-dev:5.6
-#   webdevops/php-nginx-dev:7.0
-#   webdevops/php-nginx-dev:7.1
-#   webdevops/php-nginx-dev:ubuntu-12.04
-#   webdevops/php-nginx-dev:ubuntu-14.04
-#   webdevops/php-nginx-dev:ubuntu-15.04
-#   webdevops/php-nginx-dev:ubuntu-15.10
-#   webdevops/php-nginx-dev:ubuntu-16.04
-#   webdevops/php-nginx-dev:centos-7
-#   webdevops/php-nginx-dev:debian-7
-#   webdevops/php-nginx-dev:debian-8
-#   webdevops/php-nginx-dev:debian-8-php7
-#   webdevops/php-nginx-dev:debian-9
-#
-# HHVM:
-#   webdevops/hhvm-apache
-#   webdevops/hhvm-nginx
-#
-#++++++++++++++++++++++++++++++++++++++
+FROM php:7.4-fpm
 
-FROM webdevops/php-nginx-dev:7.4
+# Copy composer.lock and composer.json
+COPY composer.lock composer.json /var/www/
 
-ENV PROVISION_CONTEXT "development"
+# Set working directory
+WORKDIR /var/www
 
-# Deploy scripts/configurations
-COPY etc/             /opt/docker/etc/
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpng-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    locales \
+    libzip-dev \
+    zip \
+    jpegoptim optipng pngquant gifsicle \
+    vim \
+    unzip \
+    git \
+    curl
 
-RUN ln -sf /opt/docker/etc/cron/crontab /etc/cron.d/docker-boilerplate \
-    && chmod 0644 /opt/docker/etc/cron/crontab \
-    && echo >> /opt/docker/etc/cron/crontab \
-    && ln -sf /opt/docker/etc/php/development.ini /opt/docker/etc/php/php.ini
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Configure volume/workdir
-WORKDIR /app/
+# Install extensions
+RUN docker-php-ext-install pdo_mysql zip exif pcntl 
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN docker-php-ext-install gd
+
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Add user for laravel application
+RUN groupadd -g 1000 www
+RUN useradd -u 1000 -ms /bin/bash -g www www
+
+# Copy existing application directory contents
+COPY . /var/www
+
+# Copy existing application directory permissions
+COPY --chown=www:www . /var/www
+
+# Change current user to www
+USER www
+
+# Expose port 9000 and start php-fpm server
+EXPOSE 9000
+CMD ["php-fpm"]
