@@ -11,7 +11,7 @@ services:
     restart: unless-stopped
     tty: true
     environment:
-      SERVICE_NAME: app
+      SERVICE_NAME: tiater
       SERVICE_TAGS: dev
     volumes:
        - ./:/var/www
@@ -30,7 +30,7 @@ services:
       - ./:/var/www
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
     ports:
-      - "8080:80"
+      - "80:80"
       - "443:443"
     networks:
       - app-network
@@ -43,6 +43,9 @@ services:
     tty: true
     ports:
       - "13306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql/
+      - ./docker/mysql/conf/mysql-docker.cnf:/etc/mysql/my.cnf
     environment:
       MYSQL_DATABASE: database
       MYSQL_USER: ${DB_USERNAME}
@@ -72,9 +75,5 @@ networks:
     driver: bridge
 
 volumes:
-  db:
-  #postgres:
-  #solr:
-  #elasticsearch:
-  #redis:
-  #phpmyadmin:
+  dbdata:
+    driver: local
