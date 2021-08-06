@@ -108,21 +108,25 @@ class SubscriptionController extends Controller
         $randomString = substr(str_shuffle(MD5(microtime())), 0, 22);
 
         //create a to-be-confirmed subscription
-        $pendingSub = Subscription::create([
-            'subscription_email' => $request->customer_email,
-            'status' => Subscription::PENDING,
-            'token' => $randomString,
-            'customer_id' => null
-        ]);
-
-        if (!$pendingSub) {
-            //TODO: refactor the error management
+        try {
+            Subscription::create([
+                'subscription_email' => $request->customer_email,
+                'status' => Subscription::PENDING,
+                'token' => $randomString,
+                'customer_id' => null
+            ]);
+        } catch (Exception $exception) {
             Log::error("Cannot create pending subscription with email {$request->customer_email} and token {$randomString}");
             abort(500);
         }
 
         Log::info("Pending Subscription for email {$request->customer_email} has been created!", [__CLASS__, __FUNCTION__]);
-        Mail::to($request->customer_email)->send(new SubscriptionToComplete(URL::to('/public/subscriptions/' . $randomString)));
+
+        try {
+            Mail::to($request->customer_email)->send(new SubscriptionToComplete(URL::to('/public/subscriptions/' . $randomString)));
+        } catch(Exception $exception) {
+            Log::error("Cannot send Mail to {$request->customer_email}: " . $exception->getMessage());
+        }
         return Redirect::route('subscriptions.index');
     }
 
@@ -133,7 +137,7 @@ class SubscriptionController extends Controller
             ->where('status', Subscription::getStatusID('PENDING'))
             ->firstOrFail();
         } catch (Exception $modelNotFoundException) {
-            Log::error("Cannot Find pending Subscription to fill");
+            Log::error("Cannot Find pending Subscription to fill: " . $modelNotFoundException->getMessage());
             abort(403);
         }
 
