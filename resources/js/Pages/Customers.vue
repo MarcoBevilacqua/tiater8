@@ -12,6 +12,7 @@
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">First Name</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Name</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -36,7 +37,14 @@
                                     {{ customer.email }}
                                 </div>
                             </div>
-                        </td>                                    
+                        </td>  
+                        <td class="px-6 py- 4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="text-sm font-medium text-gray-900">
+                                    <inertia-link class="text-indigo-600 hover:text-indigo-900" :href="customer.edit">Edit</inertia-link>
+                                </div>
+                            </div>
+                        </td>                                                             
                     </tr>
                 </tbody>
             </table>            

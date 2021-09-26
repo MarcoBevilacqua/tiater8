@@ -37,7 +37,6 @@ Route::prefix('public')->group(function(){
     Route::get('/subscriptions/{token}', [SubscriptionController::class, 'fill']);
     //the subscription submit
     Route::post('/subscriptions/complete', [SubscriptionController::class, 'complete']);
-
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -47,7 +46,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/subscriptions/init', [SubscriptionController::class, 'init']);
     Route::resource('/subscriptions', SubscriptionController::class);
     
-    Route::get('/customers', [CustomerController::class, 'index'])->name('customers');
+    Route::resource('/customers', CustomerController::class);
+
 });
 
 require __DIR__.'/auth.php';

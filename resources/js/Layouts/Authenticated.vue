@@ -21,7 +21,7 @@
                             </div>
                             <!-- TODO: Add link in navs + add full width to this component -->   
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <breeze-nav-link :href="route('customers')" :active="route().current('customers')">
+                                <breeze-nav-link :href="route('customers.index')" :active="route().current('customers')">
                                     Customers
                                 </breeze-nav-link>
                             </div>             
