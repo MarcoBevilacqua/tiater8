@@ -31,10 +31,13 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::prefix('public')->group(function(){
-    //the subscription form visualization (should be public)
+    //the subscription confirmation
+    Route::get('/subscriptions/confirmed', [SubscriptionController::class, 'confirmed']);
+    //the subscription form visualization
     Route::get('/subscriptions/{token}', [SubscriptionController::class, 'fill']);
-    //the subscription submit (should be public)
+    //the subscription submit
     Route::post('/subscriptions/complete', [SubscriptionController::class, 'complete']);
+
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
