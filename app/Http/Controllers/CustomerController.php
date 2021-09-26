@@ -7,7 +7,7 @@ use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Redirect;
 
 
 class CustomerController extends Controller
@@ -34,8 +34,9 @@ class CustomerController extends Controller
      */
     public function edit(int $id)
     {
+        Log::info("Customer id: {$id}");
         try {
-            $customer = Customer::find($id)->firstOrFail();
+            $customer = Customer::findOrFail($id);
             Log::info("Customer: {$customer}");
         } catch (\Exception $ex) 
         {
@@ -52,5 +53,21 @@ class CustomerController extends Controller
         ],
             '_method'  => 'put'     
     ]);
+    }
+
+    public function update(Request $request)
+    {        
+        Log::info("updating customer with id: {$request->input('id')}");
+        Customer::updateOrCreate(
+            ['id' => $request->input('id')],
+            [
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+        ]
+        );
+
+        return Redirect::route('customers.index');
+
     }
 }

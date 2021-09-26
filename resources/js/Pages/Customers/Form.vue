@@ -11,12 +11,66 @@
                   <div class="grid grid-cols-6 gap-6">
                     <div class="col-span-6 sm:col-span-3">
                       <label
+                        for="first_name"
+                        class="block text-sm font-medium text-gray-700"
+                        >Nome</label
+                      >
+                      <input
+                        v-model="form.first_name"
+                        type="text"
+                        name="first_name"
+                        id="first_name"                        
+                        class="
+                          mt-1
+                          focus:ring-indigo-500
+                          focus:border-indigo-500
+                          block
+                          w-full
+                          shadow-sm
+                          sm:text-sm
+                          border-gray-300
+                          rounded-md
+                        "
+                      />
+                    </div>
+                  </div>
+                  
+                  <div class="grid grid-cols-6 gap-6">
+                    <div class="col-span-6 sm:col-span-3">
+                      <label
+                        for="last_name"
+                        class="block text-sm font-medium text-gray-700"
+                        >Cognome</label
+                      >
+                      <input
+                        v-model="form.last_name"
+                        type="text"
+                        name="last_name"
+                        id="last_name"                        
+                        class="
+                          mt-1
+                          focus:ring-indigo-500
+                          focus:border-indigo-500
+                          block
+                          w-full
+                          shadow-sm
+                          sm:text-sm
+                          border-gray-300
+                          rounded-md
+                        "
+                      />
+                    </div>
+                  </div>
+               
+                  <div class="grid grid-cols-6 gap-6">
+                    <div class="col-span-6 sm:col-span-3">
+                      <label
                         for="email"
                         class="block text-sm font-medium text-gray-700"
                         >Email</label
                       >
                       <input
-                        v-model="form.subscription_email"
+                        v-model="form.email"
                         type="email"
                         name="subscription_email"
                         id="subscription_email"
@@ -35,33 +89,7 @@
                       />
                     </div>
                   </div>
-                  <div class="grid grid-cols-6 gap-6">
-                    <div class="col-span-6 sm:col-span-3">
-                      <label
-                        for="status"
-                        class="block text-sm font-medium text-gray-700"
-                        >Status</label
-                      >
-                      <select
-                        v-model="form.status"
-                        name="status"
-                        id="status"
-                        class="
-                          mt-1
-                          focus:ring-indigo-500
-                          focus:border-indigo-500
-                          block
-                          w-full
-                          shadow-sm
-                          sm:text-sm
-                          border-gray-300
-                          rounded-md
-                        "
-                      >
-                        <option v-for="(key, value) in av_statuses"  :value="value" :key="value">{{key}}</option>
-                      </select>
-                    </div>  
-                  </div>
+                  
                 </div>
                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
                   <button
@@ -108,8 +136,7 @@ export default {
 
   props: {
     customer: Array,
-    _method: String,
-    av_statuses: Array
+    _method: String,    
   },
 
   data() {
@@ -125,7 +152,7 @@ export default {
 
   methods: {
     update() {
-      this.form.post(this.route("subscriptions.update", this.subscription.id), {
+      this.form.post(this.route("customers.update", this.customer.id), {
         onSuccess: () => this.form.reset(),
       });
     },

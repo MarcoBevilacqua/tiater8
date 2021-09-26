@@ -51,7 +51,7 @@ class SubscriptionController extends Controller
 
     public function edit(int $id)
     {
-        $subscription = Subscription::find($id)->firstOrFail();
+        $subscription = Subscription::findOrFail($id);
         Log::info("Subscription: {$subscription}");
         return Inertia::render('Subscription/Form', [
             'subscription' => [
