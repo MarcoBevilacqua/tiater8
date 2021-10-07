@@ -40,7 +40,7 @@ class SubscriptionController extends Controller
                 return [
                     'email' => $subscription->subscription_email,
                     'created' => $subscription->created_at->format('d/m/Y'),
-                    'status' => $subscription->status,
+                    'status' => SubscriptionService::getSubFancyStatusLabel($subscription->status),
                     'edit' => URL::route('subscriptions.edit', $subscription)
                 ];
             }),
@@ -60,15 +60,20 @@ class SubscriptionController extends Controller
             'status' => Subscription::getStatusID($subscription->status)
         ],
             '_method'  => 'put',
+            /**
+             * TODO: GET STATUS LABELS
+             */
             'av_statuses' => Subscription::STATUSES
     ]);
     }
 
     public function update(Request $request)
     {
-        //dd($request->all());
+        /**
+         * TODO: VALIDATE REQUEST!!!
+         */
         Log::info("Trying to set status = {$request->input('status')} on subsription");
-        Subscription::updateOrCreate (
+        Subscription::updateOrCreate(
             ['id' => $request->id],
             [
             'status' => Subscription::STATUSES[$request->input('status')],
@@ -77,7 +82,6 @@ class SubscriptionController extends Controller
         );
 
         return Redirect::route('subscriptions.index');
-
     }
 
     public function generate()
@@ -125,7 +129,7 @@ class SubscriptionController extends Controller
 
         try {
             Mail::to($request->customer_email)->send(new SubscriptionToComplete(URL::to('/public/subscriptions/' . $randomString)));
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
             Log::error("Cannot send Mail to {$request->customer_email}: " . $exception->getMessage());
         }
         return Redirect::route('subscriptions.index');
@@ -167,9 +171,7 @@ class SubscriptionController extends Controller
             abort(400);
         }
 
-        /**
-         * checking if data is correct
-         */
+        //checking if data is correct
         $canHandleSubscription = SubscriptionService::subscriptionCanBeConfirmed($request->input('sub_token'));
 
         if (!$canHandleSubscription) {
@@ -185,9 +187,8 @@ class SubscriptionController extends Controller
         Log::info($request->all());
 
         //Create the customer
-        /**TODO: check phone and birth field */
+        //TODO: check phone and birth field
         try {
-        
             $customer = Customer::create([
                 'first_name' => $request->input('first_name'),
                 'last_name' => $request->input('last_name'),
@@ -217,16 +218,18 @@ class SubscriptionController extends Controller
              'status' => Subscription::TO_BE_CONFIRMED,
          ]);
 
-         Log::info("redirecting to subscriptions/" . $request->input('sub_token') . "/confirmed");
+        Log::info("redirecting to subscriptions/" . $request->input('sub_token') . "/confirmed");
 
         /** TODO: Redirect on public simple view */
         return redirect()
-            ->action([SubscriptionController::class, 'confirmed'], 
-            ['email' => $request->input('email')]);
+            ->action(
+                [SubscriptionController::class, 'confirmed'],
+                ['email' => $request->input('email')]
+            );
     }
 
     public function confirmed()
-    {       
+    {
         return Inertia::render('Subscription/Confirmed');
     }
 }
