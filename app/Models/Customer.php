@@ -9,7 +9,8 @@ class Customer extends Model
 {
     use HasFactory;
 
-    public function subscriptions() {
+    public function subscriptions()
+    {
         return $this->hasMany(Subscription::class, 'customer_id');
     }
 
@@ -19,6 +20,7 @@ class Customer extends Model
         'email',
         'password',
         'city',
+        'phone',
         'resident',
         'address',
         'postal_code',
@@ -29,5 +31,4 @@ class Customer extends Model
     protected $hidden = [
         'password'
     ];
-
 }
