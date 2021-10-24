@@ -30,6 +30,9 @@ class SubscriptionToComplete extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.complete-subscription', ['url' => $this->url]);
+        return $this
+        ->from('no-reply@piccolacompagniaimpertinente.com')
+        ->subject('Tesseramento Piccola Compagnia Impertinente')
+        ->markdown('emails.complete-subscription', ['url' => $this->url]);
     }
 }

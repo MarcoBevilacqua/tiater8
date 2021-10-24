@@ -76,7 +76,7 @@ class SubscriptionTest extends TestCase
         $this->assertDatabaseCount('subscriptions', 1);
         $this->assertDatabaseHas('subscriptions', ['expires_at' => null]);
         //assert response
-        $this->get(URL::to('/public/subscriptions') . '/' . 
+        $this->get(URL::to('/public/subscriptions') . '/' .
         Subscription::first()->token)->assertStatus(200);
         //assert subscription has changed
         $this->assertDatabaseHas('subscriptions', [
@@ -110,11 +110,11 @@ class SubscriptionTest extends TestCase
             'email' => 'example@mail.com',
             'first_name' => 'Marco',
             'last_name' => 'Bevilacqua',
-            'password' => NULL
+            'password' => null
         ]);
 
         $this->assertDatabaseHas('subscriptions', [
-            'status' => Subscription::getStatusId(Subscription::TO_BE_CONFIRMED)
+            'status' => Subscription::TO_BE_CONFIRMED
         ]);
     }
 }

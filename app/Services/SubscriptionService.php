@@ -8,13 +8,18 @@ use Carbon\Carbon;
 class SubscriptionService
 {
     private static $statusLabels = [
-        'PENDING' => 'In attesa di risposta',
-        'TO_BE_COMPLETED' => 'Da completare',
-        'TO_BE_CONFIRMED' => 'Da confermare',
-        'ACTIVE' => 'Attiva',
-        'INACTIVE' => 'Inattiva',
-        'EXPIRED' => 'Scaduta'
+        Subscription::PENDING => 'In attesa di risposta',
+        Subscription::TO_BE_COMPLETED => 'Da completare',
+        Subscription::TO_BE_CONFIRMED => 'Da confermare',
+        Subscription::ACTIVE => 'Attiva',
+        Subscription::INACTIVE => 'Inattiva',
+        Subscription::EXPIRED => 'Scaduta'
     ];
+
+    public static function getAllSubFancyStatusLabel()
+    {
+        return self::$statusLabels;
+    }
 
     public static function getSubFancyStatusLabel(string $status)
     {

@@ -18,6 +18,9 @@ class SubscriptionFilled extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.confirmed-subscription');
+        return $this
+            ->from('no-reply@piccolacompagniaimpertinente.com')
+            ->subject('Tesseramento Completato')
+            ->markdown('emails.confirmed-subscription');
     }
 }

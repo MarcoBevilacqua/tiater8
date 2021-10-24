@@ -58,13 +58,13 @@ class SubscriptionController extends Controller
             'subscription' => [
             'id' => $subscription->id,
             'subscription_email' => $subscription->subscription_email,
-            'status' => Subscription::getStatusID($subscription->status)
+            'status' => $subscription->status
         ],
             '_method'  => 'put',
             /**
              * TODO: GET STATUS LABELS
              */
-            'av_statuses' => Subscription::STATUSES
+            'av_statuses' => SubscriptionService::getAllSubFancyStatusLabel()
     ]);
     }
 
@@ -77,7 +77,7 @@ class SubscriptionController extends Controller
         Subscription::updateOrCreate(
             ['id' => $request->id],
             [
-            'status' => Subscription::STATUSES[$request->input('status')],
+            'status' => $request->input('status'),
             'subscription_email' => $request->input('subscription_email'),
         ]
         );
@@ -140,7 +140,7 @@ class SubscriptionController extends Controller
     {
         try {
             $subscriptionToFill = Subscription::where('token', '=', $token)
-            ->where('status', Subscription::getStatusID('PENDING'))
+            ->where('status', Subscription::PENDING)
             ->firstOrFail();
         } catch (Exception $modelNotFoundException) {
             Log::error("Cannot Find pending Subscription to fill: " . $modelNotFoundException->getMessage());

@@ -17,13 +17,6 @@ class Subscription extends Model
         'expires_at'
     ];
 
-    const PENDING = 'PENDING';
-    const TO_BE_COMPLETED = 'TO_BE_COMPLETED';
-    const TO_BE_CONFIRMED = 'TO_BE_CONFIRMED';
-    const ACTIVE = 'ACTIVE';
-    const INACTIVE = 'INACTIVE';
-    const EXPIRED = 'EXPIRED';
-
     /**
      * the subscription statuses
      *
@@ -34,44 +27,13 @@ class Subscription extends Model
      * Inactive: a cancelled subscription
      * Expired: an expired subscription (user has not completed the subscription before the expiration)
      */
-    public const STATUSES = [
-        0 => self::PENDING,
-        1 => self::TO_BE_COMPLETED,
-        2 => self::TO_BE_CONFIRMED,
-        3 => self::ACTIVE,
-        4 => self::INACTIVE,
-        5 => self::EXPIRED
-    ];
 
-    /**
-     * returns the id of a status
-     *
-     * @param string $status the subscription status
-     * @return int statusID
-     */
-    public static function getStatusID($status)
-    {
-        return array_search($status, self::STATUSES);
-    }
-   
-    /**
-    * get subscription status
-    */
-    public function getStatusAttribute()
-    {
-        return self::STATUSES[ $this->attributes['status'] ];
-    }
-
-    /**
-      * set subscription status
-      */
-    public function setStatusAttribute($value)
-    {
-        $statusId = $this->getStatusID($value);
-        if ($statusId) {
-            $this->attributes['status'] = $statusId;
-        }
-    }
+    const PENDING = 0;
+    const TO_BE_COMPLETED = 1;
+    const TO_BE_CONFIRMED = 2;
+    const ACTIVE = 3;
+    const INACTIVE = 4;
+    const EXPIRED = 5;
 
     /**
      * subscription/customer relationshib
