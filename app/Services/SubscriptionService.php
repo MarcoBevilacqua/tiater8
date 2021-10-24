@@ -16,14 +16,46 @@ class SubscriptionService
         Subscription::EXPIRED => 'Scaduta'
     ];
 
+    private static $activityLabels = [
+
+        Subscription::ACTIVITY_CHILD => 'Attività bambini',
+        Subscription::ACTIVITY_ADULT => 'Attività adulti',
+        Subscription::ACTIVITY_BOTH => 'Tutte le attività'
+    ];
+
+    private static $contactLabels = [
+        Subscription::PHONE_CONTACT => 'via telefono',
+        Subscription::WHATSAPP_CONTACT => 'via whatsapp',
+    ];
+
     public static function getAllSubFancyStatusLabel()
     {
         return self::$statusLabels;
     }
+    
+    public static function getAllFancyActivityLabels()
+    {
+        return self::$activityLabels;
+    }
 
-    public static function getSubFancyStatusLabel(string $status)
+    public static function getAllFancyContactLabels()
+    {
+        return self::$contactLabels;
+    }
+
+    public static function getSubFancyStatusLabel(int $status)
     {
         return self::$statusLabels[$status];
+    }
+
+    public static function getFancyActivityLabel(int $activity)
+    {
+        return self::$activityLabels[$activity];
+    }
+
+    public static function getFancyContactLabel(int $contact)
+    {
+        return self::$contactLabels[$status];
     }
 
     public static function getSubscriptionByEmail(string $email)

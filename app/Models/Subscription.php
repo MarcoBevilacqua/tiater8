@@ -14,7 +14,9 @@ class Subscription extends Model
         'subscription_email',
         'status',
         'token',
-        'expires_at'
+        'expires_at',
+        'contact_type',
+        'activity'
     ];
 
     /**
@@ -34,6 +36,19 @@ class Subscription extends Model
     const ACTIVE = 3;
     const INACTIVE = 4;
     const EXPIRED = 5;
+
+    /**
+     * the activity constants
+     */
+    const ACTIVITY_CHILD = 0;
+    const ACTIVITY_ADULT = 1;
+    const ACTIVITY_BOTH = 2;
+
+    /**
+     * the contact options
+     */
+    const PHONE_CONTACT = 0;
+    const WHATSAPP_CONTACT = 1;
 
     /**
      * subscription/customer relationshib

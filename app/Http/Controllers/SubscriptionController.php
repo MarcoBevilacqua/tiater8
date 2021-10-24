@@ -50,6 +50,10 @@ class SubscriptionController extends Controller
         );
     }
 
+    /**
+     * @param int $id
+     * @return Inertia view
+     */
     public function edit(int $id)
     {
         $subscription = Subscription::findOrFail($id);
@@ -65,7 +69,7 @@ class SubscriptionController extends Controller
              * TODO: GET STATUS LABELS
              */
             'av_statuses' => SubscriptionService::getAllSubFancyStatusLabel()
-    ]);
+        ]);
     }
 
     public function update(Request $request)
@@ -85,6 +89,10 @@ class SubscriptionController extends Controller
         return Redirect::route('subscriptions.index');
     }
 
+    /**
+     * render the view to generate invitation mail
+     * @return Inertia view
+     */
     public function generate()
     {
         return Inertia::render('Subscription/GenerateSubscriptionLink', []);
@@ -122,14 +130,16 @@ class SubscriptionController extends Controller
                 'customer_id' => null
             ]);
         } catch (Exception $exception) {
-            Log::error("Cannot create pending subscription with email {$request->customer_email} and token {$randomString}");
+            Log::error("Cannot create pending subscription with email {$request->customer_email} and token {$randomString}: {$exception->getMessage()}");
             abort(500);
         }
 
         Log::info("Pending Subscription for email {$request->customer_email} has been created!", [__CLASS__, __FUNCTION__]);
 
         try {
-            Mail::to($request->customer_email)->send(new SubscriptionToComplete(URL::to('/public/subscriptions/' . $randomString)));
+            Mail::to($request->customer_email)
+            ->send(new SubscriptionToComplete(URL::signedRoute('subscriptions.fill', [
+                'token' => $randomString])));
         } catch (Exception $exception) {
             Log::error("Cannot send Mail to {$request->customer_email}: " . $exception->getMessage());
         }
@@ -154,7 +164,9 @@ class SubscriptionController extends Controller
         Log::info("Subscription can be completed!!!", [__CLASS__, __FUNCTION__]);
 
         //should return form
-        return Inertia::render('Public/CompleteSubscription', ['sub_token' => $token]);
+        return Inertia::render('Public/CompleteSubscription', ['sub_token' => $token,
+            'activities' => SubscriptionService::getAllFancyActivityLabels(),
+            'contacts' => SubscriptionService::getAllFancyContactLabels(),]);
     }
 
     public function complete(Request $request)
@@ -201,8 +213,6 @@ class SubscriptionController extends Controller
                 'resident' => $request->input('city_res'),
                 'address' => $request->input('address'),
                 'postal_code' => $request->input('postal_code'),
-                'contact_type' => $request->input('contact_type'),
-                'activity' => $request->input('activity')
                 ]);
         } catch (\Exception $ex) {
             Log::error("Cannot create customer with data {$request->all()}: Error: {$ex->getMessage()}");
@@ -222,6 +232,8 @@ class SubscriptionController extends Controller
          ->first()->update([
              'customer_id' => $customer->id,
              'status' => Subscription::TO_BE_CONFIRMED,
+             'contact_type' => $request->input('contact_type'),
+             'activity' => $request->input('activity')
          ]);
 
         Log::info("redirecting to subscriptions/" . $request->input('sub_token') . "/confirmed");

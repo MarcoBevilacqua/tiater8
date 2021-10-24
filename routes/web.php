@@ -35,7 +35,7 @@ Route::prefix('public')->group(function () {
     //the subscription confirmation
     Route::get('/subscriptions/confirmed', [SubscriptionController::class, 'confirmed']);
     //the subscription form visualization
-    Route::get('/subscriptions/{token}', [SubscriptionController::class, 'fill']);
+    Route::get('/subscriptions/fill/{token}', [SubscriptionController::class, 'fill'])->name('subscriptions.fill');
     //the subscription submit
     Route::post('/subscriptions/complete', [SubscriptionController::class, 'complete']);
 });
@@ -45,6 +45,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/subscriptions/generate', [SubscriptionController::class, 'generate'])->name('subscriptions.generate');
     //the init subscription
     Route::post('/subscriptions/init', [SubscriptionController::class, 'init']);
+    //the subscription module PDF preview
     Route::get('/subscriptions/module/{subscriptionId}', [PDFController::class, 'subscriptionModule'])->name('pdf.subscriptions.module');
 
     Route::resource('/subscriptions', SubscriptionController::class);

@@ -25,9 +25,7 @@ class Customer extends Model
         'province',
         'resident',
         'address',
-        'postal_code',
-        'contact_type',
-        'activity'
+        'postal_code'
     ];
 
     protected $hidden = [

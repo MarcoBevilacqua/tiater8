@@ -20,8 +20,6 @@ class AddInfoToCustomers extends Migration
             $table->string('address');
             $table->string('postal_code');
             $table->string('province');
-            $table->integer('contact_type');
-            $table->integer('activity');
         });
     }
 

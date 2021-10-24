@@ -184,8 +184,7 @@
                                         <label
                                             for="contact_type"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Desidero essere contattato
-                                            via</label
+                                            >Desidero essere contattato</label
                                         >
                                         <select
                                             v-model="form.contact_type"
@@ -194,11 +193,12 @@
                                             id="contact_type"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                         >
-                                            <option disabled value="0"
-                                                >---</option
+                                            <option
+                                                v-for="(key, value) in contacts"
+                                                :value="value"
+                                                :key="value"
+                                                >{{ key }}</option
                                             >
-                                            <option value="1">Telefono</option>
-                                            <option value="2">Whatsapp</option>
                                         </select>
                                     </div>
 
@@ -215,16 +215,13 @@
                                             id="activity"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                         >
-                                            <option disabled value="0"
-                                                >---</option
+                                            <option
+                                                v-for="(key,
+                                                value) in activities"
+                                                :value="value"
+                                                :key="value"
+                                                >{{ key }}</option
                                             >
-                                            <option value="1"
-                                                >Attività adulti</option
-                                            >
-                                            <option value="2"
-                                                >Attività bambini</option
-                                            >
-                                            <option value="3">Tutte</option>
                                         </select>
                                     </div>
 
@@ -266,6 +263,8 @@ export default {
 
     props: {
         sub_token: String,
+        contacts: Array,
+        activities: Array,
     },
 
     setup() {
