@@ -19,5 +19,10 @@ class UserSeeder extends Seeder
             'name' => 'Marco Bevilacqua'
             ])
         ->create();
+
+        User::factory(['info@piccolacompagniaimpertinente.com',
+            'name' => 'Michela Delli Carri'
+            ])
+        ->create();
     }
 }
