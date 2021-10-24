@@ -5,7 +5,7 @@
 </div>
 <div class="container mx-6 w-full my-4 text-lg" style="line-height: 1.5em; font-size:1.2rem;">  
     <div class="row" style="line-height: 1.5em">
-        <span class="leading-5">Il / La sottoscritto/a {{$customer->first_name}} {{$customer->last_name}} nato/a {{$customer->city}} (##PROVINCE##) il {{$customer->birth}}</span>
+        <span class="leading-5">Il / La sottoscritto/a {{$customer->first_name}} {{$customer->last_name}} nato/a {{$customer->city}} ({{ $customer->province }}) il {{$customer->birth}}</span>
     </div>      
     <div class="row">
         <span class="">residente a {{$customer->resident}} in {{$customer->address}} cap {{ $customer->postal_code}}</span>

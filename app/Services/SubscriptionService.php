@@ -18,7 +18,7 @@ class SubscriptionService
 
     public static function getSubFancyStatusLabel(string $status)
     {
-        return self::$statusLabels['ACTIVE'];
+        return self::$statusLabels[$status];
     }
 
     public static function getSubscriptionByEmail(string $email)

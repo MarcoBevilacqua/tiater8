@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\SubscriptionToComplete;
+use App\Mail\SubscriptionFilled;
 use App\Models\Customer;
 use App\Services\SubscriptionService;
 use App\Models\Subscription;
@@ -196,6 +197,7 @@ class SubscriptionController extends Controller
                 'email' => $request->input('email'),
                 'phone' => $request->input('phone'),
                 'birth' => $request->input('birth'),
+                'province' => $request->input('province'),
                 'resident' => $request->input('city_res'),
                 'address' => $request->input('address'),
                 'postal_code' => $request->input('postal_code'),
@@ -203,18 +205,22 @@ class SubscriptionController extends Controller
                 'activity' => $request->input('activity')
                 ]);
         } catch (\Exception $ex) {
-            Log::error("Cannot create customer with data {$request->all()}");
+            Log::error("Cannot create customer with data {$request->all()}: Error: {$ex->getMessage()}");
             return false;
         }
 
         Log::info("Customer with ID {$customer->id} successfully created", [__CLASS__, __FUNCTION__]);
 
-        Mail::to($request->input('email'))->send();
+        try {
+            Mail::to($request->input('email'))->send(new SubscriptionFilled());
+        } catch (Exception $exception) {
+            Log::error("Cannot send Mail to {$request->customer_email}: " . $exception->getMessage());
+        }
 
         //complete the subscription
         $subToBeCompleted = Subscription::where('token', $request->input('sub_token'))
          ->first()->update([
-             'customer' => $customer->id,
+             'customer_id' => $customer->id,
              'status' => Subscription::TO_BE_CONFIRMED,
          ]);
 

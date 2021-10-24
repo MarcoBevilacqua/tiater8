@@ -21,6 +21,8 @@ class Customer extends Model
         'password',
         'city',
         'phone',
+        'birth',
+        'province',
         'resident',
         'address',
         'postal_code',
