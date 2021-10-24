@@ -182,7 +182,7 @@
 
             <!-- Page Content -->
             <main>
-                <slot />
+                <slot name="main" />
             </main>
         </div>
     </div>

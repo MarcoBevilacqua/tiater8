@@ -31,4 +31,10 @@ class Customer extends Model
     protected $hidden = [
         'password'
     ];
+
+    //subscription relationship
+    public function subscription()
+    {
+        return $this->hasMany(Subscription::class);
+    }
 }

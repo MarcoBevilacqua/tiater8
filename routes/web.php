@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\PDFController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,7 +31,7 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard')->with('generateLink', URL::route('subscriptions.generate'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::prefix('public')->group(function(){
+Route::prefix('public')->group(function () {
     //the subscription confirmation
     Route::get('/subscriptions/confirmed', [SubscriptionController::class, 'confirmed']);
     //the subscription form visualization
@@ -44,10 +45,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/subscriptions/generate', [SubscriptionController::class, 'generate'])->name('subscriptions.generate');
     //the init subscription
     Route::post('/subscriptions/init', [SubscriptionController::class, 'init']);
+    Route::get('/subscriptions/module/{subscriptionId}', [PDFController::class, 'subscriptionModule'])->name('pdf.subscriptions.module');
+
     Route::resource('/subscriptions', SubscriptionController::class);
     
     Route::resource('/customers', CustomerController::class);
-
 });
 
 require __DIR__.'/auth.php';

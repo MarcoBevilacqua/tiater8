@@ -26,7 +26,7 @@ class Subscription extends Model
 
     /**
      * the subscription statuses
-     * 
+     *
      * Pending: link to the subscription form has been generated and sent to the customer
      * To Be Completed: a subscription that has to be filled by the customer
      * To Be Confiermed: a subscription that has to be confirmed by the backoffice
@@ -76,7 +76,8 @@ class Subscription extends Model
     /**
      * subscription/customer relationshib
      */
-    public function customer(){
-        return $this->hasOne(Customer::class);
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
     }
 }

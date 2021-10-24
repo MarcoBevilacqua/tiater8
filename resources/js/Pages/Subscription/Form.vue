@@ -1,7 +1,11 @@
 <template>
     <breeze-authenticated-layout>
         <template #header>
-            <section>
+            <h1 v-if="subscription.id">Modifica Tessera</h1>
+            <h1 v-else>Inserisci Tessera</h1>
+        </template>
+        <template #main>
+            <container>
                 <div class="mt-10 sm:mt-5">
                     <div class="md:grid md:grid-cols-3 md:gap-6">
                         <div class="mt-10 md:mt-5 md:col-span-3">
@@ -65,12 +69,21 @@
                                         </div>
                                         <div class="grid grid-cols-6 gap-6">
                                             <div class="mt-4">
-                                                <button
-                                                    type="button"
+                                                <a
+                                                    target="_blank"
+                                                    :href="
+                                                        route(
+                                                            'pdf.subscriptions.module',
+                                                            {
+                                                                subscriptionId:
+                                                                    subscription.id,
+                                                            }
+                                                        )
+                                                    "
                                                     class="bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                                 >
                                                     Stampa modulo
-                                                </button>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -89,7 +102,7 @@
                         </div>
                     </div>
                 </div>
-            </section>
+            </container>
         </template>
     </breeze-authenticated-layout>
 </template>
@@ -98,6 +111,7 @@
 import Container from "@/Layouts/Container";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
 import { useForm } from "@inertiajs/inertia-vue3";
+import { Link } from "@inertiajs/inertia-vue3";
 
 export default {
     components: {
