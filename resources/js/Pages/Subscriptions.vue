@@ -6,7 +6,7 @@
             </h2>
             <small>
                 <inertia-link
-                    :href="generateLink"
+                    :href="createLink"
                     class="font-medium text-indigo-500"
                     >Genera nuova tessera
                 </inertia-link></small
@@ -105,7 +105,7 @@ export default {
     },
     props: {
         subscriptions: Object,
-        generateLink: String,
+        createLink: String,
     },
 };
 </script>

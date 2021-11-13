@@ -26,7 +26,11 @@ class SubscriptionController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => 'required|email',
-        ]];
+        ],
+    'store' => [
+        'user' => 'required',
+        'status' => 'required'
+    ]];
     }
     
     /**
@@ -45,9 +49,34 @@ class SubscriptionController extends Controller
                     'edit' => URL::route('subscriptions.edit', $subscription)
                 ];
             }),
-            'generateLink' => URL::route('subscriptions.generate')
+            'createLink' => URL::route('subscriptions.create')
         ]
         );
+    }
+
+    /**
+     * creation form
+     */
+    public function create()
+    {
+        return Inertia::render('Subscription/Create', [
+            'subscription' => [],
+            '_method'  => 'post',
+            /**
+             * TODO: GET STATUS LABELS
+             */
+            'av_statuses' => SubscriptionService::getAllSubFancyStatusLabel()
+        ]);
+    }
+
+    /**
+     * creation from form
+     */
+    public function store(Request $request)
+    {
+        $validated = $this->validate($request, $this->rules['store']);
+
+        Subscription::create($validated);
     }
 
     /**
@@ -65,18 +94,19 @@ class SubscriptionController extends Controller
             'status' => $subscription->status
         ],
             '_method'  => 'put',
-            /**
-             * TODO: GET STATUS LABELS
-             */
             'av_statuses' => SubscriptionService::getAllSubFancyStatusLabel()
         ]);
     }
 
     public function update(Request $request)
     {
-        /**
-         * TODO: VALIDATE REQUEST!!!
-         */
+        $validated = $this->validate($request, [
+            'status' => 'required|int',
+            'contact_type' => 'int',
+            'activity' => 'int'
+        ]);
+
+        
         Log::info("Trying to set status = {$request->input('status')} on subsription");
         Subscription::updateOrCreate(
             ['id' => $request->id],

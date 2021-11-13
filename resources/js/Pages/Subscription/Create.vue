@@ -1,8 +1,7 @@
 <template>
     <breeze-authenticated-layout>
         <template #header>
-            <h1 v-if="subscription.id">Modifica Tessera</h1>
-            <h1 v-else>Inserisci Tessera</h1>
+            <h1>Inserisci Tessera</h1>
         </template>
         <template #main>
             <container>
@@ -67,25 +66,6 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="grid grid-cols-6 gap-6">
-                                            <div class="mt-4">
-                                                <a
-                                                    target="_blank"
-                                                    :href="
-                                                        route(
-                                                            'pdf.subscriptions.module',
-                                                            {
-                                                                subscriptionId:
-                                                                    subscription.id,
-                                                            }
-                                                        )
-                                                    "
-                                                    class="bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                                >
-                                                    Stampa Modulo
-                                                </a>
-                                            </div>
-                                        </div>
                                     </div>
                                     <div
                                         class="px-4 py-3 bg-gray-50 text-right sm:px-6"
@@ -126,7 +106,6 @@ export default {
     },
 
     props: {
-        subscription: Array,
         _method: String,
         av_statuses: Array,
     },
@@ -135,22 +114,15 @@ export default {
         return {
             form: this.$inertia.form({
                 _method: this._method,
-                id: this.subscription.id,
-                subscription_email: this.subscription.subscription_email,
-                status: this.subscription.status,
-                av_statuses: this.av_statuses,
             }),
         };
     },
 
     methods: {
         update() {
-            this.form.post(
-                this.route("subscriptions.update", this.subscription.id),
-                {
-                    onSuccess: () => this.form.reset(),
-                }
-            );
+            this.form.post(this.route("subscriptions.store"), {
+                onSuccess: () => this.form.reset(),
+            });
         },
     },
 };
