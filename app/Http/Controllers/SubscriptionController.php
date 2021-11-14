@@ -50,7 +50,7 @@ class SubscriptionController extends Controller
             ['subscriptions' => Subscription::all()->map(function (Subscription $subscription) {
                 return [
                     'id' => $subscription->id,
-                    'customer' => $subscription->customer->first_name . " " . $subscription->customer->last_name,
+                    'customer' => $subscription->customer->email,
                     'created' => $subscription->created_at->format('d/m/Y'),
                     'status' => SubscriptionService::getSubFancyStatusLabel($subscription->status),
                     'edit' => URL::route('subscriptions.edit', $subscription)
@@ -182,7 +182,9 @@ class SubscriptionController extends Controller
                 'subscription_email' => $request->customer_email,
                 'status' => Subscription::PENDING,
                 'token' => $randomString,
-                'customer_id' => null
+                'customer_id' => null,
+                'year_from' => Carbon::now()->year,
+                'year_to' => Carbon::now()->year + 1,
             ]);
         } catch (Exception $exception) {
             Log::error("Cannot create pending subscription with email {$request->customer_email} and token {$randomString}: {$exception->getMessage()}");
@@ -270,7 +272,7 @@ class SubscriptionController extends Controller
                 'postal_code' => $request->input('postal_code'),
                 ]);
         } catch (\Exception $ex) {
-            Log::error("Cannot create customer with data {$request->all()}: Error: {$ex->getMessage()}");
+            Log::error("Cannot create customer with data " . implode(",", $request->all()) . ": Error: {$ex->getMessage()}");
             return false;
         }
 
