@@ -8,9 +8,9 @@ use Carbon\Carbon;
 class SubscriptionService
 {
     private static $statusLabels = [
-        Subscription::PENDING => 'In attesa di risposta',
-        Subscription::TO_BE_COMPLETED => 'Da completare',
-        Subscription::TO_BE_CONFIRMED => 'Da confermare',
+        Subscription::PENDING => 'Invito inviato (in attesa di risposta)',
+        Subscription::TO_BE_COMPLETED => 'Modulo online da completare',
+        Subscription::TO_BE_CONFIRMED => 'Pagamento da confermare',
         Subscription::ACTIVE => 'Attiva',
         Subscription::INACTIVE => 'Inattiva',
         Subscription::EXPIRED => 'Scaduta'
