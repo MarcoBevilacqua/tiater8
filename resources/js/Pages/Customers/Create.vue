@@ -8,7 +8,7 @@
                 <div class="mt-10 sm:mt-5">
                     <div class="md:grid md:grid-cols-3 md:gap-6">
                         <div class="mt-10 md:mt-5 md:col-span-3">
-                            <form @submit.prevent="update">
+                            <form @submit.prevent="create">
                                 <div class="px-4 py-5 bg-white sm:p-6">
                                     <input
                                         type="hidden"
@@ -124,8 +124,22 @@
                                             />
                                         </div>
                                     </div>
-                                    <div class="grid grid-cols-8 gap-6 mt-6">
-                                        <div class="col-span-4 sm:col-span-4">
+                                    <div class="grid grid-cols-6 gap-6 mt-6">
+                                        <div class="col-span-3 sm:col-span-2">
+                                            <label
+                                                for="resident"
+                                                class="block text-sm font-medium text-gray-700"
+                                                >Residente a</label
+                                            >
+                                            <input
+                                                v-model="form.resident"
+                                                type="text"
+                                                name="resident"
+                                                id="resident"
+                                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            />
+                                        </div>
+                                        <div class="col-span-3 sm:col-span-3">
                                             <label
                                                 for="address"
                                                 class="block text-sm font-medium text-gray-700"
@@ -136,20 +150,6 @@
                                                 type="text"
                                                 name="address"
                                                 id="address"
-                                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                            />
-                                        </div>
-                                        <div class="col-span-2 sm:col-span-2">
-                                            <label
-                                                for="city"
-                                                class="block text-sm font-medium text-gray-700"
-                                                >Città</label
-                                            >
-                                            <input
-                                                v-model="form.city"
-                                                type="text"
-                                                name="city"
-                                                id="city"
                                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                             />
                                         </div>
@@ -180,7 +180,7 @@
                                         type="submit"
                                         class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                     >
-                                        Save
+                                        Salva
                                     </button>
                                 </div>
                             </form>
@@ -211,6 +211,14 @@ export default {
     data() {
         return {
             form: this.$inertia.form({
+                first_name: null,
+                last_name: null,
+                email: null,
+                address: null,
+                city: null,
+                phone: null,
+                postal_code: null,
+                resident: null,
                 _method: this._method,
             }),
         };
@@ -218,7 +226,7 @@ export default {
 
     methods: {
         create() {
-            this.form.post(this.route("customers.store"), {
+            this.form.post(this.route("customers.store", this.form), {
                 onSuccess: () => this.form.reset(),
             });
         },

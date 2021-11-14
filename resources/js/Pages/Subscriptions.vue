@@ -8,7 +8,7 @@
                 <inertia-link
                     :href="createLink"
                     class="font-medium text-indigo-500"
-                    >Genera nuova tessera
+                    >Inserisci nuova tessera
                 </inertia-link></small
             >
         </template>
@@ -21,7 +21,7 @@
                                 scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Email
+                                Iscritto
                             </th>
                             <th
                                 scope="col"
@@ -46,14 +46,14 @@
                     <tbody class="bg-white divide-y divide-gray-200">
                         <tr
                             v-for="subscription in subscriptions"
-                            :key="subscription.email"
+                            :key="subscription.id"
                         >
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div
                                         class="text-sm font-medium text-gray-900"
                                     >
-                                        {{ subscription.email }}
+                                        {{ subscription.customer }}
                                     </div>
                                 </div>
                             </td>

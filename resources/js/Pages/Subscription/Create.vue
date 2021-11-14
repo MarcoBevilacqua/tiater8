@@ -8,7 +8,7 @@
                 <div class="mt-10 sm:mt-5">
                     <div class="md:grid md:grid-cols-3 md:gap-6">
                         <div class="mt-10 md:mt-5 md:col-span-3">
-                            <form @submit.prevent="update">
+                            <form @submit.prevent="create">
                                 <div
                                     class="shadow overflow-hidden sm:rounded-md"
                                 >
@@ -24,20 +24,75 @@
                                                 class="col-span-6 sm:col-span-3"
                                             >
                                                 <label
-                                                    for="email"
+                                                    for="customer"
                                                     class="block text-sm font-medium text-gray-700"
-                                                    >Email</label
+                                                    >Iscritto</label
                                                 >
-                                                <input
-                                                    v-model="
-                                                        form.subscription_email
-                                                    "
-                                                    type="email"
-                                                    name="subscription_email"
-                                                    id="subscription_email"
-                                                    autocomplete="email"
+                                                <select
+                                                    v-model="form.customer_id"
+                                                    name="customer_id"
+                                                    id="customer_id"
                                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                />
+                                                >
+                                                    <option
+                                                        v-for="customer in customers"
+                                                        :value="customer.id"
+                                                        >{{ customer.name }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="grid grid-cols-6 gap-6 mt-6"
+                                        >
+                                            <div
+                                                class="col-span-3 sm:col-span-1"
+                                            >
+                                                <label
+                                                    for="contact_type"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                    >Comunicazione via</label
+                                                >
+                                                <select
+                                                    v-model="form.contact_type"
+                                                    type="select"
+                                                    name="contact_type"
+                                                    id="contact_type"
+                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                >
+                                                    <option
+                                                        v-for="(key,
+                                                        value) in contacts"
+                                                        :value="value"
+                                                        :key="value"
+                                                        >{{ key }}</option
+                                                    >
+                                                </select>
+                                            </div>
+
+                                            <div
+                                                class="col-span-3 sm:col-span-2"
+                                            >
+                                                <label
+                                                    for="activity"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                    >Tipo di attività</label
+                                                >
+                                                <select
+                                                    v-model="form.activity"
+                                                    type="select"
+                                                    name="activity"
+                                                    id="activity"
+                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                >
+                                                    <option
+                                                        v-for="(key,
+                                                        value) in activities"
+                                                        :value="value"
+                                                        :key="value"
+                                                        >{{ key }}</option
+                                                    >
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="grid grid-cols-6 gap-6">
@@ -108,19 +163,26 @@ export default {
     props: {
         _method: String,
         av_statuses: Array,
+        activities: Array,
+        contacts: Array,
+        customers: Array,
     },
 
     data() {
         return {
             form: this.$inertia.form({
+                customer: null,
+                activity: null,
+                contact_type: null,
+                status: null,
                 _method: this._method,
             }),
         };
     },
 
     methods: {
-        update() {
-            this.form.post(this.route("subscriptions.store"), {
+        create() {
+            this.form.post(this.route("subscriptions.store", this.form), {
                 onSuccess: () => this.form.reset(),
             });
         },

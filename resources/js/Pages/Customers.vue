@@ -2,8 +2,15 @@
     <breeze-authenticated-layout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Users
+                Iscritti
             </h2>
+            <small>
+                <inertia-link
+                    :href="createLink"
+                    class="font-medium text-indigo-500"
+                    >Inserisci nuovo
+                </inertia-link></small
+            >
         </template>
         <template #main>
             <container>
@@ -97,6 +104,7 @@ export default {
     },
     props: {
         customers: Object,
+        createLink: String,
     },
 };
 </script>

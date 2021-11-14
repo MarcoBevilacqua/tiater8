@@ -22,15 +22,19 @@ class SubscriptionController extends Controller
 
     public function __construct()
     {
-        $this->rules = ['complete' => [
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required|email',
-        ],
-    'store' => [
-        'user' => 'required',
-        'status' => 'required'
-    ]];
+        $this->rules = [
+            'complete' => [
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'email' => 'required|email',
+            ],
+            'store' => [
+                'customer_id' => 'exists:App\Models\Customer,id',
+                'status' => 'required|numeric',
+                'contact_type' => 'required|numeric',
+                'activity' => 'required|numeric'
+            ]
+        ];
     }
     
     /**
@@ -43,14 +47,15 @@ class SubscriptionController extends Controller
             'Subscriptions',
             ['subscriptions' => Subscription::all()->map(function (Subscription $subscription) {
                 return [
-                    'email' => $subscription->subscription_email,
+                    'id' => $subscription->id,
+                    'customer' => $subscription->customer->first_name . " " . $subscription->customer->last_name,
                     'created' => $subscription->created_at->format('d/m/Y'),
                     'status' => SubscriptionService::getSubFancyStatusLabel($subscription->status),
                     'edit' => URL::route('subscriptions.edit', $subscription)
                 ];
             }),
             'createLink' => URL::route('subscriptions.create')
-        ]
+            ]
         );
     }
 
@@ -60,12 +65,19 @@ class SubscriptionController extends Controller
     public function create()
     {
         return Inertia::render('Subscription/Create', [
-            'subscription' => [],
-            '_method'  => 'post',
             /**
-             * TODO: GET STATUS LABELS
+             * TODO: make this query lighter or cache the results
              */
-            'av_statuses' => SubscriptionService::getAllSubFancyStatusLabel()
+            'customers' => Customer::all()->map(function (Customer $customer) {
+                return [
+                    'id' => $customer->id,
+                    'name' => $customer->first_name . " " . $customer->last_name
+                ];
+            }),
+            'av_statuses' => SubscriptionService::getAllSubFancyStatusLabel(),
+            'activities' => SubscriptionService::getAllFancyActivityLabels(),
+            'contacts' => SubscriptionService::getAllFancyContactLabels(),
+            '_method'  => 'post',
         ]);
     }
 
@@ -74,9 +86,15 @@ class SubscriptionController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $this->validate($request, $this->rules['store']);
+        $validated = $request->validate($this->rules['store']);
 
-        Subscription::create($validated);
+        try {
+            Subscription::create($validated + ['subscription_email' => Customer::findOrFail($validated['customer_id'])->email]);
+        } catch (\Exception $exception) {
+            Log::error("Cannot create subscription: {$exception->getMessage()}");
+        }
+
+        return Redirect::route('subscriptions.index');
     }
 
     /**
