@@ -32,7 +32,9 @@ class SubscriptionController extends Controller
                 'customer_id' => 'exists:App\Models\Customer,id',
                 'status' => 'required|numeric',
                 'contact_type' => 'required|numeric',
-                'activity' => 'required|numeric'
+                'activity' => 'required|numeric',
+                'year_from' => 'required|numeric',
+                'year_to' => 'required|numeric'
             ]
         ];
     }
@@ -87,7 +89,6 @@ class SubscriptionController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate($this->rules['store']);
-
         try {
             Subscription::create($validated + ['subscription_email' => Customer::findOrFail($validated['customer_id'])->email]);
         } catch (\Exception $exception) {
@@ -104,24 +105,30 @@ class SubscriptionController extends Controller
     public function edit(int $id)
     {
         $subscription = Subscription::findOrFail($id);
-        Log::info("Subscription: {$subscription}");
+        
         return Inertia::render('Subscription/Form', [
             'subscription' => [
             'id' => $subscription->id,
             'subscription_email' => $subscription->subscription_email,
-            'status' => $subscription->status
+            'status' => $subscription->status,
+            'activity' => $subscription->activity,
+            'contact_type' => $subscription->contact_type
         ],
             '_method'  => 'put',
-            'av_statuses' => SubscriptionService::getAllSubFancyStatusLabel()
+            'av_statuses' => SubscriptionService::getAllSubFancyStatusLabel(),
+            'activities' => SubscriptionService::getAllFancyActivityLabels(),
+            'contacts' => SubscriptionService::getAllFancyContactLabels(),
         ]);
     }
 
     public function update(Request $request)
     {
         $validated = $this->validate($request, [
-            'status' => 'required|int',
-            'contact_type' => 'int',
-            'activity' => 'int'
+            'status' => 'required|numeric',
+            'contact_type' => 'required|numeric',
+            'activity' => 'required|numeric',
+            'year_from' => 'required|numeric',
+            'year_to' => 'required|numeric'
         ]);
 
         

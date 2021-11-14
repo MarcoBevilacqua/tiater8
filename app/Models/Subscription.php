@@ -16,7 +16,9 @@ class Subscription extends Model
         'token',
         'expires_at',
         'contact_type',
-        'activity'
+        'activity',
+        'year_from',
+        'year_to'
     ];
 
     /**

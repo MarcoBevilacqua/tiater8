@@ -41,6 +41,39 @@
                                                     </option>
                                                 </select>
                                             </div>
+                                            <div
+                                                class="col-span-3 sm:col-span-1"
+                                            >
+                                                <label
+                                                    for="year_from"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                    >Anno di inizio</label
+                                                >
+                                                <input
+                                                    v-model="form.year_from"
+                                                    type="text"
+                                                    name="year_from"
+                                                    id="year_from"
+                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                />
+                                            </div>
+
+                                            <div
+                                                class="col-span-3 sm:col-span-1"
+                                            >
+                                                <label
+                                                    for="year_to"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                    >Anno di fine</label
+                                                >
+                                                <input
+                                                    v-model="form.year_to"
+                                                    type="text"
+                                                    name="year_to"
+                                                    id="year_to"
+                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                />
+                                            </div>
                                         </div>
                                         <div
                                             class="grid grid-cols-6 gap-6 mt-6"
@@ -51,7 +84,7 @@
                                                 <label
                                                     for="contact_type"
                                                     class="block text-sm font-medium text-gray-700"
-                                                    >Comunicazione via</label
+                                                    >Comunicazioni</label
                                                 >
                                                 <select
                                                     v-model="form.contact_type"
@@ -94,8 +127,7 @@
                                                     >
                                                 </select>
                                             </div>
-                                        </div>
-                                        <div class="grid grid-cols-6 gap-6">
+
                                             <div
                                                 class="col-span-6 sm:col-span-3"
                                             >
@@ -127,9 +159,9 @@
                                     >
                                         <a
                                             :href="route('subscriptions.index')"
-                                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mr-3"
                                         >
-                                            torna alla lista
+                                            Torna alla lista
                                         </a>
                                         <button
                                             type="submit"
@@ -171,10 +203,12 @@ export default {
     data() {
         return {
             form: this.$inertia.form({
-                customer: null,
+                customer_id: null,
                 activity: null,
                 contact_type: null,
                 status: null,
+                year_from: null,
+                year_to: null,
                 _method: this._method,
             }),
         };

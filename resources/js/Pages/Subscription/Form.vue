@@ -1,8 +1,7 @@
 <template>
     <breeze-authenticated-layout>
         <template #header>
-            <h1 v-if="subscription.id">Modifica Tessera</h1>
-            <h1 v-else>Inserisci Tessera</h1>
+            <h1>Modifica Tessera # {{ subscription.id }}</h1>
         </template>
         <template #main>
             <container>
@@ -20,28 +19,59 @@
                                             name="id"
                                             id="id"
                                         />
-                                        <div class="grid grid-cols-6 gap-6">
+                                        <div
+                                            class="grid grid-cols-6 gap-6 mt-6"
+                                        >
                                             <div
-                                                class="col-span-6 sm:col-span-3"
+                                                class="col-span-3 sm:col-span-1"
                                             >
                                                 <label
-                                                    for="email"
+                                                    for="contact_type"
                                                     class="block text-sm font-medium text-gray-700"
-                                                    >Email</label
+                                                    >Comunicazioni</label
                                                 >
-                                                <input
-                                                    v-model="
-                                                        form.subscription_email
-                                                    "
-                                                    type="email"
-                                                    name="subscription_email"
-                                                    id="subscription_email"
-                                                    autocomplete="email"
+                                                <select
+                                                    v-model="form.contact_type"
+                                                    type="select"
+                                                    name="contact_type"
+                                                    id="contact_type"
                                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                />
+                                                >
+                                                    <option
+                                                        :selected="contact_type"
+                                                        v-for="(key,
+                                                        value) in contacts"
+                                                        :value="value"
+                                                        :key="value"
+                                                        >{{ key }}</option
+                                                    >
+                                                </select>
                                             </div>
-                                        </div>
-                                        <div class="grid grid-cols-6 gap-6">
+
+                                            <div
+                                                class="col-span-3 sm:col-span-2"
+                                            >
+                                                <label
+                                                    for="activity"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                    >Tipo di attività</label
+                                                >
+                                                <select
+                                                    v-model="form.activity"
+                                                    type="select"
+                                                    name="activity"
+                                                    id="activity"
+                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                >
+                                                    <option
+                                                        v-for="(key,
+                                                        value) in activities"
+                                                        :value="value"
+                                                        :key="value"
+                                                        >{{ key }}</option
+                                                    >
+                                                </select>
+                                            </div>
                                             <div
                                                 class="col-span-6 sm:col-span-3"
                                             >
@@ -92,9 +122,9 @@
                                     >
                                         <a
                                             :href="route('subscriptions.index')"
-                                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-4"
                                         >
-                                            torna alla lista
+                                            Torna alla lista
                                         </a>
                                         <button
                                             type="submit"
@@ -126,9 +156,11 @@ export default {
     },
 
     props: {
-        subscription: Array,
+        subscription: Object,
         _method: String,
         av_statuses: Array,
+        contacts: Array,
+        activities: Array,
     },
 
     data() {
@@ -138,7 +170,11 @@ export default {
                 id: this.subscription.id,
                 subscription_email: this.subscription.subscription_email,
                 status: this.subscription.status,
+                contact_type: this.subscription.contact_type,
+                activity: this.subscription.activity,
                 av_statuses: this.av_statuses,
+                contacts: this.contacts,
+                activities: this.activities,
             }),
         };
     },
