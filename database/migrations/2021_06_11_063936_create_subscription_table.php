@@ -23,6 +23,9 @@ class CreateSubscriptionTable extends Migration
             $table->string('token')->nullable(false)->default('');
             $table->integer('contact_type')->nullable(true);
             $table->integer('activity')->nullable(true);
+            $table->integer('year_from')->length(4);
+            $table->integer('year_to')->length(4);
+
             $table->timestamps();
         });
     }

@@ -26,7 +26,7 @@
                                                 <label
                                                     for="customer"
                                                     class="block text-sm font-medium text-gray-700"
-                                                    >Iscritto</label
+                                                    >Tessera di:</label
                                                 >
                                                 <select
                                                     v-model="form.customer_id"

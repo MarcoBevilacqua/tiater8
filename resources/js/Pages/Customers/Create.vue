@@ -225,6 +225,7 @@ export default {
                 phone: null,
                 postal_code: null,
                 resident: null,
+                birth: null,
                 _method: this._method,
             }),
         };

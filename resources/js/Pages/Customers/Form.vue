@@ -55,7 +55,9 @@
                                             </div>
                                         </div>
 
-                                        <div class="grid grid-cols-6 gap-6">
+                                        <div
+                                            class="grid grid-cols-6 gap-6 mt-6"
+                                        >
                                             <div
                                                 class="col-span-6 sm:col-span-3"
                                             >
@@ -73,11 +75,99 @@
                                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                 />
                                             </div>
+                                            <div
+                                                class="col-span-6 sm:col-span-3"
+                                            >
+                                                <label
+                                                    for="phone"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                    >Telefono</label
+                                                >
+                                                <input
+                                                    v-model="form.phone"
+                                                    type="text"
+                                                    name="phone"
+                                                    id="phone"
+                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                />
+                                            </div>
                                         </div>
 
-                                        <div class="grid grid-cols-8 gap-6">
+                                        <div
+                                            class="grid grid-cols-6 gap-6 mt-6"
+                                        >
                                             <div
-                                                class="col-span-4 sm:col-span-4"
+                                                class="col-span-3 sm:col-span-2"
+                                            >
+                                                <label
+                                                    for="city"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                    >Nato a</label
+                                                >
+                                                <input
+                                                    v-model="form.city"
+                                                    type="text"
+                                                    name="city"
+                                                    id="city"
+                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                />
+                                            </div>
+
+                                            <div
+                                                class="col-span-1 sm:col-span-1"
+                                            >
+                                                <label
+                                                    for="province"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                    >Provincia</label
+                                                >
+                                                <input
+                                                    v-model="form.province"
+                                                    type="text"
+                                                    name="province"
+                                                    id="province"
+                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                />
+                                            </div>
+
+                                            <div
+                                                class="col-span-3 sm:col-span-2"
+                                            >
+                                                <label
+                                                    for="birth"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                    >Il</label
+                                                >
+                                                <input
+                                                    v-model="form.birth"
+                                                    type="date"
+                                                    name="birth"
+                                                    id="birth"
+                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="grid grid-cols-6 gap-6 mt-6"
+                                        >
+                                            <div
+                                                class="col-span-3 sm:col-span-2"
+                                            >
+                                                <label
+                                                    for="resident"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                    >Residente a</label
+                                                >
+                                                <input
+                                                    v-model="form.resident"
+                                                    type="text"
+                                                    name="resident"
+                                                    id="resident"
+                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                />
+                                            </div>
+                                            <div
+                                                class="col-span-3 sm:col-span-3"
                                             >
                                                 <label
                                                     for="address"
@@ -92,35 +182,21 @@
                                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                 />
                                             </div>
+
                                             <div
-                                                class="col-span-2 sm:col-span-2"
+                                                class="col-span-1 sm:col-span-1 lg:col-span-1"
                                             >
                                                 <label
-                                                    for="city"
+                                                    for="postal_code"
                                                     class="block text-sm font-medium text-gray-700"
-                                                    >Città</label
+                                                    >CAP</label
                                                 >
                                                 <input
-                                                    v-model="form.city"
+                                                    v-model="form.postal_code"
                                                     type="text"
-                                                    name="city"
-                                                    id="city"
-                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                />
-                                            </div>
-                                            <div
-                                                class="col-span-2 sm:col-span-2"
-                                            >
-                                                <label
-                                                    for="phone"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                    >Telefono</label
-                                                >
-                                                <input
-                                                    v-model="form.phone"
-                                                    type="text"
-                                                    name="phone"
-                                                    id="phone"
+                                                    name="postal_code"
+                                                    id="postal_code"
+                                                    autocomplete="postal-code"
                                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                 />
                                             </div>
@@ -173,6 +249,10 @@ export default {
                 address: this.customer.address,
                 city: this.customer.city,
                 phone: this.customer.phone,
+                province: this.customer.province,
+                birth: this.customer.birth,
+                postal_code: this.customer.postal_code,
+                resident: this.customer.resident,
             }),
         };
     },

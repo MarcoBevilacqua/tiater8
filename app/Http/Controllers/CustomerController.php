@@ -48,7 +48,8 @@ class CustomerController extends Controller
             'province' => 'required',
             'postal_code' => 'required',
             'phone' => 'required',
-            'resident' => 'required'
+            'resident' => 'required',
+            'birth' => 'required'
         ]);
 
         try {
@@ -85,6 +86,10 @@ class CustomerController extends Controller
             'address' => $customer->address,
             'city' => $customer->city,
             'phone' => $customer->phone,
+            'birth' => $customer->birth,
+            'postal_code' => $customer->postal_code,
+            'province'=> $customer->province,
+            'resident' => $customer->resident
         ],
             '_method'  => 'put'
     ]);
@@ -92,31 +97,28 @@ class CustomerController extends Controller
 
     public function update(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => 'required|email',
             'address' => 'required',
             'city' => 'required',
             'phone' => 'required',
-            'activity' => 'required|numeric',
-            'contacts' => 'required|numeric',
+            'birth' => 'required',
+            'resident' => 'required',
         ]);
 
+        Log::debug("Valid data: " . implode(",", $validated));
+
         Log::info("updating customer with id: {$request->input('id')}");
-        Customer::updateOrCreate(
-            ['id' => $request->input('id')],
-            [
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
-            'email' => $request->input('email'),
-            'address' => $request->input('address'),
-            'city' => $request->input('city'),
-            'phone' => $request->input('phone'),
-            'activity' => $request->input('activity'),
-            'contacts' => $request->input('contacts'),
-        ]
-        );
+        try {
+            Customer::updateOrCreate(
+                ['id' => $request->input('id')],
+                $validated
+            );
+        } catch (\Exception $exception) {
+            Log::error("Cannot update customer: {$exception->getMessage()}");
+        }
 
         return Redirect::route('customers.index');
     }
