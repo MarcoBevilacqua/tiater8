@@ -107,7 +107,7 @@ class SubscriptionTest extends TestCase
             'year_to' => '2022',
             'city' => 'my City',
             'province' => 'FG',
-            'city_res' => 'aaaa',
+            'resident' => 'aaaa',
             'birth' => '1982-07-20',
             'phone' => 3333333,
             'address' => 'Fake address',

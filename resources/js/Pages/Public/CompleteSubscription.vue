@@ -102,15 +102,15 @@
                                         class="col-span-2 sm:col-span-2 lg:col-span-2"
                                     >
                                         <label
-                                            for="city_res"
+                                            for="resident"
                                             class="block text-sm font-medium text-gray-700"
                                             >Residente a</label
                                         >
                                         <input
-                                            v-model="form.city_res"
+                                            v-model="form.resident"
                                             type="text"
-                                            name="city_res"
-                                            id="city_res"
+                                            name="resident"
+                                            id="resident"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                         />
                                     </div>
@@ -145,22 +145,6 @@
                                             name="postal_code"
                                             id="postal_code"
                                             autocomplete="postal-code"
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        />
-                                    </div>
-
-                                    <div class="col-span-6 sm:col-span-3">
-                                        <label
-                                            for="email"
-                                            class="block text-sm font-medium text-gray-700"
-                                            >Email</label
-                                        >
-                                        <input
-                                            v-model="form.email"
-                                            type="text"
-                                            name="email"
-                                            id="email"
-                                            autocomplete="email"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                         />
                                     </div>
@@ -273,7 +257,7 @@ export default {
             last_name: null,
             email: null,
             city: null,
-            city_res: null,
+            resident: null,
             phone: null,
             province: null,
             activity: null,
