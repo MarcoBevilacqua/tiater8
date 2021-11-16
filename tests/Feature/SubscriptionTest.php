@@ -101,7 +101,7 @@ class SubscriptionTest extends TestCase
         $subscriptionData = [
             'first_name' => 'Marco',
             'last_name' => 'Bevilacqua',
-            'email' => 'example@mail.com',
+            'email' => $subscriptionToBeCompleted->subscription_email,
             'sub_token' => $subscriptionToBeCompleted->token,
             'year_from' => '2021',
             'year_to' => '2022',
@@ -117,7 +117,7 @@ class SubscriptionTest extends TestCase
         $response = $this->post('/public/subscriptions/complete', $subscriptionData);
 
         $this->assertDatabaseHas('customers', [
-            'email' => 'example@mail.com',
+            'email' => $subscriptionToBeCompleted->subscription_email,
             'first_name' => 'Marco',
             'last_name' => 'Bevilacqua',
             'password' => null,

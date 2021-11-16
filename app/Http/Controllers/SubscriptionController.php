@@ -50,7 +50,7 @@ class SubscriptionController extends Controller
             ['subscriptions' => Subscription::all()->map(function (Subscription $subscription) {
                 return [
                     'id' => $subscription->id,
-                    'customer' => $subscription->customer->email,
+                    'customer' => $subscription->subscription_email,
                     'created' => $subscription->created_at->format('d/m/Y'),
                     'status' => SubscriptionService::getSubFancyStatusLabel($subscription->status),
                     'edit' => URL::route('subscriptions.edit', $subscription)
@@ -244,7 +244,7 @@ class SubscriptionController extends Controller
         //checking if data is correct
         $canHandleSubscription = SubscriptionService::subscriptionCanBeConfirmed($request->input('sub_token'));
 
-        if (!$canHandleSubscription) {
+        if (!$canHandleSubscription->first()) {
             Log::error("Cannot find subscription with token " . $request->input('sub_token'));
             abort(400);
         }
@@ -263,11 +263,11 @@ class SubscriptionController extends Controller
                 'first_name' => $request->input('first_name'),
                 'last_name' => $request->input('last_name'),
                 'city' => $request->input('city'),
-                'email' => $request->input('email'),
+                'email' => $canHandleSubscription->last(), //should not be handled from the public form
                 'phone' => $request->input('phone'),
                 'birth' => $request->input('birth'),
                 'province' => $request->input('province'),
-                'resident' => $request->input('city_res'),
+                'resident' => $request->input('resident'),
                 'address' => $request->input('address'),
                 'postal_code' => $request->input('postal_code'),
                 ]);
@@ -285,12 +285,14 @@ class SubscriptionController extends Controller
         }
 
         //complete the subscription
-        $subToBeCompleted = Subscription::where('token', $request->input('sub_token'))
+        Subscription::where('token', $request->input('sub_token'))
          ->first()->update([
              'customer_id' => $customer->id,
              'status' => Subscription::TO_BE_CONFIRMED,
              'contact_type' => $request->input('contact_type'),
-             'activity' => $request->input('activity')
+             'activity' => $request->input('activity'),
+             'year_from' => Carbon::now()->year,
+             'year_to' => Carbon::now()->year + 1,
          ]);
 
         Log::info("redirecting to subscriptions/" . $request->input('sub_token') . "/confirmed");
