@@ -55,7 +55,7 @@ class SubscriptionService
 
     public static function getFancyContactLabel(int $contact)
     {
-        return self::$contactLabels[$status];
+        return self::$contactLabels[$contact];
     }
 
     public static function getSubscriptionByEmail(string $email)
@@ -74,7 +74,7 @@ class SubscriptionService
             return false;
         }
 
-        return $subscriptionByToken->expires_at > Carbon::now();
+        return collect([$subscriptionByToken->expires_at > Carbon::now(), $subscriptionByToken->subscription_email]);
         //&& $subscriptionByToken->status === Subscription::TO_BE_COMPLETED;
     }
 }
