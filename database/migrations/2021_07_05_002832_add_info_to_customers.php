@@ -19,8 +19,7 @@ class AddInfoToCustomers extends Migration
             $table->string('resident');
             $table->string('address');
             $table->string('postal_code');
-            $table->integer('contact_type');
-            $table->integer('activity');
+            $table->string('province');
         });
     }
 
@@ -32,7 +31,16 @@ class AddInfoToCustomers extends Migration
     public function down()
     {
         Schema::table('customers', function (Blueprint $table) {
-            //
+            $table->removeColumn([
+                'city',
+                'birth',
+                'resident',
+                'address',
+                'postal_code',
+                'province',
+                'contact_type',
+                'activity'
+            ]);
         });
     }
 }

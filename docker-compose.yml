@@ -1,6 +1,5 @@
-version: '3'
+version: "3"
 services:
-
   #PHP Service
   app:
     build:
@@ -14,8 +13,8 @@ services:
       SERVICE_NAME: tiater
       SERVICE_TAGS: dev
     volumes:
-       - ./:/var/www
-       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./:/var/www
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     working_dir: /var/www
     networks:
       - app-network
@@ -61,7 +60,7 @@ services:
       context: docker/mysql/
       dockerfile: MySQL-5.6.Dockerfile
     ports:
-      - 13308:3308
+      - 13308:3306
     environment:
       MYSQL_ROOT_PASSWORD: "${DBTEST_PASSWORD}"
       MYSQL_DATABASE: "${DBTEST_DATABASE}"

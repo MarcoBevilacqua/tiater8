@@ -1,365 +1,238 @@
-  <template #guest>
-  <container>
-    <div class="mt-10 sm:mt-5 px-24">
-      <div class="flex justify-items-center">
-        <div class="w-full">
-          <img
-            class="mx-auto rounded-md"
-            :src="'/img/common/logo.jpg'"
-            alt="pci_logo"
-          />
-        </div>
-      </div>
-      <div class="md:grid md:grid-cols-3 md:gap-6">
-        <div class="mt-10 md:mt-5 md:col-span-3">
-          <form @submit.prevent="submit">
-            <div class="shadow overflow-hidden sm:rounded-md">
-              <div class="px-4 py-3 bg-gray-50 text-center sm:px-6">
-                <p>Completa la tua iscrizione</p>
-              </div>
-              <div class="px-4 py-5 bg-white sm:p-6">
-                <div class="grid grid-cols-6 gap-6">
-                  <div class="col-span-4 sm:col-span-2">
-                    <label
-                      for="first_name"
-                      class="block text-sm font-medium text-gray-700"
-                      >Nome</label
-                    >
-                    <input
-                      v-model="form.first_name"
-                      type="text"
-                      name="first_name"
-                      id="first_name"
-                      autocomplete="given-name"
-                      class="
-                        mt-1
-                        focus:ring-indigo-500
-                        focus:border-indigo-500
-                        block
-                        w-full
-                        shadow-sm
-                        sm:text-sm
-                        border-gray-300
-                        rounded-md
-                      "
+<template #guest>
+    <container>
+        <div class="mt-10 sm:mt-5 px-24">
+            <div class="flex justify-items-center">
+                <div class="w-full">
+                    <img
+                        class="mx-auto rounded-md"
+                        :src="'/img/common/logo.jpg'"
+                        alt="pci_logo"
                     />
-                  </div>
-
-                  <div class="col-span-8 sm:col-span-4">
-                    <label
-                      for="last_name"
-                      class="block text-sm font-medium text-gray-700"
-                      >Cognome</label
-                    >
-                    <input
-                      v-model="form.last_name"
-                      type="text"
-                      name="last_name"
-                      id="last_name"
-                      autocomplete="family-name"
-                      class="
-                        mt-1
-                        focus:ring-indigo-500
-                        focus:border-indigo-500
-                        block
-                        w-full
-                        shadow-sm
-                        sm:text-sm
-                        border-gray-300
-                        rounded-md
-                      "
-                    />
-                  </div>
-
-                  <div class="col-span-3 sm:col-span-2">
-                    <label
-                      for="city"
-                      class="block text-sm font-medium text-gray-700"
-                      >Nato a</label
-                    >
-                    <input
-                      v-model="form.city"
-                      type="text"
-                      name="city"
-                      id="city"
-                      class="
-                        mt-1
-                        focus:ring-indigo-500
-                        focus:border-indigo-500
-                        block
-                        w-full
-                        shadow-sm
-                        sm:text-sm
-                        border-gray-300
-                        rounded-md
-                      "
-                    />
-                  </div>
-
-                  <div class="col-span-3 sm:col-span-2">
-                    <label
-                      for="birth"
-                      class="block text-sm font-medium text-gray-700"
-                      >Il</label
-                    >
-                    <input
-                    v-model="form.birth"
-                      type="date"
-                      name="birth"
-                      id="birth"
-                      class="
-                        mt-1
-                        focus:ring-indigo-500
-                        focus:border-indigo-500
-                        block
-                        w-full
-                        shadow-sm
-                        sm:text-sm
-                        border-gray-300
-                        rounded-md
-                      "
-                    />
-                  </div>
-
-                  <div class="col-span-3 sm:col-span-1 lg:col-span-3">
-                    <label
-                      for="city_res"
-                      class="block text-sm font-medium text-gray-700"
-                      >Residente a</label
-                    >
-                    <input
-                      v-model="form.city_res"
-                      type="text"
-                      name="city_res"
-                      id="city_res"
-                      class="
-                        mt-1
-                        focus:ring-indigo-500
-                        focus:border-indigo-500
-                        block
-                        w-full
-                        shadow-sm
-                        sm:text-sm
-                        border-gray-300
-                        rounded-md
-                      "
-                    />
-                  </div>
-
-                  <div class="col-span-4 sm:col-span-2">
-                    <label
-                      for="address"
-                      class="block text-sm font-medium text-gray-700"
-                      >Via</label
-                    >
-                    <input
-                    v-model="form.address"
-                      type="text"
-                      name="address"
-                      id="address"
-                      autocomplete="street-address"
-                      class="
-                        mt-1
-                        focus:ring-indigo-500
-                        focus:border-indigo-500
-                        block
-                        w-full
-                        shadow-sm
-                        sm:text-sm
-                        border-gray-300
-                        rounded-md
-                      "
-                    />
-                  </div>
-
-                  <div class="col-span-1 sm:col-span-1 lg:col-span-1">
-                    <label
-                      for="postal_code"
-                      class="block text-sm font-medium text-gray-700"
-                      >CAP</label
-                    >
-                    <input
-                    v-model="form.postal_code"
-                      type="text"
-                      name="postal_code"
-                      id="postal_code"
-                      autocomplete="postal-code"
-                      class="
-                        mt-1
-                        focus:ring-indigo-500
-                        focus:border-indigo-500
-                        block
-                        w-full
-                        shadow-sm
-                        sm:text-sm
-                        border-gray-300
-                        rounded-md
-                      "
-                    />
-                  </div>
-
-                  <div class="col-span-6 sm:col-span-3">
-                    <label
-                      for="email"
-                      class="block text-sm font-medium text-gray-700"
-                      >Email</label
-                    >
-                    <input
-                      v-model="form.email"
-                      type="text"
-                      name="email"
-                      id="email"
-                      autocomplete="email"
-                      class="
-                        mt-1
-                        focus:ring-indigo-500
-                        focus:border-indigo-500
-                        block
-                        w-full
-                        shadow-sm
-                        sm:text-sm
-                        border-gray-300
-                        rounded-md
-                      "
-                    />
-                  </div>
-
-                  <div class="col-span-4 sm:col-span-2">
-                    <label
-                      for="phone"
-                      class="block text-sm font-medium text-gray-700"
-                      >Telefono</label
-                    >
-                    <input
-                      v-model="form.phone"
-                      type="text"
-                      name="phone"
-                      id="phone"
-                      class="
-                        mt-1
-                        focus:ring-indigo-500
-                        focus:border-indigo-500
-                        block
-                        w-full
-                        shadow-sm
-                        sm:text-sm
-                        border-gray-300
-                        rounded-md
-                      "
-                    />
-                  </div>
-
-                  <div class="col-span-4 sm:col-span-2">
-                    <label
-                      for="contact_type"
-                      class="block text-sm font-medium text-gray-700"
-                      >Desidero essere contattato via</label
-                    >
-                    <select
-                      v-model="form.contact_type"
-                      type="select"
-                      name="contact_type"
-                      id="contact_type"
-                      class="
-                        mt-1
-                        focus:ring-indigo-500
-                        focus:border-indigo-500
-                        block
-                        w-full
-                        shadow-sm
-                        sm:text-sm
-                        border-gray-300
-                        rounded-md
-                      "
-                    >
-                      <option disabled value="0">---</option>
-                      <option value="1">Telefono</option>
-                      <option value="2">Whatsapp</option>
-                    </select>
-                  </div>
-
-                  <div class="col-span-4 sm:col-span-2">
-                    <label
-                      for="activity"
-                      class="block text-sm font-medium text-gray-700"
-                      >Per attività riguardanti</label
-                    >
-                    <select
-                      v-model="form.activity"
-                      type="select"
-                      name="activity"
-                      id="activity"
-                      class="
-                        mt-1
-                        focus:ring-indigo-500
-                        focus:border-indigo-500
-                        block
-                        w-full
-                        shadow-sm
-                        sm:text-sm
-                        border-gray-300
-                        rounded-md
-                      "
-                    >
-                      <option disabled value="0">---</option>
-                      <option value="1">Attività adulti</option>
-                      <option value="2">Attività bambini</option>
-                      <option value="3">Tutte</option>
-                    </select>
-                  </div>
-
-                  <input
-                    type="hidden"
-                    v-model="form.sub_token"
-                    name="sub_token"
-                    id="sub_token"
-                  />
                 </div>
-                <div class="w-full mt-6">
-                  <h4><b>chiede</b></h4>
-                  <p>
-                    di aderire all’Associazione Culturale “piccola
-                    compagnia impertinente” in qualità di socio/a ordinario/a
-                    per l’anno sociale 2021/2022. Conferma di avere preso visione
-                    dello Statuto e di condividere le finalità
-                    dell’Associazione. Autorizza, ai sensi della legge 675/96 e
-                    del D.L.196/2003, il trattamento dei dati personali qui o
-                    altrove dichiarati, esclusivamente per lo svolgimento e la
-                    gestione delle attività legate agli scopi dell’Associazione,
-                    senza possibilità di trasferimento a terzi dei dati
-                    medesimi.
-                  </p>
-                </div>
-              </div>
-              <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                <button
-                  type="submit"
-                  class="
-                    inline-flex
-                    justify-center
-                    py-2
-                    px-4
-                    border border-transparent
-                    shadow-sm
-                    text-sm
-                    font-medium
-                    rounded-md
-                    text-white
-                    bg-indigo-600
-                    hover:bg-indigo-700
-                    focus:outline-none
-                    focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
-                  "
-                >
-                  Save
-                </button>
-              </div>
             </div>
-          </form>
+            <div class="md:grid md:grid-cols-3 md:gap-6">
+                <div class="mt-10 md:mt-5 md:col-span-3">
+                    <form @submit.prevent="submit">
+                        <div class="shadow overflow-hidden sm:rounded-md">
+                            <div
+                                class="px-4 py-3 bg-gray-50 text-center sm:px-6"
+                            >
+                                <p>Completa la tua iscrizione</p>
+                            </div>
+                            <div class="px-4 py-5 bg-white sm:p-6">
+                                <div class="grid grid-cols-6 gap-6">
+                                    <div class="col-span-4 sm:col-span-2">
+                                        <label
+                                            for="first_name"
+                                            class="block text-sm font-medium text-gray-700"
+                                            >Nome</label
+                                        >
+                                        <input
+                                            v-model="form.first_name"
+                                            type="text"
+                                            name="first_name"
+                                            id="first_name"
+                                            autocomplete="given-name"
+                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        />
+                                    </div>
+
+                                    <div class="col-span-8 sm:col-span-4">
+                                        <label
+                                            for="last_name"
+                                            class="block text-sm font-medium text-gray-700"
+                                            >Cognome</label
+                                        >
+                                        <input
+                                            v-model="form.last_name"
+                                            type="text"
+                                            name="last_name"
+                                            id="last_name"
+                                            autocomplete="family-name"
+                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        />
+                                    </div>
+
+                                    <div class="col-span-3 sm:col-span-2">
+                                        <label
+                                            for="city"
+                                            class="block text-sm font-medium text-gray-700"
+                                            >Nato a</label
+                                        >
+                                        <input
+                                            v-model="form.city"
+                                            type="text"
+                                            name="city"
+                                            id="city"
+                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        />
+                                    </div>
+
+                                    <div class="col-span-1 sm:col-span-1">
+                                        <label
+                                            for="province"
+                                            class="block text-sm font-medium text-gray-700"
+                                            >Provincia</label
+                                        >
+                                        <input
+                                            v-model="form.province"
+                                            type="text"
+                                            name="province"
+                                            id="province"
+                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        />
+                                    </div>
+
+                                    <div class="col-span-3 sm:col-span-2">
+                                        <label
+                                            for="birth"
+                                            class="block text-sm font-medium text-gray-700"
+                                            >Il</label
+                                        >
+                                        <input
+                                            v-model="form.birth"
+                                            type="date"
+                                            name="birth"
+                                            id="birth"
+                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        />
+                                    </div>
+
+                                    <div
+                                        class="col-span-2 sm:col-span-2 lg:col-span-2"
+                                    >
+                                        <label
+                                            for="resident"
+                                            class="block text-sm font-medium text-gray-700"
+                                            >Residente a</label
+                                        >
+                                        <input
+                                            v-model="form.resident"
+                                            type="text"
+                                            name="resident"
+                                            id="resident"
+                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        />
+                                    </div>
+
+                                    <div class="col-span-4 sm:col-span-2">
+                                        <label
+                                            for="address"
+                                            class="block text-sm font-medium text-gray-700"
+                                            >Indirizzo</label
+                                        >
+                                        <input
+                                            v-model="form.address"
+                                            type="text"
+                                            name="address"
+                                            id="address"
+                                            autocomplete="street-address"
+                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        />
+                                    </div>
+
+                                    <div
+                                        class="col-span-1 sm:col-span-1 lg:col-span-1"
+                                    >
+                                        <label
+                                            for="postal_code"
+                                            class="block text-sm font-medium text-gray-700"
+                                            >CAP</label
+                                        >
+                                        <input
+                                            v-model="form.postal_code"
+                                            type="text"
+                                            name="postal_code"
+                                            id="postal_code"
+                                            autocomplete="postal-code"
+                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        />
+                                    </div>
+
+                                    <div class="col-span-4 sm:col-span-2">
+                                        <label
+                                            for="phone"
+                                            class="block text-sm font-medium text-gray-700"
+                                            >Telefono</label
+                                        >
+                                        <input
+                                            v-model="form.phone"
+                                            type="text"
+                                            name="phone"
+                                            id="phone"
+                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        />
+                                    </div>
+
+                                    <div class="col-span-4 sm:col-span-2">
+                                        <label
+                                            for="contact_type"
+                                            class="block text-sm font-medium text-gray-700"
+                                            >Desidero essere contattato</label
+                                        >
+                                        <select
+                                            v-model="form.contact_type"
+                                            type="select"
+                                            name="contact_type"
+                                            id="contact_type"
+                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        >
+                                            <option
+                                                v-for="(key, value) in contacts"
+                                                :value="value"
+                                                :key="value"
+                                                >{{ key }}</option
+                                            >
+                                        </select>
+                                    </div>
+
+                                    <div class="col-span-4 sm:col-span-2">
+                                        <label
+                                            for="activity"
+                                            class="block text-sm font-medium text-gray-700"
+                                            >Per attività riguardanti</label
+                                        >
+                                        <select
+                                            v-model="form.activity"
+                                            type="select"
+                                            name="activity"
+                                            id="activity"
+                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        >
+                                            <option
+                                                v-for="(key,
+                                                value) in activities"
+                                                :value="value"
+                                                :key="value"
+                                                >{{ key }}</option
+                                            >
+                                        </select>
+                                    </div>
+
+                                    <input
+                                        type="hidden"
+                                        v-model="form.sub_token"
+                                        name="sub_token"
+                                        id="sub_token"
+                                    />
+                                </div>
+                            </div>
+                            <div
+                                class="px-4 py-3 bg-gray-50 text-center sm:px-6"
+                            >
+                                <button
+                                    type="submit"
+                                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                >
+                                    Completa il tuo tesseramento
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </container>
+    </container>
 </template>
 
 <script>
@@ -368,38 +241,41 @@ import { reactive } from "vue";
 import { Inertia } from "@inertiajs/inertia";
 
 export default {
-  components: {
-    Container,
-  },
+    components: {
+        Container,
+    },
 
-  props: {
-    sub_token: String,
-  },
+    props: {
+        sub_token: String,
+        contacts: Array,
+        activities: Array,
+    },
 
-  setup() {
-    const form = reactive({
-      first_name: null,
-      last_name: null,
-      email: null,
-      city:null, 
-      city_res:null,
-      phone:null, 
-      activity:null,
-      postal_code: null,
-      address:null,
-      contact_type: null,
-      sub_token: null,
-    });
+    setup() {
+        const form = reactive({
+            first_name: null,
+            last_name: null,
+            email: null,
+            city: null,
+            resident: null,
+            phone: null,
+            province: null,
+            activity: null,
+            postal_code: null,
+            address: null,
+            contact_type: null,
+            sub_token: null,
+        });
 
-    function submit() {
-      Inertia.post("/public/subscriptions/complete", form);
-    }
+        function submit() {
+            Inertia.post("/public/subscriptions/complete", form);
+        }
 
-    return { form, submit };
-  },
+        return { form, submit };
+    },
 
-  mounted() {
-    this.form.sub_token = this.sub_token;
-  },
+    mounted() {
+        this.form.sub_token = this.sub_token;
+    },
 };
 </script>

@@ -14,19 +14,16 @@ class Subscription extends Model
         'subscription_email',
         'status',
         'token',
-        'expires_at'
+        'expires_at',
+        'contact_type',
+        'activity',
+        'year_from',
+        'year_to'
     ];
-
-    const PENDING = 'PENDING';
-    const TO_BE_COMPLETED = 'TO_BE_COMPLETED';
-    const TO_BE_CONFIRMED = 'TO_BE_CONFIRMED';
-    const ACTIVE = 'ACTIVE';
-    const INACTIVE = 'INACTIVE';
-    const EXPIRED = 'EXPIRED';
 
     /**
      * the subscription statuses
-     * 
+     *
      * Pending: link to the subscription form has been generated and sent to the customer
      * To Be Completed: a subscription that has to be filled by the customer
      * To Be Confiermed: a subscription that has to be confirmed by the backoffice
@@ -34,49 +31,32 @@ class Subscription extends Model
      * Inactive: a cancelled subscription
      * Expired: an expired subscription (user has not completed the subscription before the expiration)
      */
-    public const STATUSES = [
-        0 => self::PENDING,
-        1 => self::TO_BE_COMPLETED,
-        2 => self::TO_BE_CONFIRMED,
-        3 => self::ACTIVE,
-        4 => self::INACTIVE,
-        5 => self::EXPIRED
-    ];
+
+    const PENDING = 0;
+    const TO_BE_COMPLETED = 1;
+    const TO_BE_CONFIRMED = 2;
+    const ACTIVE = 3;
+    const INACTIVE = 4;
+    const EXPIRED = 5;
 
     /**
-     * returns the id of a status
-     *
-     * @param string $status the subscription status
-     * @return int statusID
+     * the activity constants
      */
-    public static function getStatusID($status)
-    {
-        return array_search($status, self::STATUSES);
-    }
-   
-    /**
-    * get subscription status
-    */
-    public function getStatusAttribute()
-    {
-        return self::STATUSES[ $this->attributes['status'] ];
-    }
+    const ACTIVITY_CHILD = 0;
+    const ACTIVITY_ADULT = 1;
+    const ACTIVITY_BOTH = 2;
 
     /**
-      * set subscription status
-      */
-    public function setStatusAttribute($value)
-    {
-        $statusId = $this->getStatusID($value);
-        if ($statusId) {
-            $this->attributes['status'] = $statusId;
-        }
-    }
+     * the contact options
+     */
+    const PHONE_CONTACT = 0;
+    const WHATSAPP_CONTACT = 1;
 
     /**
      * subscription/customer relationshib
      */
-    public function customer(){
-        return $this->hasOne(Customer::class);
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
     }
 }

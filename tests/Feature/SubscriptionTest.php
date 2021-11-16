@@ -58,7 +58,7 @@ class SubscriptionTest extends TestCase
         $this->assertDatabaseCount('subscriptions', 1);
         $sub = Subscription::where('subscription_email', 'prova@prova.com')->first();
         $this->assertDatabaseHas('subscriptions', ['token' => $sub->token, 'status' => 0]);
-        $url = URL::to('/public/subscriptions') . '/' . $sub->token;
+        $url = URL::signedRoute('subscriptions.fill', ['token' =>  $sub->token]);
         $getFormResponse = $this->get($url);
         $getFormResponse->assertStatus(200);
     }
@@ -76,11 +76,12 @@ class SubscriptionTest extends TestCase
         $this->assertDatabaseCount('subscriptions', 1);
         $this->assertDatabaseHas('subscriptions', ['expires_at' => null]);
         //assert response
-        $this->get(URL::to('/public/subscriptions') . '/' . 
-        Subscription::first()->token)->assertStatus(200);
+        $this->get(
+            URL::signedRoute('subscriptions.fill', ['token' =>  Subscription::first()->token])
+        )->assertStatus(200);
         //assert subscription has changed
         $this->assertDatabaseHas('subscriptions', [
-            'expires_at' => Carbon::now()->addMinutes(10)
+            'expires_at' => Carbon::now()->addMinutes(10)->format('Y-m-d H:i:s')
             ]);
     }
 
@@ -100,21 +101,31 @@ class SubscriptionTest extends TestCase
         $subscriptionData = [
             'first_name' => 'Marco',
             'last_name' => 'Bevilacqua',
-            'email' => 'example@mail.com',
-            'sub_token' => $subscriptionToBeCompleted->token
+            'email' => $subscriptionToBeCompleted->subscription_email,
+            'sub_token' => $subscriptionToBeCompleted->token,
+            'year_from' => '2021',
+            'year_to' => '2022',
+            'city' => 'my City',
+            'province' => 'FG',
+            'resident' => 'aaaa',
+            'birth' => '1982-07-20',
+            'phone' => 3333333,
+            'address' => 'Fake address',
+            'postal_code' => 989797
         ];
 
         $response = $this->post('/public/subscriptions/complete', $subscriptionData);
 
         $this->assertDatabaseHas('customers', [
-            'email' => 'example@mail.com',
+            'email' => $subscriptionToBeCompleted->subscription_email,
             'first_name' => 'Marco',
             'last_name' => 'Bevilacqua',
-            'password' => NULL
+            'password' => null,
+            
         ]);
 
         $this->assertDatabaseHas('subscriptions', [
-            'status' => Subscription::getStatusId(Subscription::TO_BE_CONFIRMED)
+            'status' => Subscription::TO_BE_CONFIRMED
         ]);
     }
 }
