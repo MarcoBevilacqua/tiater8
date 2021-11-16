@@ -14,10 +14,10 @@
         <span class="leading-5"> telefono {{ $customer->phone}} email {{ $customer->email}}</span>
     </div>    
     <div class="my-8 font-bold">
-        <span class="leading-5">desidera essere contattato via {{$customer->contact_type}}</span>
+        <span class="leading-5">desidera essere contattato {{$contact_type}}</span>
     </div>                        
     <div class="row font-bold">
-        <span>per comunicazioni riguardanti {{ $customer->activity }}</span>
+        <span>per comunicazioni riguardanti {{ $activity }}</span>
     </div>       
     <div class="font-bold my-6">
         <h3>chiede</h3>
