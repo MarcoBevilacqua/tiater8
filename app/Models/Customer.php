@@ -9,7 +9,8 @@ class Customer extends Model
 {
     use HasFactory;
 
-    public function subscriptions() {
+    public function subscriptions()
+    {
         return $this->hasMany(Subscription::class, 'customer_id');
     }
 
@@ -17,11 +18,23 @@ class Customer extends Model
         'first_name',
         'last_name',
         'email',
-        'password'
+        'password',
+        'city',
+        'phone',
+        'birth',
+        'province',
+        'resident',
+        'address',
+        'postal_code'
     ];
 
     protected $hidden = [
         'password'
     ];
 
+    //subscription relationship
+    public function subscription()
+    {
+        return $this->hasMany(Subscription::class);
+    }
 }

@@ -1,261 +1,193 @@
 <template>
-  <breeze-authenticated-layout>
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">Subsription</h2>
-    </template>
-    <container>
-      <div class="mt-10 sm:mt-5 px-24">
-        <div class="md:grid md:grid-cols-3 md:gap-6">
-          <div class="mt-10 md:mt-5 md:col-span-3">
-            <form @submit.prevent="submit">
-              <div class="shadow overflow-hidden sm:rounded-md">
-                <div class="px-4 py-3 bg-gray-50 text-center sm:px-6">
-                  <p>Modifica Sottoscrizione</p>
+    <breeze-authenticated-layout>
+        <template #header>
+            <h1>Modifica Tessera # {{ subscription.id }}</h1>
+        </template>
+        <template #main>
+            <container>
+                <div class="mt-10 sm:mt-5">
+                    <div class="md:grid md:grid-cols-3 md:gap-6">
+                        <div class="mt-10 md:mt-5 md:col-span-3">
+                            <form @submit.prevent="update">
+                                <div
+                                    class="shadow overflow-hidden sm:rounded-md"
+                                >
+                                    <div class="px-4 py-5 bg-white sm:p-6">
+                                        <input
+                                            type="hidden"
+                                            v-model="form.id"
+                                            name="id"
+                                            id="id"
+                                        />
+                                        <div
+                                            class="grid grid-cols-6 gap-6 mt-6"
+                                        >
+                                            <div
+                                                class="col-span-3 sm:col-span-1"
+                                            >
+                                                <label
+                                                    for="contact_type"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                    >Comunicazioni</label
+                                                >
+                                                <select
+                                                    v-model="form.contact_type"
+                                                    type="select"
+                                                    name="contact_type"
+                                                    id="contact_type"
+                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                >
+                                                    <option
+                                                        :selected="contact_type"
+                                                        v-for="(key,
+                                                        value) in contacts"
+                                                        :value="value"
+                                                        :key="value"
+                                                        >{{ key }}</option
+                                                    >
+                                                </select>
+                                            </div>
+
+                                            <div
+                                                class="col-span-3 sm:col-span-2"
+                                            >
+                                                <label
+                                                    for="activity"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                    >Tipo di attività</label
+                                                >
+                                                <select
+                                                    v-model="form.activity"
+                                                    type="select"
+                                                    name="activity"
+                                                    id="activity"
+                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                >
+                                                    <option
+                                                        v-for="(key,
+                                                        value) in activities"
+                                                        :value="value"
+                                                        :key="value"
+                                                        >{{ key }}</option
+                                                    >
+                                                </select>
+                                            </div>
+                                            <div
+                                                class="col-span-6 sm:col-span-3"
+                                            >
+                                                <label
+                                                    for="status"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                    >Stato della
+                                                    sottoscrizione</label
+                                                >
+                                                <select
+                                                    v-model="form.status"
+                                                    name="status"
+                                                    id="status"
+                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                >
+                                                    <option
+                                                        v-for="(key,
+                                                        value) in av_statuses"
+                                                        :value="value"
+                                                        :key="value"
+                                                        >{{ key }}</option
+                                                    >
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-6 gap-6">
+                                            <div class="mt-4">
+                                                <a
+                                                    target="_blank"
+                                                    :href="
+                                                        route(
+                                                            'pdf.subscriptions.module',
+                                                            {
+                                                                subscriptionId:
+                                                                    subscription.id,
+                                                            }
+                                                        )
+                                                    "
+                                                    class="bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                                >
+                                                    Stampa Modulo
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="px-4 py-3 bg-gray-50 text-right sm:px-6"
+                                    >
+                                        <a
+                                            :href="route('subscriptions.index')"
+                                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-4"
+                                        >
+                                            Torna alla lista
+                                        </a>
+                                        <button
+                                            type="submit"
+                                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                        >
+                                            Salva
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <div class="px-4 py-5 bg-white sm:p-6">
-                  <div class="grid grid-cols-6 gap-6">
-                    <div class="col-span-4 sm:col-span-2">
-                      <label
-                        for="first_name"
-                        class="block text-sm font-medium text-gray-700"
-                        >First name</label
-                      >
-                      <input
-                        v-model="form.subscription_email"
-                        type="text"
-                        name="subscription_email"
-                        id="subscription_email"
-                        autocomplete="given-name"
-                        class="
-                          mt-1
-                          focus:ring-indigo-500
-                          focus:border-indigo-500
-                          block
-                          w-full
-                          shadow-sm
-                          sm:text-sm
-                          border-gray-300
-                          rounded-md
-                        "
-                      />
-                    </div>
-
-                    <div class="col-span-8 sm:col-span-4">
-                      <label
-                        for="last_name"
-                        class="block text-sm font-medium text-gray-700"
-                        >Last name</label
-                      >
-                      <input
-                        v-model="form.last_name"
-                        type="text"
-                        name="last_name"
-                        id="last_name"
-                        autocomplete="family-name"
-                        class="
-                          mt-1
-                          focus:ring-indigo-500
-                          focus:border-indigo-500
-                          block
-                          w-full
-                          shadow-sm
-                          sm:text-sm
-                          border-gray-300
-                          rounded-md
-                        "
-                      />
-                    </div>
-
-                    <div class="col-span-12 sm:col-span-6">
-                      <label
-                        for="email_address"
-                        class="block text-sm font-medium text-gray-700"
-                        >Email address</label
-                      >
-                      <input
-                        v-model="form.email"
-                        type="text"
-                        name="email_address"
-                        id="email_address"
-                        autocomplete="email"
-                        class="
-                          mt-1
-                          focus:ring-indigo-500
-                          focus:border-indigo-500
-                          block
-                          w-full
-                          shadow-sm
-                          sm:text-sm
-                          border-gray-300
-                          rounded-md
-                        "
-                      />
-                    </div>
-
-                    <div class="col-span-4 sm:col-span-2">
-                      <label
-                        for="street_address"
-                        class="block text-sm font-medium text-gray-700"
-                        >Street address</label
-                      >
-                      <input
-                        type="text"
-                        name="street_address"
-                        id="street_address"
-                        autocomplete="street-address"
-                        class="
-                          mt-1
-                          focus:ring-indigo-500
-                          focus:border-indigo-500
-                          block
-                          w-full
-                          shadow-sm
-                          sm:text-sm
-                          border-gray-300
-                          rounded-md
-                        "
-                      />
-                    </div>
-
-                    <div class="col-span-3 sm:col-span-2">
-                      <label
-                        for="city"
-                        class="block text-sm font-medium text-gray-700"
-                        >City</label
-                      >
-                      <input
-                        type="text"
-                        name="city"
-                        id="city"
-                        class="
-                          mt-1
-                          focus:ring-indigo-500
-                          focus:border-indigo-500
-                          block
-                          w-full
-                          shadow-sm
-                          sm:text-sm
-                          border-gray-300
-                          rounded-md
-                        "
-                      />
-                    </div>
-
-                    <div class="col-span-1 sm:col-span-1 lg:col-span-1">
-                      <label
-                        for="state"
-                        class="block text-sm font-medium text-gray-700"
-                        >State / Province</label
-                      >
-                      <input
-                        type="text"
-                        name="state"
-                        id="state"
-                        class="
-                          mt-1
-                          focus:ring-indigo-500
-                          focus:border-indigo-500
-                          block
-                          w-full
-                          shadow-sm
-                          sm:text-sm
-                          border-gray-300
-                          rounded-md
-                        "
-                      />
-                    </div>
-
-                    <div class="col-span-1 sm:col-span-1 lg:col-span-1">
-                      <label
-                        for="postal_code"
-                        class="block text-sm font-medium text-gray-700"
-                        >ZIP / Postal</label
-                      >
-                      <input
-                        type="text"
-                        name="postal_code"
-                        id="postal_code"
-                        autocomplete="postal-code"
-                        class="
-                          mt-1
-                          focus:ring-indigo-500
-                          focus:border-indigo-500
-                          block
-                          w-full
-                          shadow-sm
-                          sm:text-sm
-                          border-gray-300
-                          rounded-md
-                        " />
-                    </div>
-                    <input type="hidden" v-model="form.sub_token" name="sub_token" id="sub_token" />
-                  </div>
-                </div>
-                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                  <button
-                    type="submit"
-                    class="
-                      inline-flex
-                      justify-center
-                      py-2
-                      px-4
-                      border border-transparent
-                      shadow-sm
-                      text-sm
-                      font-medium
-                      rounded-md
-                      text-white
-                      bg-indigo-600
-                      hover:bg-indigo-700
-                      focus:outline-none
-                      focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
-                    "
-                  >
-                    Save
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </container>
-  </breeze-authenticated-layout>
+            </container>
+        </template>
+    </breeze-authenticated-layout>
 </template>
 
 <script>
-import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
 import Container from "@/Layouts/Container";
-import { reactive } from "vue";
-import { Inertia } from "@inertiajs/inertia";
+import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
+import { useForm } from "@inertiajs/inertia-vue3";
+import { Link } from "@inertiajs/inertia-vue3";
 
 export default {
-  components: {
-    BreezeAuthenticatedLayout,
-    Container,
-  },
+    components: {
+        Container,
+        BreezeAuthenticatedLayout,
+    },
 
-  props: {
-    sub_token: String,
-  },
+    props: {
+        subscription: Object,
+        _method: String,
+        av_statuses: Array,
+        contacts: Array,
+        activities: Array,
+    },
 
-  setup() {
-    const form = reactive({
-      first_name: null,
-      last_name: null,
-      email: null,
-      sub_token: null,
-    });
+    data() {
+        return {
+            form: this.$inertia.form({
+                _method: this._method,
+                id: this.subscription.id,
+                subscription_email: this.subscription.subscription_email,
+                status: this.subscription.status,
+                contact_type: this.subscription.contact_type,
+                activity: this.subscription.activity,
+                av_statuses: this.av_statuses,
+                contacts: this.contacts,
+                activities: this.activities,
+            }),
+        };
+    },
 
-    function submit() {
-      Inertia.post("/subscriptions/complete", form);
-    }
-
-    return { form, submit };
-  },
-
-  mounted(){
-    this.form.sub_token = this.sub_token;
-  }
+    methods: {
+        update() {
+            this.form.post(
+                this.route("subscriptions.update", this.subscription.id),
+                {
+                    onSuccess: () => this.form.reset(),
+                }
+            );
+        },
+    },
 };
 </script>

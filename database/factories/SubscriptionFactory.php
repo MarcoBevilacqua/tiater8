@@ -26,7 +26,9 @@ class SubscriptionFactory extends Factory
         return [
             'subscription_email' => 'example@example.com',
             'token' => 'abc123',
-            'expires_at' => Carbon::now()->addHour()
+            'expires_at' => Carbon::now()->addHour(),
+            'year_from' => '2021',
+            'year_to' => '2022',
         ];
     }
 
@@ -37,42 +39,43 @@ class SubscriptionFactory extends Factory
      */
     public function pending()
     {
-        return $this->state(function(array $attributes){
+        return $this->state(function (array $attributes) {
             return [
                 'status' => Subscription::PENDING
             ];
-            
         });
     }
 
-        /**
+    /**
      * A pending subscription
      *
      * @return array
      */
     public function toBeCompleted()
     {
-        return $this->state(function(array $attributes){
+        return $this->state(function (array $attributes) {
             return [
                 'status' => Subscription::TO_BE_COMPLETED,
                 'expires_at' => Carbon::now()->addHour(),
+                'year_from' => '2021',
+                'year_to' => '2022',
             ];
-            
         });
     }
 
-        /**
+    /**
      * A subscription to be confirmed
      *
      * @return array
      */
     public function toBeConfirmed()
     {
-        return $this->state(function(array $attributes){
+        return $this->state(function (array $attributes) {
             return [
-                'status' => Subscription::TO_BE_CONFIRMED
+                'status' => Subscription::TO_BE_CONFIRMED,
+                'year_from' => '2021',
+                'year_to' => '2022',
             ];
-            
         });
     }
 }

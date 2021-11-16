@@ -27,6 +27,8 @@
     "dependencies": {
         "@babel/preset-react": "^7.13.13",
         "@inertiajs/inertia": "^0.9.2",
-        "@inertiajs/inertia-vue3": "^0.4.4"
+        "@inertiajs/inertia-vue3": "^0.4.4",
+        "@prettier/plugin-php": "0.14.3",
+        "prettier": "2.0.5"
     }
 }
