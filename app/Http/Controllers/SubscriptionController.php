@@ -284,7 +284,7 @@ class SubscriptionController extends Controller
         try {
             Mail::to($canHandleSubscription->last())->send(new SubscriptionFilled());
         } catch (Exception $exception) {
-            Log::error("Cannot send Mail to {$request->customer_email}: " . $exception->getMessage());
+            Log::error("Cannot send Mail to {$canHandleSubscription->last()}: " . $exception->getMessage());
         }
 
         //complete the subscription
