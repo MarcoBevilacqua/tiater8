@@ -31,7 +31,7 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard')->with('generateLink', URL::route('subscriptions.generate'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::prefix('public')->group(function () {
+Route::prefix('over')->group(function () {
     //the subscription confirmation
     Route::get('/subscriptions/confirmed', [SubscriptionController::class, 'confirmed']);
     //the subscription form visualization
