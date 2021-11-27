@@ -12,7 +12,7 @@
             </div>
             <div class="md:grid md:grid-cols-3 md:gap-6">
                 <div class="mt-10 md:mt-5 md:col-span-3">
-                    <form @submit.prevent="submit">
+                    <form @submit.prevent="complete">
                         <div class="shadow overflow-hidden sm:rounded-md">
                             <div
                                 class="px-4 py-3 bg-gray-50 text-center sm:px-6"
@@ -249,30 +249,34 @@ export default {
         sub_token: String,
         contacts: Array,
         activities: Array,
-        url: String
+        url: String,
     },
 
-    setup() {
-        const form = reactive({
-            first_name: null,
-            last_name: null,
-            email: null,
-            city: null,
-            resident: null,
-            phone: null,
-            province: null,
-            activity: null,
-            postal_code: null,
-            address: null,
-            contact_type: null,
-            sub_token: null,
-        });
+    data() {
+        return {
+            form: this.$inertia.form({
+                first_name: null,
+                last_name: null,
+                email: null,
+                city: null,
+                resident: null,
+                phone: null,
+                province: null,
+                activity: null,
+                postal_code: null,
+                address: null,
+                contact_type: null,
+                sub_token: null,
+            }),
+        };
+    },
 
-        function submit() {
-            Inertia.post(this.url, form);
-        }
-
-        return { form, submit };
+    methods: {
+        complete() {
+            this.form.post(this.route("subscriptions.complete", this.form), {
+                onSuccess: () => this.form.reset(),
+            });
+        },
     },
 
     mounted() {

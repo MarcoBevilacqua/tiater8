@@ -15,6 +15,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Route;
 
 class SubscriptionController extends Controller
 {
@@ -25,8 +26,7 @@ class SubscriptionController extends Controller
         $this->rules = [
             'complete' => [
                 'first_name' => 'required',
-                'last_name' => 'required',
-                'email' => 'required|email',
+                'last_name' => 'required'
             ],
             'store' => [
                 'customer_id' => 'exists:App\Models\Customer,id',
@@ -221,9 +221,12 @@ class SubscriptionController extends Controller
         Log::info("Subscription can be completed!!!", [__CLASS__, __FUNCTION__]);
 
         //should return form
-        return Inertia::render('Public/CompleteSubscription', ['sub_token' => $token,
+        return Inertia::render('Public/CompleteSubscription', [
+            'sub_token' => $token,
             'activities' => SubscriptionService::getAllFancyActivityLabels(),
-            'contacts' => SubscriptionService::getAllFancyContactLabels(),]);
+            'contacts' => SubscriptionService::getAllFancyContactLabels(),
+            'url' => route('subscriptions.complete')
+        ]);
     }
 
     public function complete(Request $request)
@@ -279,7 +282,7 @@ class SubscriptionController extends Controller
         Log::info("Customer with ID {$customer->id} successfully created", [__CLASS__, __FUNCTION__]);
 
         try {
-            Mail::to($request->input('email'))->send(new SubscriptionFilled());
+            Mail::to($canHandleSubscription->last())->send(new SubscriptionFilled());
         } catch (Exception $exception) {
             Log::error("Cannot send Mail to {$request->customer_email}: " . $exception->getMessage());
         }
@@ -296,7 +299,7 @@ class SubscriptionController extends Controller
          ]);
 
         Log::info("redirecting to subscriptions/" . $request->input('sub_token') . "/confirmed");
-
+        
         /** TODO: Redirect on public simple view */
         return redirect()
             ->action(
