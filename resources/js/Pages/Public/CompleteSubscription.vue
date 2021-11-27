@@ -249,6 +249,7 @@ export default {
         sub_token: String,
         contacts: Array,
         activities: Array,
+        url: String
     },
 
     setup() {
@@ -268,7 +269,7 @@ export default {
         });
 
         function submit() {
-            Inertia.post("/public/subscriptions/complete", form);
+            Inertia.post(this.url, form);
         }
 
         return { form, submit };

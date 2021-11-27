@@ -37,7 +37,7 @@ Route::prefix('over')->group(function () {
     //the subscription form visualization
     Route::get('/subscriptions/fill/{token}', [SubscriptionController::class, 'fill'])->name('subscriptions.fill');
     //the subscription submit
-    Route::post('/subscriptions/complete', [SubscriptionController::class, 'complete']);
+    Route::post('/subscriptions/complete', [SubscriptionController::class, 'complete'])->name('subscriptions.complete');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
