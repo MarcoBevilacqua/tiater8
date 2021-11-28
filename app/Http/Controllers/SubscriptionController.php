@@ -104,16 +104,16 @@ class SubscriptionController extends Controller
      */
     public function edit(int $id)
     {
-        $subscription = Subscription::findOrFail($id);
+        $subscription = Subscription::findOrFail($id)->toArray();
         
         return Inertia::render('Subscription/Form', [
-            'subscription' => [
-            'id' => $subscription->id,
-            'subscription_email' => $subscription->subscription_email,
-            'status' => $subscription->status,
-            'activity' => $subscription->activity,
-            'contact_type' => $subscription->contact_type
-        ],
+            'subscription' => $subscription,
+            'customers' => Customer::all()->map(function (Customer $customer) {
+                return [
+                    'id' => $customer->id,
+                    'name' => $customer->first_name . " " . $customer->last_name
+                ];
+            }),
             '_method'  => 'put',
             'av_statuses' => SubscriptionService::getAllSubFancyStatusLabel(),
             'activities' => SubscriptionService::getAllFancyActivityLabels(),
@@ -257,7 +257,6 @@ class SubscriptionController extends Controller
             Log::info("Cannot validate Request");
             abort(400);
         }
-        Log::info($request->all());
 
         //Create the customer
         //TODO: check phone and birth field
