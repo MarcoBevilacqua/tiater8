@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\App;
 
 class SubscriptionToComplete extends Mailable
 {
@@ -31,7 +32,7 @@ class SubscriptionToComplete extends Mailable
     public function build()
     {
         return $this
-        ->from('no-reply@piccolacompagniaimpertinente.com')
+        ->from(App::environment('MAIL_FROM_ADDRESS'))
         ->subject('Tesseramento Piccola Compagnia Impertinente')
         ->markdown('emails.complete-subscription', ['url' => $this->url]);
     }

@@ -19,6 +19,70 @@
                                             name="id"
                                             id="id"
                                         />
+                                        <div class="grid grid-cols-6 gap-6">
+                                            <div
+                                                class="col-span-6 sm:col-span-3"
+                                            >
+                                                <label
+                                                    for="customer"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                    >Tessera di:</label
+                                                >
+                                                <select
+                                                    v-model="
+                                                        subscription.customer_id
+                                                    "
+                                                    name="customer_id"
+                                                    id="customer_id"
+                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                >
+                                                    <option
+                                                        v-for="customer in customers"
+                                                        :value="customer.id"
+                                                        >{{ customer.name }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div
+                                                class="col-span-3 sm:col-span-1"
+                                            >
+                                                <label
+                                                    for="year_from"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                    >Anno di inizio</label
+                                                >
+                                                <input
+                                                    v-model="form.year_from"
+                                                    type="text"
+                                                    name="year_from"
+                                                    id="year_from"
+                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                />
+                                                <div v-if="errors.year_from">
+                                                    {{ errors.year_from }}
+                                                </div>
+                                            </div>
+
+                                            <div
+                                                class="col-span-3 sm:col-span-1"
+                                            >
+                                                <label
+                                                    for="year_to"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                    >Anno di fine</label
+                                                >
+                                                <input
+                                                    v-model="form.year_to"
+                                                    type="text"
+                                                    name="year_to"
+                                                    id="year_to"
+                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                />
+                                                <div v-if="errors.year_to">
+                                                    {{ errors.year_to }}
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div
                                             class="grid grid-cols-6 gap-6 mt-6"
                                         >
@@ -32,7 +96,6 @@
                                                 >
                                                 <select
                                                     v-model="form.contact_type"
-                                                    type="select"
                                                     name="contact_type"
                                                     id="contact_type"
                                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -58,7 +121,6 @@
                                                 >
                                                 <select
                                                     v-model="form.activity"
-                                                    type="select"
                                                     name="activity"
                                                     id="activity"
                                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -97,29 +159,25 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="grid grid-cols-6 gap-6">
-                                            <div class="mt-4">
-                                                <a
-                                                    target="_blank"
-                                                    :href="
-                                                        route(
-                                                            'pdf.subscriptions.module',
-                                                            {
-                                                                subscriptionId:
-                                                                    subscription.id,
-                                                            }
-                                                        )
-                                                    "
-                                                    class="bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                                >
-                                                    Stampa Modulo
-                                                </a>
-                                            </div>
-                                        </div>
                                     </div>
                                     <div
                                         class="px-4 py-3 bg-gray-50 text-right sm:px-6"
                                     >
+                                        <a
+                                            target="_blank"
+                                            :href="
+                                                route(
+                                                    'pdf.subscriptions.module',
+                                                    {
+                                                        subscriptionId:
+                                                            subscription.id,
+                                                    }
+                                                )
+                                            "
+                                            class="bg-white mr-4 py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                        >
+                                            Stampa Modulo
+                                        </a>
                                         <a
                                             :href="route('subscriptions.index')"
                                             class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-4"
@@ -156,7 +214,9 @@ export default {
     },
 
     props: {
-        subscription: Object,
+        errors: Object,
+        subscription: Array,
+        customers: Array,
         _method: String,
         av_statuses: Array,
         contacts: Array,
@@ -175,6 +235,8 @@ export default {
                 av_statuses: this.av_statuses,
                 contacts: this.contacts,
                 activities: this.activities,
+                year_from: this.subscription.year_from,
+                year_to: this.subscription.year_to,
             }),
         };
     },

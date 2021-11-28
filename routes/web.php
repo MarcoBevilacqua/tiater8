@@ -31,13 +31,13 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard')->with('generateLink', URL::route('subscriptions.generate'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::prefix('public')->group(function () {
+Route::prefix('over')->group(function () {
     //the subscription confirmation
     Route::get('/subscriptions/confirmed', [SubscriptionController::class, 'confirmed']);
     //the subscription form visualization
     Route::get('/subscriptions/fill/{token}', [SubscriptionController::class, 'fill'])->name('subscriptions.fill');
     //the subscription submit
-    Route::post('/subscriptions/complete', [SubscriptionController::class, 'complete']);
+    Route::post('/subscriptions/complete', [SubscriptionController::class, 'complete'])->name('subscriptions.complete');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
