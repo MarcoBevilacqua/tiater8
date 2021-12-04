@@ -33,13 +33,13 @@ class SubscriptionTest extends TestCase
     public function initSubscriptionTest()
     {
         $this->actingAs($this->admin);
-        $response = $this->post('/subscriptions/init', ['customer_email' => 'abc123']);
+        $response = $this->post('/subscriptions/init', ['customer_email' => 'abc123@mail.com']);
         /** database assertions */
         $this->assertDatabaseCount('subscriptions', 1);
         $this->assertDatabaseHas('subscriptions', [
             'customer_id' => null,
             'status' => 0,
-            'subscription_email' => 'abc123'
+            'subscription_email' => 'abc123@mail.com'
 
         ]);
         $response->assertStatus(302);
@@ -114,7 +114,7 @@ class SubscriptionTest extends TestCase
             'postal_code' => 989797
         ];
 
-        $response = $this->post('/public/subscriptions/complete', $subscriptionData);
+        $response = $this->post('/over/subscriptions/complete', $subscriptionData);
 
         $this->assertDatabaseHas('customers', [
             'email' => $subscriptionToBeCompleted->subscription_email,
