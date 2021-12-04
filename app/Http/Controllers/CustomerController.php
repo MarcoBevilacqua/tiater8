@@ -16,7 +16,8 @@ class CustomerController extends Controller
     {
         return Inertia::render(
             'Customers',
-            ['customers' => Customer::all()->map(function (Customer $customer) {
+            ['customers' => Customer::orderByDesc('id')->get()
+            ->map(function (Customer $customer) {
                 return [
                     'first_name' => $customer->first_name,
                     'last_name' => $customer->last_name,

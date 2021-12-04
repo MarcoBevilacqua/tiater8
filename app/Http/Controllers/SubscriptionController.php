@@ -10,6 +10,7 @@ use App\Models\Subscription;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
@@ -47,15 +48,17 @@ class SubscriptionController extends Controller
     {
         return Inertia::render(
             'Subscriptions',
-            ['subscriptions' => Subscription::all()->map(function (Subscription $subscription) {
-                return [
+            ['subscriptions' => Subscription::orderByDesc('id')
+                ->get()
+                ->map(function (Subscription $subscription) {
+                    return [
                     'id' => $subscription->id,
                     'customer' => $subscription->subscription_email,
                     'created' => $subscription->created_at->format('d/m/Y'),
                     'status' => SubscriptionService::getSubFancyStatusLabel($subscription->status),
                     'edit' => URL::route('subscriptions.edit', $subscription)
                 ];
-            }),
+                }),
             'createLink' => URL::route('subscriptions.create')
             ]
         );
