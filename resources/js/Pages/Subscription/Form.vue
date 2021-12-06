@@ -164,6 +164,12 @@
                                         class="px-4 py-3 bg-gray-50 text-right sm:px-6"
                                     >
                                         <a
+                                            :href="route('subscriptions.index')"
+                                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-4"
+                                        >
+                                            Torna alla lista
+                                        </a>
+                                        <a
                                             target="_blank"
                                             :href="
                                                 route(
@@ -177,12 +183,6 @@
                                             class="bg-white mr-4 py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                         >
                                             Stampa Modulo
-                                        </a>
-                                        <a
-                                            :href="route('subscriptions.index')"
-                                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-4"
-                                        >
-                                            Torna alla lista
                                         </a>
                                         <button
                                             type="submit"
