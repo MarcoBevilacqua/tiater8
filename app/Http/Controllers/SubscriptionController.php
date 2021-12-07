@@ -10,6 +10,7 @@ use App\Models\Subscription;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
@@ -47,15 +48,17 @@ class SubscriptionController extends Controller
     {
         return Inertia::render(
             'Subscriptions',
-            ['subscriptions' => Subscription::all()->map(function (Subscription $subscription) {
-                return [
+            ['subscriptions' => Subscription::orderByDesc('id')
+                ->get()
+                ->map(function (Subscription $subscription) {
+                    return [
                     'id' => $subscription->id,
                     'customer' => $subscription->subscription_email,
                     'created' => $subscription->created_at->format('d/m/Y'),
                     'status' => SubscriptionService::getSubFancyStatusLabel($subscription->status),
                     'edit' => URL::route('subscriptions.edit', $subscription)
                 ];
-            }),
+                }),
             'createLink' => URL::route('subscriptions.create')
             ]
         );
@@ -123,7 +126,7 @@ class SubscriptionController extends Controller
 
     public function update(Request $request)
     {
-        $validated = $this->validate($request, [
+        $this->validate($request, [
             'status' => 'required|numeric',
             'contact_type' => 'required|numeric',
             'activity' => 'required|numeric',
@@ -237,7 +240,7 @@ class SubscriptionController extends Controller
          * 3. complete the subscription (should be another status such as TO_BE_CONFIRMED)
          * 4. return the response
          */
-        
+
         //TODO: check if subscription is valid
         if (!$request->has('sub_token') || !$request->input('sub_token')) {
             Log::error("Cannot retrieve Token from request, aborting");
@@ -259,7 +262,6 @@ class SubscriptionController extends Controller
         }
 
         //Create the customer
-        //TODO: check phone and birth field
         try {
             $customer = Customer::create([
                 'first_name' => $request->input('first_name'),
@@ -272,7 +274,7 @@ class SubscriptionController extends Controller
                 'resident' => $request->input('resident'),
                 'address' => $request->input('address'),
                 'postal_code' => $request->input('postal_code'),
-                ]);
+            ]);
         } catch (\Exception $ex) {
             Log::error("Cannot create customer with data " . implode(",", $request->all()) . ": Error: {$ex->getMessage()}");
             return false;
@@ -286,6 +288,10 @@ class SubscriptionController extends Controller
             Log::error("Cannot send Mail to {$canHandleSubscription->last()}: " . $exception->getMessage());
         }
 
+        //retrieve year_from and year_to
+        $years = SubscriptionService::getSubscriptionYears();
+        Log::info("subscription years: " . implode(",", $years->toArray()));
+
         //complete the subscription
         Subscription::where('token', $request->input('sub_token'))
          ->first()->update([
@@ -293,8 +299,8 @@ class SubscriptionController extends Controller
              'status' => Subscription::TO_BE_CONFIRMED,
              'contact_type' => $request->input('contact_type'),
              'activity' => $request->input('activity'),
-             'year_from' => Carbon::now()->year,
-             'year_to' => Carbon::now()->year + 1,
+             'year_from' => $years['from'],
+             'year_to' => $years['to'],
          ]);
 
         Log::info("redirecting to subscriptions/" . $request->input('sub_token') . "/confirmed");

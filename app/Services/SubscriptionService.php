@@ -77,4 +77,22 @@ class SubscriptionService
         return collect([$subscriptionByToken->expires_at > Carbon::now(), $subscriptionByToken->subscription_email]);
         //&& $subscriptionByToken->status === Subscription::TO_BE_COMPLETED;
     }
+
+    /**
+     * get year_from and year_to for subscription
+     *
+     * @return Collection
+     */
+    public static function getSubscriptionYears()
+    {
+        $expirationMonth = config('app.subscriptions.expiration_month');
+        $renovationMonth = config('app.subscriptions.renovation_month');
+
+        $year = (Carbon::now()->month > $expirationMonth &&
+        Carbon::now()->month <= $renovationMonth) ?
+        Carbon::now()->year + 1 :
+        Carbon::now()->year;
+         
+        return collect(['from' => $year, 'to' => $year + 1]);
+    }
 }

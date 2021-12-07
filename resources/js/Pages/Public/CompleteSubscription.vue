@@ -1,6 +1,6 @@
 <template #guest>
     <container>
-        <div class="mt-10 sm:mt-5 px-24">
+        <div class="mt-5 md:mt-10 lg:mt-10 md:px-12 lg:px-24">
             <div class="flex justify-items-center">
                 <div class="w-full">
                     <img
@@ -10,7 +10,7 @@
                     />
                 </div>
             </div>
-            <div class="md:grid md:grid-cols-3 md:gap-6">
+            <div class="grid grid-cols-1 md:grid md:grid-cols-3 md:gap-6">
                 <div class="mt-10 md:mt-5 md:col-span-3">
                     <form @submit.prevent="complete">
                         <div class="shadow overflow-hidden sm:rounded-md">
@@ -20,8 +20,12 @@
                                 <p>Completa la tua iscrizione</p>
                             </div>
                             <div class="px-4 py-5 bg-white sm:p-6">
-                                <div class="grid grid-cols-6 gap-6">
-                                    <div class="col-span-4 sm:col-span-2">
+                                <div
+                                    class="grid grid-cols-12 gap-2 md:grid-cols-6 lg:grid-cols-6 md:gap-6 lg:gap-6"
+                                >
+                                    <div
+                                        class="col-span-12 md:col-span-2 lg:col-span-2"
+                                    >
                                         <label
                                             for="first_name"
                                             class="block text-sm font-medium text-gray-700"
@@ -37,7 +41,9 @@
                                         />
                                     </div>
 
-                                    <div class="col-span-8 sm:col-span-4">
+                                    <div
+                                        class="col-span-12 md:col-span-4 lg:col-span-4"
+                                    >
                                         <label
                                             for="last_name"
                                             class="block text-sm font-medium text-gray-700"
@@ -53,7 +59,9 @@
                                         />
                                     </div>
 
-                                    <div class="col-span-3 sm:col-span-2">
+                                    <div
+                                        class="col-span-8 md:col-span-2 lg:col-span-2"
+                                    >
                                         <label
                                             for="city"
                                             class="block text-sm font-medium text-gray-700"
@@ -68,7 +76,9 @@
                                         />
                                     </div>
 
-                                    <div class="col-span-1 sm:col-span-1">
+                                    <div
+                                        class="col-span-4 md:col-span-1 lg:col-span-1"
+                                    >
                                         <label
                                             for="province"
                                             class="block text-sm font-medium text-gray-700"
@@ -83,7 +93,9 @@
                                         />
                                     </div>
 
-                                    <div class="col-span-3 sm:col-span-2">
+                                    <div
+                                        class="col-span-6 md:col-span-2 lg:col-span-2"
+                                    >
                                         <label
                                             for="birth"
                                             class="block text-sm font-medium text-gray-700"
@@ -99,7 +111,7 @@
                                     </div>
 
                                     <div
-                                        class="col-span-2 sm:col-span-2 lg:col-span-2"
+                                        class="col-span-6 sm:col-span-2 lg:col-span-2"
                                     >
                                         <label
                                             for="resident"
@@ -115,7 +127,9 @@
                                         />
                                     </div>
 
-                                    <div class="col-span-4 sm:col-span-2">
+                                    <div
+                                        class="col-span-8 md:col-span-2 lg:col-span-2"
+                                    >
                                         <label
                                             for="address"
                                             class="block text-sm font-medium text-gray-700"
@@ -132,7 +146,7 @@
                                     </div>
 
                                     <div
-                                        class="col-span-1 sm:col-span-1 lg:col-span-1"
+                                        class="col-span-4 md:col-span-1 lg:col-span-1"
                                     >
                                         <label
                                             for="postal_code"
@@ -141,7 +155,7 @@
                                         >
                                         <input
                                             v-model="form.postal_code"
-                                            type="text"
+                                            type="number"
                                             name="postal_code"
                                             id="postal_code"
                                             autocomplete="postal-code"
@@ -149,7 +163,9 @@
                                         />
                                     </div>
 
-                                    <div class="col-span-4 sm:col-span-2">
+                                    <div
+                                        class="col-span-8 md:col-span-2 lg:col-span-2"
+                                    >
                                         <label
                                             for="phone"
                                             class="block text-sm font-medium text-gray-700"
@@ -164,11 +180,13 @@
                                         />
                                     </div>
 
-                                    <div class="col-span-4 sm:col-span-2">
+                                    <div
+                                        class="col-span-6 md:col-span-2 lg:col-span-2"
+                                    >
                                         <label
                                             for="contact_type"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Desidero essere contattato</label
+                                            >Contatto</label
                                         >
                                         <select
                                             v-model="form.contact_type"
@@ -186,7 +204,9 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-span-4 sm:col-span-2">
+                                    <div
+                                        class="col-span-6 md:col-span-2 lg:col-span-2"
+                                    >
                                         <label
                                             for="activity"
                                             class="block text-sm font-medium text-gray-700"
