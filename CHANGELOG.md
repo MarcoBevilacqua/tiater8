@@ -1,3 +1,7 @@
+v0.0.3
+
+-   validation on subscription from email
+
 v0.0.2
 
 -   public form responsiveness
