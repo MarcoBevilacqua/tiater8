@@ -200,7 +200,12 @@ class SubscriptionController extends Controller
         } catch (Exception $exception) {
             Log::error("Cannot send Mail to {$request->customer_email}: " . $exception->getMessage());
         }
-        Log::info("Mail to {$request->customer_email} has been sent! Redirecting...", [__CLASS__, __FUNCTION__]);
+        if (Mail::failures()) {
+            Log::error("Cannot send email!!!");
+        } else {
+            Log::info("Mail to {$request->customer_email} has been sent! Redirecting...", [__CLASS__, __FUNCTION__]);
+        }
+        
 
         return Redirect::route('subscriptions.index');
     }
