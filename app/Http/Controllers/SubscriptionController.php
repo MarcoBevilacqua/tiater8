@@ -195,7 +195,8 @@ class SubscriptionController extends Controller
 
         try {
             Mail::to($request->customer_email)
-            ->send(new SubscriptionToComplete(URL::signedRoute('subscriptions.fill')));
+            ->send(new SubscriptionToComplete(URL::signedRoute('subscriptions.fill', [
+                'token' => $randomString])));
         } catch (Exception $exception) {
             Log::error("Cannot send Mail to {$request->customer_email}: " . $exception->getMessage());
         }
