@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\MailTestController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\PDFController;
 use Illuminate\Foundation\Application;
@@ -45,5 +46,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     Route::resource('/customers', CustomerController::class);
 });
+
+Route::get('mail/test', [MailTestController::class, 'send']);
 
 require __DIR__.'/auth.php';
