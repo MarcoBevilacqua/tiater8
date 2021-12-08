@@ -10,13 +10,11 @@ use App\Models\Subscription;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Route;
 
 class SubscriptionController extends Controller
 {
@@ -153,7 +151,7 @@ class SubscriptionController extends Controller
      */
     public function generate()
     {
-        return Inertia::render('Subscription/GenerateSubscriptionLink', []);
+        return inertia('Subscription/GenerateSubscriptionLink');
     }
 
     /**
@@ -164,16 +162,15 @@ class SubscriptionController extends Controller
      */
     public function init(Request $request)
     {
-        if (!$request->has('customer_email') || !$request->customer_email) {
-            //TODO: refactor the error management
-            abort(400);
-        }
+        $request->validate([
+            'customer_email' => 'required|email:filter|unique:subscriptions,subscription_email'
+        ]);
 
         //check if email has already been taken
         $shouldBeBlocked = SubscriptionService::getSubscriptionByEmail($request->customer_email);
         if ($shouldBeBlocked) {
             Log::error("Subscription with email {$request->customer_email} has already been stored");
-            abort(403);
+            return Inertia::render('Subscription/GenerateSubscriptionLink', ['errors.customer_email' => "Subscription with email {$request->customer_email} has already been stored"]);
         }
 
         //the url to be returned
