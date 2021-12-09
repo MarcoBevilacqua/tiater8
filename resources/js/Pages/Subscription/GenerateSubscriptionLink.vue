@@ -61,7 +61,7 @@
                                 </button>
                             </div>
                             <div
-                                v:if="errors.customer_email"
+                                v-if="errors.customer_email"
                                 class="rounded-md shadow-sm font-semibold bg-red-200 text-red-600 text-sm p-4"
                             >
                                 <span>{{ errors.customer_email }}</span>
@@ -88,6 +88,7 @@ export default {
 
     setup() {
         const form = reactive({
+            errors: null,
             customer_email: null,
         });
 
