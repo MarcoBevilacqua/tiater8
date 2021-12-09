@@ -151,7 +151,7 @@ class SubscriptionController extends Controller
      */
     public function generate()
     {
-        return inertia('Subscription/GenerateSubscriptionLink', []);
+        return inertia('Subscription/GenerateSubscriptionLink');
     }
 
     /**
