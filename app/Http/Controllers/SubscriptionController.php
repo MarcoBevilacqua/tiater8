@@ -245,6 +245,17 @@ class SubscriptionController extends Controller
          * 4. return the response
          */
 
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required|email',
+            'address' => 'required',
+            'city' => 'required',
+            'phone' => 'required',
+            'birth' => 'required',
+            'resident' => 'required',
+         ]);
+
         //TODO: check if subscription is valid
         if (!$request->has('sub_token') || !$request->input('sub_token')) {
             Log::error("Cannot retrieve Token from request, aborting");
