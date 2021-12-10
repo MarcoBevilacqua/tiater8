@@ -200,7 +200,12 @@ class SubscriptionController extends Controller
         } catch (Exception $exception) {
             Log::error("Cannot send Mail to {$request->customer_email}: " . $exception->getMessage());
         }
-        Log::info("Mail to {$request->customer_email} has been sent! Redirecting...", [__CLASS__, __FUNCTION__]);
+        if (Mail::failures()) {
+            Log::error("Cannot send email!!!");
+        } else {
+            Log::info("Mail to {$request->customer_email} has been sent! Redirecting...", [__CLASS__, __FUNCTION__]);
+        }
+        
 
         return Redirect::route('subscriptions.index');
     }
@@ -239,6 +244,17 @@ class SubscriptionController extends Controller
          * 3. complete the subscription (should be another status such as TO_BE_CONFIRMED)
          * 4. return the response
          */
+
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required|email',
+            'address' => 'required',
+            'city' => 'required',
+            'phone' => 'required',
+            'birth' => 'required',
+            'resident' => 'required',
+         ]);
 
         //TODO: check if subscription is valid
         if (!$request->has('sub_token') || !$request->input('sub_token')) {

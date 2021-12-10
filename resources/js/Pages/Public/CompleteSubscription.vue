@@ -36,6 +36,7 @@
                                             type="text"
                                             name="first_name"
                                             id="first_name"
+                                            required
                                             autocomplete="given-name"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                         />
@@ -54,6 +55,7 @@
                                             type="text"
                                             name="last_name"
                                             id="last_name"
+                                            required
                                             autocomplete="family-name"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                         />
@@ -72,6 +74,7 @@
                                             type="text"
                                             name="city"
                                             id="city"
+                                            required
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                         />
                                     </div>
@@ -89,6 +92,7 @@
                                             type="text"
                                             name="province"
                                             id="province"
+                                            required
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                         />
                                     </div>
@@ -106,6 +110,7 @@
                                             type="date"
                                             name="birth"
                                             id="birth"
+                                            required
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                         />
                                     </div>
@@ -123,6 +128,7 @@
                                             type="text"
                                             name="resident"
                                             id="resident"
+                                            required
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                         />
                                     </div>
@@ -140,6 +146,7 @@
                                             type="text"
                                             name="address"
                                             id="address"
+                                            required
                                             autocomplete="street-address"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                         />
@@ -158,6 +165,7 @@
                                             type="number"
                                             name="postal_code"
                                             id="postal_code"
+                                            required
                                             autocomplete="postal-code"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                         />
@@ -176,6 +184,7 @@
                                             type="text"
                                             name="phone"
                                             id="phone"
+                                            required
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                         />
                                     </div>
@@ -190,7 +199,6 @@
                                         >
                                         <select
                                             v-model="form.contact_type"
-                                            type="select"
                                             name="contact_type"
                                             id="contact_type"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -214,7 +222,6 @@
                                         >
                                         <select
                                             v-model="form.activity"
-                                            type="select"
                                             name="activity"
                                             id="activity"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
