@@ -15,6 +15,10 @@ public/hot
 public_html/storage
 public_html/hot
 
+# Laravel packages
+_ide_helper_models.php
+_ide_helper.php
+
 storage/*.key
 .env
 .env.production
@@ -22,3 +26,4 @@ Homestead.yaml
 Homestead.json
 /.vagrant
 .phpunit.result.cache
+.phpstorm.meta.php
