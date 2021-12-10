@@ -29,6 +29,12 @@ RUN docker-php-ext-install pdo_mysql zip exif pcntl
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 RUN docker-php-ext-install gd
 
+# Install opcache
+RUN docker-php-ext-configure opcache --enable-opcache \
+    && docker-php-ext-install opcache
+ADD docker/php/opcache/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+ADD ./docker/php/opcache/opcache-blacklist.txt /usr/local/etc/opcache-blacklist.txt
+
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
