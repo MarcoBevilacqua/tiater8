@@ -248,7 +248,6 @@ class SubscriptionController extends Controller
         $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
-            //'email' => 'required|email',
             'address' => 'required',
             'city' => 'required',
             'phone' => 'required',
