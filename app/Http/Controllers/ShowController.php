@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Booking;
-use Show;
+use App\Models\Show;
 use Illuminate\Http\Request;
-use App\Http\Requests;
+use Illuminate\Support\Facades\URL;
+use Inertia\Inertia;
 use Intervention\Image\Facades\Image;
 
 class ShowController extends Controller
@@ -16,8 +16,17 @@ class ShowController extends Controller
      */
     public function index()
     {
-        $shows = \Show::all()->sortBy('created_at');
-        return view('crud/spettacoli.index', array('shows' => $shows));
+        return Inertia::render('Shows', [
+            'shows' => Show::orderByDesc('created_at')
+            ->get()
+            ->map(function (Show $show) {
+                return [
+                    'title' => $show->title,
+                    'description' => $show->description,
+                ];
+            }),
+            'createLink' => URL::route('shows.create')
+        ]);
     }
 
     /**
@@ -26,7 +35,9 @@ class ShowController extends Controller
      */
     public function create()
     {
-        return view('crud/spettacoli.create');
+        return Inertia::render('Shows/Create', [
+            '_method' => 'post'
+        ]);
     }
 
     /**
@@ -45,14 +56,11 @@ class ShowController extends Controller
 
         $validator = \Validator::make($request->all(), $rules);
 
-        if($validator->fails()){
-
+        if ($validator->fails()) {
             return redirect('show/create')
                 ->withErrors($validator)
                 ->withInput($request->all());
-
         } else {
-
             $data = $request->all();
 
             $show = Show::create(
@@ -67,8 +75,7 @@ class ShowController extends Controller
             );
 
             //check if input has file
-            if ($request->hasFile('image')){
-
+            if ($request->hasFile('image')) {
                 $file = $request->file('image');
                 $image_name = $file->getClientOriginalName();
 
@@ -79,7 +86,6 @@ class ShowController extends Controller
                 $image->resize(680, 960)->save($store_path . $image_name);
 
                 $show->image = $image_name;
-
             }
 
             $show->save();
@@ -87,7 +93,6 @@ class ShowController extends Controller
             //redirect
             session('message', 'spettacolo creato correttamente');
             return redirect('show');
-
         }
     }
 
@@ -103,7 +108,8 @@ class ShowController extends Controller
         $show = Show::where('url', '=', $url)->firstOrFail();
         $events = $show->events;
 
-        return view('crud/spettacoli.show',
+        return view(
+            'crud/spettacoli.show',
             array(
                 'show'      => $show,
                 'events'    => $events
@@ -139,19 +145,17 @@ class ShowController extends Controller
 
         $validator = validator($request->all(), $rules);
 
-        if($validator->fails()){
-
+        if ($validator->fails()) {
             return redirect('show/'. $url . '/edit')
                 ->withErrors($validator);
-
         } else {
 
             //save
             $show = Show::whereUrl($url)->firstOrFail();
 
-            if(!$show){
+            if (!$show) {
                 \Log::error("Impossibile modificare un record inesistente");
-                Throw new \Exception("Impossibile modificare un record inesistente");
+                throw new \Exception("Impossibile modificare un record inesistente");
             }
 
             $data = $request->all();
@@ -166,8 +170,7 @@ class ShowController extends Controller
             $show->url = strtolower($url);
 
             //check if input has file
-            if ($request->hasFile('image')){
-
+            if ($request->hasFile('image')) {
                 $file = $request->file('image');
                 $image_name = $file->getClientOriginalName();
 
@@ -178,7 +181,6 @@ class ShowController extends Controller
                 $image->resize(680, 960)->save($store_path . $image_name);
 
                 $show->image = $image_name;
-
             }
 
             try {
@@ -192,9 +194,7 @@ class ShowController extends Controller
             //redirect to spettacoli
             session('message', 'spettacolo modificato con successo');
             return redirect('show');
-
         }
-
     }
 
     /**
@@ -207,7 +207,7 @@ class ShowController extends Controller
         //delete
         $show = Show::where("url", "=", $url);
 
-        if(!$show){
+        if (!$show) {
             return redirect($this->getRedirectUrl());
         }
 
@@ -221,16 +221,13 @@ class ShowController extends Controller
         //redirect
         session('message', 'spettacolo eliminato');
         return redirect('show');
-
     }
 
-    private function _createUrl($title){
-
+    private function _createUrl($title)
+    {
         $url = str_replace(" ", "-", $title);
         $url = str_replace(".", "", $url);
 
         return $url;
     }
-
-
 }

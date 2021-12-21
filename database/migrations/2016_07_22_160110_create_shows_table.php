@@ -25,6 +25,7 @@ class CreateShowsTable extends Migration
             $table->tinyInteger('full_price_qnt');
             $table->tinyInteger('half_price_qnt');
             $table->tinyInteger('total_qnt');
+            $table->timestamps();
         });
     }
 
