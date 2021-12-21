@@ -39,8 +39,5 @@
     <div class="my-4 text-right" style="text-align: right;margin: 10px 100px 10px 0;">
         Firma <br />
     </div>
-    <div class="my-6 "></div>
-            <p>Tessera n. {{ $subscriptionId }}</p>
-    </div>
 </div>
 @endsection
