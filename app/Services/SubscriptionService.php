@@ -50,11 +50,17 @@ class SubscriptionService
 
     public static function getFancyActivityLabel(int $activity)
     {
+        if (!in_array($activity, self::$activityLabels)) {
+            return "";
+        }
         return self::$activityLabels[$activity];
     }
 
     public static function getFancyContactLabel(int $contact)
     {
+        if (!in_array($contact, self::$contactLabels)) {
+            return "";
+        }
         return self::$contactLabels[$contact];
     }
 
