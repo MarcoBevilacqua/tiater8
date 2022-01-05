@@ -213,13 +213,16 @@
                                     </div>
 
                                     <div
+                                        v-if="
+                                            form.contact_type != default_contact
+                                        "
                                         class="col-span-6 md:col-span-2 lg:col-span-2"
                                     >
                                         <label
                                             for="activity"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Per attività riguardanti</label
-                                        >
+                                            >Per attività riguardanti
+                                        </label>
                                         <select
                                             v-model="form.activity"
                                             name="activity"
@@ -275,6 +278,7 @@ export default {
     props: {
         sub_token: String,
         contacts: Array,
+        default_contact: Number,
         activities: Array,
         url: String,
     },
@@ -292,7 +296,7 @@ export default {
                 activity: null,
                 postal_code: null,
                 address: null,
-                contact_type: null,
+                contact_type: this.default_contact,
                 sub_token: null,
             }),
         };

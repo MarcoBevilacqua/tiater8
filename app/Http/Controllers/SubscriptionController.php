@@ -231,6 +231,7 @@ class SubscriptionController extends Controller
         return Inertia::render('Public/CompleteSubscription', [
             'sub_token' => $token,
             'activities' => SubscriptionService::getAllFancyActivityLabels(),
+            'default_contact' => Subscription::NO_CONTACT,
             'contacts' => SubscriptionService::getAllFancyContactLabels(),
             'url' => route('subscriptions.complete')
         ]);

@@ -49,6 +49,7 @@ class Subscription extends Model
     /**
      * the contact options
      */
+    const NO_CONTACT = 2;
     const PHONE_CONTACT = 0;
     const WHATSAPP_CONTACT = 1;
 

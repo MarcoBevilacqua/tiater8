@@ -24,6 +24,7 @@ class SubscriptionService
     ];
 
     private static $contactLabels = [
+        Subscription::NO_CONTACT => 'non desidero essere contattato',
         Subscription::PHONE_CONTACT => 'via telefono',
         Subscription::WHATSAPP_CONTACT => 'via whatsapp',
     ];
