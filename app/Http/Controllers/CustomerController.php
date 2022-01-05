@@ -92,7 +92,7 @@ class CustomerController extends Controller
             'province'=> $customer->province,
             'resident' => $customer->resident
         ],
-            '_method'  => 'put'
+            '_method'  => 'put',
     ]);
     }
 

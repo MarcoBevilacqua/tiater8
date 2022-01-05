@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Show;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Intervention\Image\Facades\Image;
+use App\Services\ShowService;
 
 class ShowController extends Controller
 {
@@ -21,8 +26,10 @@ class ShowController extends Controller
             ->get()
             ->map(function (Show $show) {
                 return [
+                    'id' => $show->id,
                     'title' => $show->title,
-                    'description' => $show->description,
+                    'description' => Str::limit($show->description, 100),
+                    'edit' => route('shows.edit', ['show' => $show->id])
                 ];
             }),
             'createLink' => URL::route('shows.create')
@@ -46,75 +53,31 @@ class ShowController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required',
+            'url' => 'required|url'
+        ]);
 
-        //validation
-        $rules = array(
-            'name'              => 'required',
-            'full_price'        => 'numeric',
-            'half_price'        => 'numeric'
-        );
-
-        $validator = \Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return redirect('show/create')
-                ->withErrors($validator)
-                ->withInput($request->all());
-        } else {
-            $data = $request->all();
-
-            $show = Show::create(
-                array(
-                    'name'          => $data['name'],
-                    'description'   => $data['description'],
-                    'places'        => $data['places'],
-                    'half_price'    => $data['half_price'],
-                    'full_price'    => $data['full_price'],
-                    'url'           => strtolower($this->_createUrl($data['name']))
-                )
-            );
-
-            //check if input has file
-            if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $image_name = $file->getClientOriginalName();
-
-                //store image on server
-                $store_path = public_path().DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR;
-
-                $image = Image::make($request->file('image')->getRealPath());
-                $image->resize(680, 960)->save($store_path . $image_name);
-
-                $show->image = $image_name;
-            }
-
-            $show->save();
-
-            //redirect
-            session('message', 'spettacolo creato correttamente');
-            return redirect('show');
+        //check if input has file
+        if ($request->hasFile('image')) {
+            ShowService::saveImage($request->file('image'));
         }
-    }
 
-    /**
-     * Display the specified resource.
-     * @param $id
-     * @return mixed
-     */
-    public function show($url)
-    {
-        //get the selected gig
-        /** @var \App\Show $show */
-        $show = Show::where('url', '=', $url)->firstOrFail();
-        $events = $show->events;
-
-        return view(
-            'crud/spettacoli.show',
-            array(
-                'show'      => $show,
-                'events'    => $events
-            )
+        Show::create(
+            [
+            'name'          => $request->title,
+            'description'   => $request->description,
+            'url'           => $request->url,
+            'image' => $request->hasFile('image') ?
+                asset('/img/' . $request->file('image')->getClientOriginalName()) :
+                ""
+            ]
         );
+
+        //redirect
+        session('message', 'spettacolo creato correttamente');
+        return redirect('shows');
     }
 
 
@@ -123,78 +86,71 @@ class ShowController extends Controller
      * @param $url
      * @return mixed
      */
-    public function edit($url)
+    public function edit($id)
     {
         //get the selected gig
-        $show = Show::where('url', '=', $url)->firstOrFail();
-        return view('crud/spettacoli.edit', array('show' => $show));
+        $show = Show::findOrFail($id);
+        return Inertia::render('Shows/Form', [
+            'show' => $show,
+            '_method'  => 'put',
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update($url, Request $request)
+    public function update(Request $request)
     {
         //validate
-        $rules = array(
-            //rules
-            'name'      => 'required',
-            'places'    => 'required|numeric'
-
+        $request->validate(
+            ['name' => 'required',
+            'description' => 'required',
+            'url' => 'required|url']
         );
 
-        $validator = validator($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return redirect('show/'. $url . '/edit')
-                ->withErrors($validator);
-        } else {
-
-            //save
-            $show = Show::whereUrl($url)->firstOrFail();
-
-            if (!$show) {
-                \Log::error("Impossibile modificare un record inesistente");
-                throw new \Exception("Impossibile modificare un record inesistente");
-            }
-
-            $data = $request->all();
-
-            $show->name = $data['name'];
-            $show->description = $data['description'];
-            $show->places = $data['places'];
-            $show->full_price = $data['full_price'];
-            $show->half_price = $data['half_price'];
-            //URL
-            $url = $this->_createUrl($data['url']);
-            $show->url = strtolower($url);
-
-            //check if input has file
-            if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $image_name = $file->getClientOriginalName();
-
-                //store image on server
-                $store_path = public_path().DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR;
-
-                $image = Image::make($request->file('image')->getRealPath());
-                $image->resize(680, 960)->save($store_path . $image_name);
-
-                $show->image = $image_name;
-            }
-
-            try {
-                $show->save();
-            } catch (\Exception $ex) {
-                \Log::alert("Cannot Update Show: {$ex->getMessage()}");
-                return redirect('show', 302, ['message' => "Impossibile aggiornare il record"]);
-            }
-
-
-            //redirect to spettacoli
-            session('message', 'spettacolo modificato con successo');
-            return redirect('show');
+    
+        try {
+            $show = Show::findOrFail($request->id);
+        } catch (\Exception $ex) {
+            Log::error("Cannot find show with id {$request->id}");
+            return Redirect::route('shows.edit', ['id' => $request->id])
+        ->with('errors', "Show not found");
         }
+
+        /** TODO: move this data into event */
+        /**
+        $show->places = $data['places'];
+        $show->full_price = $data['full_price'];
+        $show->half_price = $data['half_price'];
+        */
+
+        //check if input has file
+        if ($request->hasFile('image')) {
+            //call service method
+            ShowService::saveImage($request->file('image'));
+        }
+
+        $show->update(
+            ['name' => $request->name,
+            'description' => $request->description,
+            'url' => $request->url,
+            'image' => $request->hasFile('image') ?
+                asset('/img/' . $request->file('image')->getClientOriginalName()) :
+                $show->image
+            ]
+        );
+
+
+        try {
+            $show->save();
+        } catch (\Exception $ex) {
+            \Log::alert("Cannot Update Show: {$ex->getMessage()}");
+            return redirect('shows.index', 302, ['message' => "Impossibile aggiornare il record"]);
+        }
+
+        //redirect to spettacoli
+        session('message', 'spettacolo modificato con successo');
+        return redirect('shows');
     }
 
     /**
@@ -221,13 +177,5 @@ class ShowController extends Controller
         //redirect
         session('message', 'spettacolo eliminato');
         return redirect('show');
-    }
-
-    private function _createUrl($title)
-    {
-        $url = str_replace(" ", "-", $title);
-        $url = str_replace(".", "", $url);
-
-        return $url;
     }
 }
