@@ -49,6 +49,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/shows', ShowController::class);
 });
 
-Route::get('mail/test', [MailTestController::class, 'send']);
-
 require __DIR__.'/auth.php';
