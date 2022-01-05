@@ -1,18 +1,24 @@
 <template>
     <breeze-authenticated-layout>
         <template #header>
-            <h1>Inserisci Spettacolo</h1>
+            <h1>Modifica "{{ show.name }}"</h1>
         </template>
         <template #main>
             <container>
                 <div class="mt-10 sm:mt-5">
                     <div class="md:grid md:grid-cols-3 md:gap-6">
                         <div class="mt-10 md:mt-5 md:col-span-3">
-                            <form @submit.prevent="create">
+                            <form @submit.prevent="update">
                                 <div
                                     class="shadow overflow-hidden sm:rounded-md"
                                 >
                                     <div class="px-4 py-5 bg-white sm:p-6">
+                                        <input
+                                            type="hidden"
+                                            v-model="form.id"
+                                            name="id"
+                                            id="id"
+                                        />
                                         <div class="grid grid-cols-6 gap-6">
                                             <div
                                                 class="sm:col-span-3 col-span-3"
@@ -49,19 +55,19 @@
                                                     class="sm:col-span-6 col-span-3"
                                                 >
                                                     <label
-                                                        for="name"
+                                                        for="title"
                                                         class="block text-sm font-medium text-gray-700"
                                                         >Titolo</label
                                                     >
                                                     <input
-                                                        v-model="form.name"
+                                                        v-model="form.title"
                                                         type="text"
-                                                        name="name"
-                                                        id="name"
+                                                        name="title"
+                                                        id="title"
                                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                     />
-                                                    <div v-if="errors.name">
-                                                        {{ errors.name }}
+                                                    <div v-if="errors.title">
+                                                        {{ errors.title }}
                                                     </div>
                                                 </div>
                                                 <div
@@ -117,8 +123,8 @@
                                         class="px-4 py-3 bg-gray-50 text-right sm:px-6"
                                     >
                                         <a
-                                            :href="route('subscriptions.index')"
-                                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mr-3"
+                                            :href="route('shows.index')"
+                                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-4"
                                         >
                                             Torna alla lista
                                         </a>
@@ -153,25 +159,26 @@ export default {
 
     props: {
         errors: Object,
+        show: Array,
         _method: String,
     },
 
     data() {
         return {
             form: this.$inertia.form({
-                title: null,
-                description: null,
-                image: null,
-                url: null,
-                description: null,
                 _method: this._method,
+                id: this.show.id,
+                title: this.show.title,
+                description: this.show.description,
+                image: this.show.image,
+                url: this.show.url,
             }),
         };
     },
 
     methods: {
-        create() {
-            this.form.post(this.route("shows.store", this.form), {
+        update() {
+            this.form.post(this.route("shows.update", this.show.id), {
                 onSuccess: () => this.form.reset(),
             });
         },
