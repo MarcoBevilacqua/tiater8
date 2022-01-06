@@ -255,6 +255,7 @@ export default {
     props: {
         customer: Array,
         _method: String,
+        errors: Object,
     },
 
     data() {
