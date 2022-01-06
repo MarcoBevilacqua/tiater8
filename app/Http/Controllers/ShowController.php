@@ -158,20 +158,16 @@ class ShowController extends Controller
      * @param $id
      * @return mixed
      */
-    public function destroy($url)
+    public function destroy($id)
     {
         //delete
-        $show = Show::where("url", "=", $url);
-
-        if (!$show) {
-            return redirect($this->getRedirectUrl());
-        }
+        $show = Show::findOrFail($id);
 
         try {
             $show->delete();
         } catch (Exception $ex) {
             \Log::error("Cannot delete show");
-            return redirect($this->getRedirectUrl());
+            return redirect('show');
         }
 
         //redirect
