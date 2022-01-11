@@ -24,6 +24,7 @@ class SubscriptionService
     ];
 
     private static $contactLabels = [
+        Subscription::NO_CONTACT => 'non desidero essere contattato',
         Subscription::PHONE_CONTACT => 'via telefono',
         Subscription::WHATSAPP_CONTACT => 'via whatsapp',
     ];
@@ -48,13 +49,19 @@ class SubscriptionService
         return self::$statusLabels[$status];
     }
 
-    public static function getFancyActivityLabel(int $activity)
+    public static function getFancyActivityLabel(int $activity = null)
     {
+        if (!in_array($activity, self::$activityLabels)) {
+            return "";
+        }
         return self::$activityLabels[$activity];
     }
 
-    public static function getFancyContactLabel(int $contact)
+    public static function getFancyContactLabel(int $contact = null)
     {
+        if (!in_array($contact, self::$contactLabels)) {
+            return "";
+        }
         return self::$contactLabels[$contact];
     }
 

@@ -12,7 +12,7 @@
             </div>
             <div class="grid grid-cols-1 md:grid md:grid-cols-3 md:gap-6">
                 <div class="mt-10 md:mt-5 md:col-span-3">
-                    <form @submit.prevent="complete">
+                    <form @submit.prevent="submit">
                         <div class="shadow overflow-hidden sm:rounded-md">
                             <div
                                 class="px-4 py-3 bg-gray-50 text-center sm:px-6"
@@ -213,13 +213,16 @@
                                     </div>
 
                                     <div
+                                        v-if="
+                                            form.contact_type != default_contact
+                                        "
                                         class="col-span-6 md:col-span-2 lg:col-span-2"
                                     >
                                         <label
                                             for="activity"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Per attività riguardanti</label
-                                        >
+                                            >Per attività riguardanti
+                                        </label>
                                         <select
                                             v-model="form.activity"
                                             name="activity"
@@ -245,6 +248,7 @@
                                 </div>
                             </div>
                             <div
+                                v-if="!form.processing"
                                 class="px-4 py-3 bg-gray-50 text-center sm:px-6"
                             >
                                 <button
@@ -252,6 +256,38 @@
                                     class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 >
                                     Completa il tuo tesseramento
+                                </button>
+                            </div>
+                            <div
+                                v-else
+                                class="px-4 py-3 bg-gray-50 text-center sm:px-6"
+                            >
+                                <button
+                                    type="button"
+                                    class="inline-flex justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-400 hover:bg-indigo-600 transition ease-in-out duration-150 cursor-not-allowed"
+                                    disabled=""
+                                >
+                                    <svg
+                                        class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <circle
+                                            class="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            stroke-width="4"
+                                        ></circle>
+                                        <path
+                                            class="opacity-75"
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                        ></path>
+                                    </svg>
+                                    Operazione in corso...
                                 </button>
                             </div>
                         </div>
@@ -264,8 +300,8 @@
 
 <script>
 import Container from "@/Layouts/Container";
-import { reactive } from "vue";
 import { Inertia } from "@inertiajs/inertia";
+import { useForm } from "@inertiajs/inertia-vue3";
 
 export default {
     components: {
@@ -275,39 +311,41 @@ export default {
     props: {
         sub_token: String,
         contacts: Array,
+        default_contact: Number,
         activities: Array,
         url: String,
     },
 
-    data() {
-        return {
-            form: this.$inertia.form({
-                first_name: null,
-                last_name: null,
-                email: null,
-                city: null,
-                resident: null,
-                phone: null,
-                province: null,
-                activity: null,
-                postal_code: null,
-                address: null,
-                contact_type: null,
-                sub_token: null,
-            }),
-        };
-    },
+    setup() {
+        const form = useForm({
+            first_name: null,
+            last_name: null,
+            email: null,
+            city: null,
+            resident: null,
+            phone: null,
+            birth: null,
+            province: null,
+            activity: null,
+            postal_code: null,
+            address: null,
+            contact_type: null,
+            sub_token: null,
+        });
 
-    methods: {
-        complete() {
-            this.form.post(this.route("subscriptions.complete", this.form), {
-                onSuccess: () => this.form.reset(),
+        function submit() {
+            form.post("/over/subscriptions/complete", {
+                preserveScroll: true,
+                onSuccess: () => form.reset(),
             });
-        },
+        }
+
+        return { form, submit };
     },
 
     mounted() {
         this.form.sub_token = this.sub_token;
+        this.form.contact_type = this.default_contact;
     },
 };
 </script>
