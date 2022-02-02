@@ -26,6 +26,10 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::prefix('over')->group(function () {
+    //the public email confirmation
+    Route::get('/subscriptions/start', [SubscriptionController::class, 'start'])->name('subscriptions.start');
+    //the public init email invitation
+    Route::post('/subscriptions/init', [SubscriptionController::class, 'publicInit']);
     //the subscription confirmation
     Route::get('/subscriptions/confirmed', [SubscriptionController::class, 'confirmed']);
     //the subscription form visualization

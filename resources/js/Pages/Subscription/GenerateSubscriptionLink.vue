@@ -83,7 +83,7 @@
                             </div>
                             <div
                                 v-if="form.errors.customer_email"
-                                class="rounded-md shadow-sm font-semibold bg-red-200 text-red-600 text-sm p-4"
+                                class="text-center rounded-md shadow-sm font-semibold bg-red-200 text-red-600 text-sm p-2"
                             >
                                 <span>{{ form.errors.customer_email }}</span>
                             </div>

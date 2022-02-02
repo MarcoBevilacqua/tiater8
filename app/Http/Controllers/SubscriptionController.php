@@ -155,6 +155,15 @@ class SubscriptionController extends Controller
     }
 
     /**
+     * render the view to generate invitation mail
+     * @return Inertia view
+     */
+    public function start()
+    {
+        return Inertia::render('Public/SelfInvitation');
+    }
+
+    /**
      * the subscription init (return the form url)
      *
      * @param Request $request
@@ -208,6 +217,49 @@ class SubscriptionController extends Controller
         
 
         return Redirect::route('subscriptions.index');
+    }
+
+    /**
+     * the subscription PUBLIC init
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function publicInit(Request $request)
+    {
+        $request->validate([
+            'customer_email' => 'required|email:filter|unique:subscriptions,subscription_email'
+        ]);
+
+        //check if email has already been taken
+        $shouldBeBlocked = SubscriptionService::getSubscriptionByEmail($request->customer_email);
+        if ($shouldBeBlocked) {
+            Log::error("Subscription with email {$request->customer_email} has already been stored");
+            return Inertia::render('Public/SelfInvitation', ['errors.customer_email' => "Subscription with email {$request->customer_email} has already been stored"]);
+        }
+
+        //the url to be returned
+        $randomString = substr(str_shuffle(MD5(microtime())), 0, 22);
+
+        //create a to-be-confirmed subscription
+        try {
+            Subscription::create([
+                'subscription_email' => $request->customer_email,
+                'status' => Subscription::PENDING,
+                'token' => $randomString,
+                'customer_id' => null,
+                'year_from' => Carbon::now()->year,
+                'year_to' => Carbon::now()->year + 1,
+            ]);
+        } catch (Exception $exception) {
+            Log::error("Cannot create pending subscription with email {$request->customer_email} and token {$randomString}: {$exception->getMessage()}");
+            abort(500);
+        }
+
+        Log::info("Pending Subscription for email {$request->customer_email} has been created!", [__CLASS__, __FUNCTION__]);
+
+        return Redirect::to(URL::signedRoute('subscriptions.fill', [
+                'token' => $randomString]));
     }
 
     public function fill(string $token)

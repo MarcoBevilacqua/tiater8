@@ -1,3 +1,7 @@
+v0.0.5
+
+-   public url for subscription
+
 v0.0.3
 
 -   validation on subscription from email
