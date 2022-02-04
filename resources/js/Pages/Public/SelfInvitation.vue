@@ -13,9 +13,9 @@
                 </div>
             </div>
             <div class="grid grid-cols-3 md:grid md:grid-cols-3 md:gap-6">
-                <div class="mt-10 md:mt-5 md:col-span-3 text-center">
+                <div class="col-span-3 mt-10 md:mt-5 md:col-span-3 text-center">
                     <h2
-                        class="mt-6 text-center text-2xl font-extrabold text-gray-900"
+                        class="mt-6 text-center text-2xl xs:text-sm font-extrabold text-gray-900"
                     >
                         Ciao, inserisci la tua mail!
                     </h2>
@@ -24,7 +24,9 @@
                         dati</small
                     >
                 </div>
-                <div class="col-start-2 col-span-1">
+                <div
+                    class="col-span-3 mx-8 md:col-start-2 md:col-span-1 md:mx-2"
+                >
                     <form class="mt-4 space-y-6" @submit.prevent="submit">
                         <input type="hidden" name="remember" value="true" />
                         <div class="rounded-md shadow-sm -space-y-px">
@@ -37,7 +39,7 @@
                                     id="customer_email"
                                     name="customer_email"
                                     type="email"
-                                    class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                    class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm text-center"
                                     placeholder="Il tuo indirizzo mail"
                                 />
                             </div>
