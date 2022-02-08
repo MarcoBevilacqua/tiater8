@@ -1,3 +1,7 @@
+v0.0.6
+
+-   search bar and pagination on index
+
 v0.0.5
 
 -   public url for subscription
