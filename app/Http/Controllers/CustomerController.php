@@ -12,12 +12,18 @@ use Illuminate\Support\Facades\Redirect;
 
 class CustomerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render(
             'Customers',
-            ['customers' => Customer::orderByDesc('id')->get()
-            ->map(function (Customer $customer) {
+            [
+            'customers' => Customer::when($request->has('search'), function ($query) use ($request) {
+                $query->where('first_name', 'LIKE', '%' . $request->search . '%')
+                ->orWhere('last_name', 'LIKE', '%' . $request->search . '%');
+            })
+            ->orderByDesc('id')
+            ->paginate(10)
+            ->through(function (Customer $customer) {
                 return [
                     'first_name' => $customer->first_name,
                     'last_name' => $customer->last_name,

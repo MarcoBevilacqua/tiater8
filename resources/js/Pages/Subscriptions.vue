@@ -1,16 +1,31 @@
 <template>
     <breeze-authenticated-layout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Tessera socio
-            </h2>
-            <small>
-                <inertia-link
-                    :href="createLink"
-                    class="font-medium text-indigo-500"
-                    >Inserisci nuova tessera
-                </inertia-link></small
-            >
+            <div class="grid grid-cols-2">
+                <div>
+                    <h2
+                        class="font-semibold text-xl text-gray-800 leading-tight"
+                    >
+                        Tessera socio
+                    </h2>
+                    <small>
+                        <inertia-link
+                            :href="createLink"
+                            class="font-medium text-indigo-500"
+                            >Inserisci nuova tessera
+                        </inertia-link></small
+                    >
+                </div>
+                <div class="text-right">
+                    <label class="block text-gray-700"></label>
+                    <input
+                        class="border-2 border-gray-300 bg-white h-10 px-5 rounded-md text-sm focus:outline-none"
+                        type="search"
+                        placeholder="Cerca..."
+                        v-model="search"
+                    />
+                </div>
+            </div>
         </template>
         <template #main>
             <container>
@@ -45,7 +60,7 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         <tr
-                            v-for="subscription in subscriptions"
+                            v-for="subscription in subscriptions.data"
                             :key="subscription.id"
                         >
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -89,23 +104,45 @@
                         </tr>
                     </tbody>
                 </table>
+                <Pagination :links="subscriptions.links" />
             </container>
         </template>
     </breeze-authenticated-layout>
 </template>
 
 <script>
+import { Inertia } from "@inertiajs/inertia";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
 import Container from "@/Layouts/Container";
+import Pagination from "@/Shared/Pagination";
+import throttle from "lodash/throttle";
 
 export default {
     components: {
+        Pagination,
         BreezeAuthenticatedLayout,
         Container,
     },
     props: {
+        links: Array,
         subscriptions: Object,
         createLink: String,
+    },
+    watch: {
+        search: {
+            handler: throttle(function () {
+                Inertia.get(
+                    "subscriptions",
+                    { search: this.search },
+                    { preserveState: true, preserveScroll: true }
+                );
+            }, 250),
+        },
+    },
+    data() {
+        return {
+            search: "",
+        };
     },
 };
 </script>
