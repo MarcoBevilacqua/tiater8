@@ -50,7 +50,7 @@ class SubscriptionController extends Controller
                 $query->where('subscription_email', 'LIKE', '%' . $request->search . '%');
             })
                 ->orderByDesc('id')
-                ->paginate(10)
+                ->paginate(25)
                 ->through(function (Subscription $subscription) {
                     return [
                     'id' => $subscription->id,
