@@ -42,11 +42,14 @@ class SubscriptionController extends Controller
      * the subscription index
      * @return Inertia view
      */
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render(
             'Subscriptions',
-            ['subscriptions' => Subscription::orderByDesc('id')
+            ['subscriptions' => Subscription::when($request->has('search'), function ($query) use ($request) {
+                $query->where('subscription_email', 'LIKE', '%' . $request->search . '%');
+            })
+                ->orderByDesc('id')
                 ->paginate(10)
                 ->through(function (Subscription $subscription) {
                     return [
