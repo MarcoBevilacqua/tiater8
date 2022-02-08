@@ -42,7 +42,10 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <tr v-for="customer in customers" :key="customer.email">
+                        <tr
+                            v-for="customer in customers.data"
+                            :key="customer.email"
+                        >
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div
@@ -86,6 +89,7 @@
                         </tr>
                     </tbody>
                 </table>
+                <Pagination :links="customers.links" />
             </container>
         </template>
     </breeze-authenticated-layout>
@@ -94,9 +98,11 @@
 <script>
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
 import Container from "@/Layouts/Container";
+import Pagination from "@/Shared/Pagination";
 
 export default {
     components: {
+        Pagination,
         BreezeAuthenticatedLayout,
         Container,
     },

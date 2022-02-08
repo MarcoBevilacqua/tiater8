@@ -47,8 +47,8 @@ class SubscriptionController extends Controller
         return Inertia::render(
             'Subscriptions',
             ['subscriptions' => Subscription::orderByDesc('id')
-                ->get()
-                ->map(function (Subscription $subscription) {
+                ->paginate(10)
+                ->through(function (Subscription $subscription) {
                     return [
                     'id' => $subscription->id,
                     'customer' => $subscription->subscription_email,

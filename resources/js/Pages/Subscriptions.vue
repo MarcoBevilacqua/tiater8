@@ -45,7 +45,7 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         <tr
-                            v-for="subscription in subscriptions"
+                            v-for="subscription in subscriptions.data"
                             :key="subscription.id"
                         >
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -89,6 +89,7 @@
                         </tr>
                     </tbody>
                 </table>
+                <Pagination :links="subscriptions.links" />
             </container>
         </template>
     </breeze-authenticated-layout>
@@ -97,13 +98,16 @@
 <script>
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
 import Container from "@/Layouts/Container";
+import Pagination from "@/Shared/Pagination";
 
 export default {
     components: {
+        Pagination,
         BreezeAuthenticatedLayout,
         Container,
     },
     props: {
+        links: Array,
         subscriptions: Object,
         createLink: String,
     },
