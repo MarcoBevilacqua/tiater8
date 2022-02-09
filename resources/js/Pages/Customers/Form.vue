@@ -1,8 +1,8 @@
 <template>
     <breeze-authenticated-layout>
         <template #header>
-            <h1 v-if="customer.id">Modifica Cliente</h1>
-            <h1 v-else>Inserisci Cliente</h1>
+            <h1 v-if="customer.id">Modifica Iscritto</h1>
+            <h1 v-else>Inserisci Iscritto</h1>
         </template>
         <template #main>
             <container>
@@ -146,7 +146,7 @@
                                             </div>
 
                                             <div
-                                                class="col-span-3 sm:col-span-2"
+                                                class="col-span-3 sm:col-span-1"
                                             >
                                                 <label
                                                     for="birth"
@@ -161,6 +161,25 @@
                                                     required
                                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                 />
+                                            </div>
+                                            <div
+                                                class="col-span-3 md:col-span-2 lg:col-span-2"
+                                            >
+                                                <label
+                                                    for="fiscal_code"
+                                                    class="block text-sm font-medium text-gray-700"
+                                                    >Codice Fiscale</label
+                                                >
+                                                <input
+                                                    v-model="form.fiscal_code"
+                                                    type="text"
+                                                    name="fiscal_code"
+                                                    id="fiscal_code"
+                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                />
+                                                <div v-if="errors.fiscal_code">
+                                                    {{ errors.fiscal_code }}
+                                                </div>
                                             </div>
                                         </div>
                                         <div
@@ -278,6 +297,7 @@ export default {
                 province: this.customer.province,
                 birth: this.customer.birth,
                 postal_code: this.customer.postal_code,
+                fiscal_code: this.customer.fiscal_code,
                 resident: this.customer.resident,
             }),
         };

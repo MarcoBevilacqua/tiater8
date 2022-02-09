@@ -124,7 +124,7 @@
                                             />
                                         </div>
 
-                                        <div class="col-span-3 sm:col-span-2">
+                                        <div class="col-span-2 sm:col-span-1">
                                             <label
                                                 for="birth"
                                                 class="block text-sm font-medium text-gray-700"
@@ -138,6 +138,27 @@
                                                 required
                                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                             />
+                                        </div>
+
+                                        <div
+                                            class="col-span-2 md:col-span-2 lg:col-span-2"
+                                        >
+                                            <label
+                                                for="fiscal_code"
+                                                class="block text-sm font-medium text-gray-700"
+                                                >Codice Fiscale</label
+                                            >
+                                            <input
+                                                v-model="form.fiscal_code"
+                                                type="text"
+                                                name="fiscal_code"
+                                                id="fiscal_code"
+                                                required
+                                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            />
+                                            <div v-if="errors.fiscal_code">
+                                                {{ errors.fiscal_code }}
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="grid grid-cols-6 gap-6 mt-6">
@@ -244,6 +265,7 @@ export default {
                 city: null,
                 phone: null,
                 postal_code: null,
+                fiscal_code: null,
                 resident: null,
                 birth: null,
                 _method: this._method,
