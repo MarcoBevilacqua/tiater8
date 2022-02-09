@@ -98,7 +98,7 @@
                                     </div>
 
                                     <div
-                                        class="col-span-6 md:col-span-2 lg:col-span-2"
+                                        class="col-span-6 md:col-span-2 lg:col-span-1"
                                     >
                                         <label
                                             for="birth"
@@ -113,6 +113,27 @@
                                             required
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                         />
+                                    </div>
+
+                                    <div
+                                        class="col-span-6 md:col-span-2 lg:col-span-2"
+                                    >
+                                        <label
+                                            for="fiscal_code"
+                                            class="block text-sm font-medium text-gray-700"
+                                            >Codice Fiscale</label
+                                        >
+                                        <input
+                                            v-model="form.fiscal_code"
+                                            type="text"
+                                            name="fiscal_code"
+                                            id="fiscal_code"
+                                            required
+                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        />
+                                        <div v-if="errors.fiscal_code">
+                                            {{ errors.fiscal_code }}
+                                        </div>
                                     </div>
 
                                     <div
@@ -309,6 +330,7 @@ export default {
     },
 
     props: {
+        errors: Object,
         sub_token: String,
         contacts: Array,
         default_contact: Number,
@@ -320,7 +342,6 @@ export default {
         const form = useForm({
             first_name: null,
             last_name: null,
-            email: null,
             city: null,
             resident: null,
             phone: null,
@@ -328,6 +349,7 @@ export default {
             province: null,
             activity: null,
             postal_code: null,
+            fiscal_code: null,
             address: null,
             contact_type: null,
             sub_token: null,

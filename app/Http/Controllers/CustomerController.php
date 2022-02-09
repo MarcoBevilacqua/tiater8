@@ -94,6 +94,7 @@ class CustomerController extends Controller
             'city' => $customer->city,
             'phone' => $customer->phone,
             'birth' => $customer->birth,
+            'fiscal_code' => $customer->fiscal_code,
             'postal_code' => $customer->postal_code,
             'province'=> $customer->province,
             'resident' => $customer->resident

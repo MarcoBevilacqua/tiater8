@@ -309,6 +309,7 @@ class SubscriptionController extends Controller
             'phone' => 'required',
             'birth' => 'required',
             'resident' => 'required',
+            'fiscal_code' => 'required|size:16'
          ]);
 
         //TODO: check if subscription is valid
@@ -320,7 +321,7 @@ class SubscriptionController extends Controller
         //checking if data is correct
         $canHandleSubscription = SubscriptionService::subscriptionCanBeConfirmed($request->input('sub_token'));
 
-        if (!$canHandleSubscription->first()) {
+        if ($canHandleSubscription && !$canHandleSubscription->first()) {
             Log::error("Cannot find subscription with token " . $request->input('sub_token'));
             abort(400);
         }
@@ -344,6 +345,7 @@ class SubscriptionController extends Controller
                 'resident' => $request->input('resident'),
                 'address' => $request->input('address'),
                 'postal_code' => $request->input('postal_code'),
+                'fiscal_code' => $request->input('fiscal_code'),
             ]);
         } catch (\Exception $ex) {
             Log::error("Cannot create customer with data " . implode(",", $request->all()) . ": Error: {$ex->getMessage()}");
