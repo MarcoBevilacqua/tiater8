@@ -1,3 +1,7 @@
+v0.0.7
+
+-   fiscal code required for subscription
+
 v0.0.6
 
 -   search bar and pagination on index
