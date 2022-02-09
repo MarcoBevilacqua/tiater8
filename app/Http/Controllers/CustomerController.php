@@ -22,7 +22,7 @@ class CustomerController extends Controller
                 ->orWhere('last_name', 'LIKE', '%' . $request->search . '%');
             })
             ->orderByDesc('id')
-            ->paginate(10)
+            ->paginate(25)
             ->through(function (Customer $customer) {
                 return [
                     'first_name' => $customer->first_name,
