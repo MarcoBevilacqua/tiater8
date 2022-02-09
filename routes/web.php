@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MailTestController;
 use App\Http\Controllers\SubscriptionController;
@@ -49,6 +50,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/subscriptions', SubscriptionController::class);
     
     Route::resource('/customers', CustomerController::class);
+
+    Route::resource('/bookings', BookingController::class);
 });
 
 Route::get('mail/test', [MailTestController::class, 'send']);
