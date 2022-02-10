@@ -18,6 +18,9 @@ class BookingController extends Controller
 {
     public function index()
     {
+        /**
+         * TODO: how to structure the bookings collection?
+         */
         return Inertia::render('Bookings', [
             'bookings' => Booking::orderByDesc('id')
             ->get()

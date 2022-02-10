@@ -1,7 +1,7 @@
 <template>
     <div :class="'grid gap-4 grid-cols-' + places">
         <div v-for="place in places" key="place">
-            <Place :row="row" :idx="place" />
+            <Place :row="row" :info="{ idx: place, booked: false }" />
         </div></div
 ></template>
 

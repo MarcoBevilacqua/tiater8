@@ -1,7 +1,7 @@
 <template>
     <div class="grid grid-cols-2">
         <div class="col-span-1 center text-left">
-            <Row :places="2" :row="'A'" />
+            <Row :places="2" :row="'X'" />
         </div>
     </div>
     <div class="grid gap-x-2 grid-cols-2 bg-white-500">
