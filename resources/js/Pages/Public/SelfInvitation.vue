@@ -86,10 +86,10 @@
                             </button>
                         </div>
                         <div
-                            v-if="form.errors.customer_email"
+                            v-if="errors.customer_email"
                             class="text-center rounded-md shadow-sm font-semibold bg-red-200 text-red-600 text-sm p-2"
                         >
-                            <span>{{ form.errors.customer_email }}</span>
+                            <span>{{ errors.customer_email }}</span>
                         </div>
                     </form>
                 </div>
