@@ -15,6 +15,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
 
 class SubscriptionController extends Controller
 {
@@ -178,7 +179,7 @@ class SubscriptionController extends Controller
         $shouldBeBlocked = SubscriptionService::getSubscriptionByEmail($request->customer_email);
         if ($shouldBeBlocked) {
             Log::error("Subscription with email {$request->customer_email} has already been stored");
-            return Inertia::render('Subscription/GenerateSubscriptionLink', ['errors.customer_email' => "Subscription with email {$request->customer_email} has already been stored"]);
+            return Redirect::back()->with('error', "Indirizzo email non disponibile");
         }
 
         //the url to be returned
@@ -234,7 +235,7 @@ class SubscriptionController extends Controller
         $shouldBeBlocked = SubscriptionService::getSubscriptionByEmail($request->customer_email);
         if ($shouldBeBlocked) {
             Log::error("Subscription with email {$request->customer_email} has already been stored");
-            return Inertia::render('Public/SelfInvitation', ['errors.customer_email' => "Subscription with email {$request->customer_email} has already been stored"]);
+            return Redirect::back()->with('error', "Indirizzo email non disponibile");
         }
 
         //the url to be returned
@@ -339,10 +340,7 @@ class SubscriptionController extends Controller
             ]);
         } catch (\Exception $ex) {
             Log::error("Cannot create customer with data " . implode(",", $request->all()) . ": Error: {$ex->getMessage()}");
-            return Inertia::render(
-                'Public/CompleteSubscription',
-                ['message' => "Errore durante l'elaborazione della richiesta, si prega di riprovare."]
-            );
+            return Redirect::back()->with('error', "Errore durante l'elaborazione della richiesta, si prega di riprovare.");
         }
 
         Log::info("Customer with ID {$customer->id} successfully created", [__CLASS__, __FUNCTION__]);
