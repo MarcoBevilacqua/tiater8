@@ -1,3 +1,7 @@
+v0.0.9
+
+-   error message on public subscription
+
 v0.0.8
 
 -   public subscription fixed on retry
