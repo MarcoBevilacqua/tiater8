@@ -1,3 +1,7 @@
+v0.0.8
+
+-   public subscription fixed on retry
+
 v0.0.7
 
 -   fiscal code required for subscription
