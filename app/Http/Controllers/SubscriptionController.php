@@ -179,7 +179,7 @@ class SubscriptionController extends Controller
         $shouldBeBlocked = SubscriptionService::getSubscriptionByEmail($request->customer_email);
         if ($shouldBeBlocked) {
             Log::error("Subscription with email {$request->customer_email} has already been stored");
-            return Inertia::render('Subscription/GenerateSubscriptionLink', ['errors.customer_email' => "Subscription with email {$request->customer_email} has already been stored"]);
+            return Redirect::back()->with('error', "Indirizzo email non disponibile");
         }
 
         //the url to be returned
@@ -235,7 +235,7 @@ class SubscriptionController extends Controller
         $shouldBeBlocked = SubscriptionService::getSubscriptionByEmail($request->customer_email);
         if ($shouldBeBlocked) {
             Log::error("Subscription with email {$request->customer_email} has already been stored");
-            return Redirect::back()->with('error', "Email address already stored");
+            return Redirect::back()->with('error', "Indirizzo email non disponibile");
         }
 
         //the url to be returned
