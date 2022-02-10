@@ -24,7 +24,7 @@ class SubscriptionService
     ];
 
     private static $contactLabels = [
-        Subscription::NO_CONTACT => 'non desidero essere contattato',
+        Subscription::NO_CONTACT => 'nessun contatto',
         Subscription::PHONE_CONTACT => 'via telefono',
         Subscription::WHATSAPP_CONTACT => 'via whatsapp',
     ];
@@ -68,7 +68,7 @@ class SubscriptionService
     public static function getSubscriptionByEmail(string $email)
     {
         return Subscription::where('subscription_email', '=', $email)
-        ->where('status', Subscription::PENDING)
+        ->where('status', '!=', Subscription::PENDING)
         ->count() > 0;
     }
 

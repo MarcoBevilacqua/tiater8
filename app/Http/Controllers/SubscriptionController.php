@@ -23,10 +23,6 @@ class SubscriptionController extends Controller
     public function __construct()
     {
         $this->rules = [
-            'complete' => [
-                'first_name' => 'required',
-                'last_name' => 'required'
-            ],
             'store' => [
                 'customer_id' => 'exists:App\Models\Customer,id',
                 'status' => 'required|numeric',
@@ -175,7 +171,7 @@ class SubscriptionController extends Controller
     public function init(Request $request)
     {
         $request->validate([
-            'customer_email' => 'required|email:filter|unique:subscriptions,subscription_email'
+            'customer_email' => 'required|email:filter'
         ]);
 
         //check if email has already been taken
@@ -190,8 +186,8 @@ class SubscriptionController extends Controller
 
         //create a to-be-confirmed subscription
         try {
-            Subscription::create([
-                'subscription_email' => $request->customer_email,
+            Subscription::updateOrCreate([
+                'subscription_email' => $request->customer_email], [
                 'status' => Subscription::PENDING,
                 'token' => $randomString,
                 'customer_id' => null,
@@ -231,7 +227,7 @@ class SubscriptionController extends Controller
     public function publicInit(Request $request)
     {
         $request->validate([
-            'customer_email' => 'required|email:filter|unique:subscriptions,subscription_email'
+            'customer_email' => 'required|email:filter'
         ]);
 
         //check if email has already been taken
@@ -246,8 +242,8 @@ class SubscriptionController extends Controller
 
         //create a to-be-confirmed subscription
         try {
-            Subscription::create([
-                'subscription_email' => $request->customer_email,
+            Subscription::updateOrCreate([
+                'subscription_email' => $request->customer_email], [
                 'status' => Subscription::PENDING,
                 'token' => $randomString,
                 'customer_id' => null,
@@ -325,12 +321,6 @@ class SubscriptionController extends Controller
             Log::error("Cannot find subscription with token " . $request->input('sub_token'));
             abort(400);
         }
-        
-        //validate the request
-        if (!$request->validate($this->rules['complete'])) {
-            Log::info("Cannot validate Request");
-            abort(400);
-        }
 
         //Create the customer
         try {
@@ -349,7 +339,10 @@ class SubscriptionController extends Controller
             ]);
         } catch (\Exception $ex) {
             Log::error("Cannot create customer with data " . implode(",", $request->all()) . ": Error: {$ex->getMessage()}");
-            return false;
+            return Inertia::render(
+                'Public/CompleteSubscription',
+                ['message' => "Errore durante l'elaborazione della richiesta, si prega di riprovare."]
+            );
         }
 
         Log::info("Customer with ID {$customer->id} successfully created", [__CLASS__, __FUNCTION__]);

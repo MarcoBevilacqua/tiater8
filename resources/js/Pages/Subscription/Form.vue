@@ -170,6 +170,7 @@
                                             Torna alla lista
                                         </a>
                                         <a
+                                            v-if="subscription.status != 0"
                                             target="_blank"
                                             :href="
                                                 route(
