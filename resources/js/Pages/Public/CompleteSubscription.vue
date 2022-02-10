@@ -110,7 +110,7 @@
                                         <label
                                             for="province"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Provincia</label
+                                            >Provincia*</label
                                         >
                                         <input
                                             v-model="form.province"
@@ -183,7 +183,7 @@
                                         <label
                                             for="postal_code"
                                             class="block text-sm font-medium text-gray-700"
-                                            >CAP</label
+                                            >CAP*</label
                                         >
                                         <input
                                             v-model="form.postal_code"
