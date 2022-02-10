@@ -18,6 +18,10 @@
                                 class="px-4 py-3 bg-gray-50 text-center sm:px-6"
                             >
                                 <p>Completa la tua iscrizione</p>
+                                <small
+                                    >(I campi contrassegnati con * sono
+                                    obbligatori)</small
+                                >
                             </div>
                             <div class="px-4 py-5 bg-white sm:p-6">
                                 <div
@@ -29,7 +33,7 @@
                                         <label
                                             for="first_name"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Nome</label
+                                            >Nome*</label
                                         >
                                         <input
                                             v-model="form.first_name"
@@ -43,12 +47,12 @@
                                     </div>
 
                                     <div
-                                        class="col-span-12 md:col-span-4 lg:col-span-4"
+                                        class="col-span-12 md:col-span-2 lg:col-span-2"
                                     >
                                         <label
                                             for="last_name"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Cognome</label
+                                            >Cognome*</label
                                         >
                                         <input
                                             v-model="form.last_name"
@@ -62,12 +66,33 @@
                                     </div>
 
                                     <div
+                                        class="col-span-12 md:col-span-2 lg:col-span-2"
+                                    >
+                                        <label
+                                            for="fiscal_code"
+                                            class="block text-sm font-medium text-gray-700"
+                                            >Codice Fiscale*</label
+                                        >
+                                        <input
+                                            v-model="form.fiscal_code"
+                                            type="text"
+                                            name="fiscal_code"
+                                            id="fiscal_code"
+                                            required
+                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        />
+                                        <div v-if="errors.fiscal_code">
+                                            {{ errors.fiscal_code }}
+                                        </div>
+                                    </div>
+
+                                    <div
                                         class="col-span-8 md:col-span-2 lg:col-span-2"
                                     >
                                         <label
                                             for="city"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Nato a</label
+                                            >Nato a*</label
                                         >
                                         <input
                                             v-model="form.city"
@@ -98,12 +123,12 @@
                                     </div>
 
                                     <div
-                                        class="col-span-6 md:col-span-2 lg:col-span-1"
+                                        class="col-span-6 md:col-span-2 lg:col-span-2"
                                     >
                                         <label
                                             for="birth"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Il</label
+                                            >Il*</label
                                         >
                                         <input
                                             v-model="form.birth"
@@ -116,33 +141,12 @@
                                     </div>
 
                                     <div
-                                        class="col-span-6 md:col-span-2 lg:col-span-2"
-                                    >
-                                        <label
-                                            for="fiscal_code"
-                                            class="block text-sm font-medium text-gray-700"
-                                            >Codice Fiscale</label
-                                        >
-                                        <input
-                                            v-model="form.fiscal_code"
-                                            type="text"
-                                            name="fiscal_code"
-                                            id="fiscal_code"
-                                            required
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        />
-                                        <div v-if="errors.fiscal_code">
-                                            {{ errors.fiscal_code }}
-                                        </div>
-                                    </div>
-
-                                    <div
                                         class="col-span-6 sm:col-span-2 lg:col-span-2"
                                     >
                                         <label
                                             for="resident"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Residente a</label
+                                            >Residente a*</label
                                         >
                                         <input
                                             v-model="form.resident"
@@ -160,7 +164,7 @@
                                         <label
                                             for="address"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Indirizzo</label
+                                            >Indirizzo*</label
                                         >
                                         <input
                                             v-model="form.address"
@@ -198,7 +202,7 @@
                                         <label
                                             for="phone"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Telefono</label
+                                            >Telefono*</label
                                         >
                                         <input
                                             v-model="form.phone"
@@ -314,6 +318,30 @@
                         </div>
                     </form>
                 </div>
+                <div
+                    class="text-center col-span-3 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                    role="alert"
+                    v-if="message"
+                >
+                    <span class="block sm:inline">{{ message }}</span>
+                    <span
+                        class="absolute top-0 bottom-0 right-0 px-4 py-3"
+                        @click="message = null"
+                    >
+                        <svg
+                            class="fill-current h-6 w-6 text-red-500"
+                            role="button"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                        >
+                            <title>Close</title>
+                            <path
+                                d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"
+                            />
+                        </svg>
+                    </span>
+                </div>
+                <div class="w-full message"></div>
             </div>
         </div>
     </container>
@@ -330,6 +358,7 @@ export default {
     },
 
     props: {
+        message: String,
         errors: Object,
         sub_token: String,
         contacts: Array,
@@ -358,6 +387,7 @@ export default {
         function submit() {
             form.post("/over/subscriptions/complete", {
                 preserveScroll: true,
+                preserveState: true,
                 onSuccess: () => form.reset(),
             });
         }
