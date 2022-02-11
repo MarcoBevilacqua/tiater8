@@ -304,7 +304,7 @@ class SubscriptionController extends Controller
             'address' => 'required',
             'city' => 'required',
             'phone' => 'required',
-            'birth' => 'required',
+            'birth' => 'required|date_format:d-m-Y',
             'resident' => 'required',
             'fiscal_code' => 'required|size:16'
          ]);

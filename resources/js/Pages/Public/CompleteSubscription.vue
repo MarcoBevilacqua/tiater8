@@ -82,7 +82,10 @@
                                                 required
                                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                             />
-                                            <div v-if="errors.fiscal_code">
+                                            <div
+                                                v-if="errors.fiscal_code"
+                                                class="text-red-700 text-xs pt-2"
+                                            >
                                                 {{ errors.fiscal_code }}
                                             </div>
                                         </div>
@@ -139,6 +142,12 @@
                                                 required
                                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                             />
+                                            <div
+                                                v-if="errors.birth"
+                                                class="text-red-700 text-xs pt-2"
+                                            >
+                                                {{ errors.birth }}
+                                            </div>
                                         </div>
 
                                         <div
@@ -326,13 +335,28 @@
                         role="alert"
                         v-if="
                             $page.props.flash.error ||
-                            (Object.keys($page.props.errors).length > 0 &&
-                                message)
+                            Object.keys($page.props.errors).length > 0
                         "
                     >
-                        <span class="block sm:inline">{{
-                            $page.props.flash.error
-                        }}</span>
+                        <div v-if="$page.props.flash.error">
+                            <span class="block sm:inline">{{
+                                $page.props.flash.error
+                            }}</span>
+                        </div>
+                        <div v-else>
+                            <span
+                                class="block sm:inline"
+                                v-if="
+                                    Object.keys($page.props.errors).length === 1
+                                "
+                                >There is one form error.</span
+                            >
+                            <span v-else
+                                >There are
+                                {{ Object.keys($page.props.errors).length }}
+                                form errors.</span
+                            >
+                        </div>
                         <span
                             class="absolute top-0 bottom-0 right-0 px-4 py-3"
                             @click="message = null"
