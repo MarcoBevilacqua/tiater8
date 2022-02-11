@@ -335,7 +335,7 @@
                         role="alert"
                         v-if="
                             $page.props.flash.error ||
-                            Object.keys($page.props.errors).length > 0
+                            (Object.keys($page.props.errors).length > 0 && show)
                         "
                     >
                         <div v-if="$page.props.flash.error">
@@ -349,17 +349,17 @@
                                 v-if="
                                     Object.keys($page.props.errors).length === 1
                                 "
-                                >There is one form error.</span
+                                >Errore nella compilazione dei dati</span
                             >
                             <span v-else
-                                >There are
+                                >Rilevati
                                 {{ Object.keys($page.props.errors).length }}
-                                form errors.</span
+                                errori nella compilazione dei dati.</span
                             >
                         </div>
                         <span
                             class="absolute top-0 bottom-0 right-0 px-4 py-3"
-                            @click="message = null"
+                            @click="show = false"
                         >
                             <svg
                                 class="fill-current h-6 w-6 text-red-500"
@@ -389,9 +389,12 @@ export default {
     components: {
         Container,
     },
-
+    data() {
+        return {
+            show: true,
+        };
+    },
     props: {
-        message: String,
         errors: Object,
         sub_token: String,
         contacts: Array,
@@ -399,7 +402,14 @@ export default {
         activities: Array,
         url: String,
     },
-
+    watch: {
+        "$page.props.flash": {
+            handler() {
+                this.show = true;
+            },
+            deep: true,
+        },
+    },
     setup() {
         const form = useForm({
             first_name: null,
