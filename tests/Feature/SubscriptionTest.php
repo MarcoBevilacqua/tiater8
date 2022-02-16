@@ -109,7 +109,8 @@ class SubscriptionTest extends TestCase
             'birth' => '1982-07-20',
             'phone' => 3333333,
             'address' => 'Fake address',
-            'postal_code' => 989797
+            'postal_code' => 989797,
+            'fiscal_code' => '1234567891234567'
         ];
 
         $this->post('/over/subscriptions/complete', $subscriptionData);
@@ -151,7 +152,8 @@ class SubscriptionTest extends TestCase
             'birth' => '1982-07-20',
             'phone' => 3333333,
             'address' => 'Fake address',
-            'postal_code' => 989797
+            'postal_code' => 989797,
+            'fiscal_code' => '1234567891234567'
         ];
 
         //create subscription
