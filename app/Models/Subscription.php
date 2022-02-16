@@ -60,4 +60,10 @@ class Subscription extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+    
+    //add active scope
+    public function scopeActive($query)
+    {
+        return $query->whereIn('status', [self::ACTIVE, self::TO_BE_CONFIRMED]);
+    }
 }

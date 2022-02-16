@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Customer;
 use App\Models\Show;
 use App\Models\ShowEvent;
+use App\Models\Subscription;
 use App\Models\Viewer;
 use Faker\Factory;
 use Illuminate\View\View;
@@ -27,6 +29,13 @@ class BookingController extends Controller
             ->map(function (Booking $booking) {
                 return [
                     'id' => $booking->id
+                ];
+            }),
+            'customers' => Subscription::active()->get()
+            ->map(function (Subscription $subscription) {
+                return [
+                    'id' => $subscription->id,
+                    'name' => $subscription->customer->first_name . ' ' . $subscription->customer->last_name
                 ];
             }),
             'createLink' => URL::route('bookings.create')
