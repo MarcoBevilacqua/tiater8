@@ -12,7 +12,6 @@ use Tests\TestCase;
 
 class SubscriptionTest extends TestCase
 {
-    use RefreshDatabase;
     use DatabaseMigrations;
 
     private $admin;
