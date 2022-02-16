@@ -18,7 +18,7 @@ jobs:
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.development', '.env');"
       - name: Copy phpunit file
-        run: copy('phpunit.ci.xml', 'phpunit.xml');"
+        run: php -r "copy('phpunit.ci.xml', 'phpunit.xml');"
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
       - name: Generate key
