@@ -145,6 +145,19 @@ class SubscriptionController extends Controller
         return Redirect::route('subscriptions.index');
     }
 
+    public function destroy(Subscription $subscription)
+    {
+        try {
+            Subscription::findOrFail($subscription->id)->delete();
+        } catch (\Exception $exception) {
+            Log::error("Cannot find subscription {$subscription->id}");
+            return false;
+        }
+
+        Log::info("Subscription successfully deleted");
+        return Redirect::to('subscriptions')->with('success', 'Subscription successfully deleted');
+    }
+
     /**
      * render the view to generate invitation mail
      * @return Inertia view
@@ -298,6 +311,7 @@ class SubscriptionController extends Controller
          * 4. return the response
          */
 
+        Log::info("Completing subscription...");
         $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
@@ -308,6 +322,9 @@ class SubscriptionController extends Controller
             'resident' => 'required',
             'fiscal_code' => 'required|size:16'
          ]);
+
+        Log::info("Request validated, proceeding...");
+
 
         //TODO: check if subscription is valid
         if (!$request->has('sub_token') || !$request->input('sub_token')) {

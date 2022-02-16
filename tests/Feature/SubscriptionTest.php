@@ -27,6 +27,22 @@ class SubscriptionTest extends TestCase
     /**
      * @test
      *
+     * should soft delete subscription
+     * @return void
+     */
+    public function shoulDeleteSubscription()
+    {
+        $this->actingAs($this->admin);
+        $subscription = Subscription::factory()->make();
+
+        $this->call("DELETE", '/subscriptions/', $subscription->toArray());
+
+        $this->assertDatabaseMissing('subscriptions', ['id' => $subscription->id]);
+    }
+
+    /**
+     * @test
+     *
      * the subscription init test
      * @return void
      */
@@ -109,7 +125,8 @@ class SubscriptionTest extends TestCase
             'birth' => '1982-07-20',
             'phone' => 3333333,
             'address' => 'Fake address',
-            'postal_code' => 989797
+            'postal_code' => 989797,
+            'fiscal_code' => 'ABCUIO678TYHGC67'
         ];
 
         $this->post('/over/subscriptions/complete', $subscriptionData);
@@ -151,7 +168,8 @@ class SubscriptionTest extends TestCase
             'birth' => '1982-07-20',
             'phone' => 3333333,
             'address' => 'Fake address',
-            'postal_code' => 989797
+            'postal_code' => 989797,
+            'fiscal_code' => 'HKUIDIUHAISUFYIH'
         ];
 
         //create subscription
