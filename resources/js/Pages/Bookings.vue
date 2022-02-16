@@ -30,7 +30,7 @@
         <template #main>
             <container>
                 <div class="container map-container">
-                    <Map />
+                    <Map :customers="customers" />
                 </div>
             </container>
         </template> </breeze-authenticated-layout
@@ -57,6 +57,7 @@ export default {
     },
     props: {
         bookings: Object,
+        customers: Object,
         createLink: String,
     },
 };
