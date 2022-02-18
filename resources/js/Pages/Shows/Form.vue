@@ -19,14 +19,14 @@
                                             name="id"
                                             id="id"
                                         />
-                                        <div class="grid grid-cols-6 gap-6">
+                                        <div class="grid grid-cols-8 gap-6">
                                             <div
-                                                class="sm:col-span-3 col-span-3"
+                                                class="mx-auto sm:col-span-4 col-span-4"
                                             >
                                                 <div v-if="form.image">
                                                     <img
-                                                        width="600"
-                                                        height="800"
+                                                        width="400"
+                                                        height="600"
                                                         :src="form.image"
                                                         class="rounded"
                                                     />
@@ -49,7 +49,7 @@
                                             </div>
 
                                             <div
-                                                class="sm:col-span-3 col-span-3"
+                                                class="sm:col-span-4 col-span-4"
                                             >
                                                 <div
                                                     class="sm:col-span-6 col-span-3"
@@ -114,6 +114,47 @@
                                                         "
                                                     >
                                                         {{ errors.description }}
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="grid grid-cols-4 gap-4"
+                                                >
+                                                    <div
+                                                        class="sm:col-span-2 col-span-2 py-5"
+                                                    >
+                                                        <label
+                                                            for="full_price"
+                                                            class="block text-sm font-medium text-gray-700"
+                                                            >Prezzo pieno</label
+                                                        >
+                                                        <input
+                                                            v-model="
+                                                                form.full_price
+                                                            "
+                                                            type="number"
+                                                            name="full_price"
+                                                            id="full_price"
+                                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        />
+                                                    </div>
+                                                    <div
+                                                        class="sm:col-span-2 col-span-2 py-5"
+                                                    >
+                                                        <label
+                                                            for="half_price"
+                                                            class="block text-sm font-medium text-gray-700"
+                                                            >Prezzo
+                                                            ridotto</label
+                                                        >
+                                                        <input
+                                                            v-model="
+                                                                form.half_price
+                                                            "
+                                                            name="half_price"
+                                                            id="half_price"
+                                                            type="number"
+                                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        />
                                                     </div>
                                                 </div>
                                             </div>
