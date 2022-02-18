@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Subscription;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 class SubscriptionService
 {
@@ -72,7 +73,13 @@ class SubscriptionService
         ->count() > 0;
     }
 
-    public static function subscriptionCanBeConfirmed(string $token)
+    /**
+     * Check if subscription can be confirmed
+     * @param string $token
+     *
+     * @return Collection
+     */
+    public static function subscriptionCanBeConfirmed(string $token) : Collection
     {
         $subscriptionByToken = Subscription::where('token', $token)
         ->first();
