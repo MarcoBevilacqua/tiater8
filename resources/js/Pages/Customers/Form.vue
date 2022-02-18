@@ -278,7 +278,7 @@ export default {
     },
 
     props: {
-        customer: Array,
+        customer: Object,
         _method: String,
         errors: Object,
     },

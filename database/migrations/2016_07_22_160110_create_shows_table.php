@@ -13,18 +13,15 @@ class CreateShowsTable extends Migration
     public function up()
     {
         Schema::create('shows', function (Blueprint $table) {
-            $table->engine = 'InnoDB';
             $table->id();
-            $table->string("name");
+            $table->string("title");
             $table->string("description");
             $table->integer("places");
-            $table->float("full_price", 8, 2);
-            $table->float("half_price", 8, 2);
+            $table->float("full_price", 4, 2);
+            $table->float("half_price", 4, 2);
             $table->string('image');
             $table->string('url');
-            $table->tinyInteger('full_price_qnt');
-            $table->tinyInteger('half_price_qnt');
-            $table->tinyInteger('total_qnt');
+            $table->timestamps();
         });
     }
 
