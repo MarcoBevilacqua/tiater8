@@ -4,7 +4,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MailTestController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\PDFController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\ShowController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -49,8 +49,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/subscriptions', SubscriptionController::class);
     
     Route::resource('/customers', CustomerController::class);
-});
 
-Route::get('mail/test', [MailTestController::class, 'send']);
+    Route::resource('/shows', ShowController::class);
+});
 
 require __DIR__.'/auth.php';

@@ -49,6 +49,16 @@
                                     Tessere Socio
                                 </breeze-nav-link>
                             </div>
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
+                            >
+                                <breeze-nav-link
+                                    :href="route('shows.index')"
+                                    :active="route().current('shows.index')"
+                                >
+                                    Spettacoli
+                                </breeze-nav-link>
+                            </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
