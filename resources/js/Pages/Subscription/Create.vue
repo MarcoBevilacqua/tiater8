@@ -30,6 +30,7 @@
                                                 >
                                                 <select
                                                     v-model="form.customer_id"
+                                                    required
                                                     name="customer_id"
                                                     id="customer_id"
                                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -56,6 +57,9 @@
                                                     id="year_from"
                                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                 />
+                                                <div v-if="errors.year_from">
+                                                    {{ errors.year_from }}
+                                                </div>
                                             </div>
 
                                             <div
@@ -73,6 +77,9 @@
                                                     id="year_to"
                                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                 />
+                                                <div v-if="errors.year_to">
+                                                    {{ errors.year_to }}
+                                                </div>
                                             </div>
                                         </div>
                                         <div
@@ -88,7 +95,7 @@
                                                 >
                                                 <select
                                                     v-model="form.contact_type"
-                                                    type="select"
+                                                    required
                                                     name="contact_type"
                                                     id="contact_type"
                                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -113,7 +120,6 @@
                                                 >
                                                 <select
                                                     v-model="form.activity"
-                                                    type="select"
                                                     name="activity"
                                                     id="activity"
                                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -139,6 +145,7 @@
                                                 >
                                                 <select
                                                     v-model="form.status"
+                                                    required
                                                     name="status"
                                                     id="status"
                                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -193,6 +200,7 @@ export default {
     },
 
     props: {
+        errors: Object,
         _method: String,
         av_statuses: Array,
         activities: Array,

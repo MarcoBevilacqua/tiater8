@@ -35,15 +35,12 @@
                                         id="customer_email"
                                         name="customer_email"
                                         type="email"
-                                        autocomplete="email"
-                                        required=""
                                         class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                         placeholder="Inserisci indirizzo mail"
                                     />
                                 </div>
                             </div>
-
-                            <div>
+                            <div v-if="!form.processing">
                                 <button
                                     type="submit"
                                     class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -51,14 +48,44 @@
                                     <span
                                         class="absolute left-0 inset-y-0 flex items-center pl-3"
                                     >
-                                        <button
-                                            class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
-                                            aria-hidden="true"
-                                            value="generate"
-                                        />
                                     </span>
                                     Invita
                                 </button>
+                            </div>
+                            <div v-else>
+                                <button
+                                    type="button"
+                                    class="group relative w-full flex justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-400 hover:bg-indigo-600 transition ease-in-out duration-150 cursor-not-allowed"
+                                    disabled=""
+                                >
+                                    <svg
+                                        class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <circle
+                                            class="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            stroke-width="4"
+                                        ></circle>
+                                        <path
+                                            class="opacity-75"
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                        ></path>
+                                    </svg>
+                                    Operazione in corso...
+                                </button>
+                            </div>
+                            <div
+                                v-if="form.errors.customer_email"
+                                class="text-center rounded-md shadow-sm font-semibold bg-red-200 text-red-600 text-sm p-2"
+                            >
+                                <span>{{ form.errors.customer_email }}</span>
                             </div>
                         </form>
                     </div>
@@ -71,7 +98,7 @@
 <script>
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
 import Container from "@/Layouts/Container";
-import { reactive } from "vue";
+import { useForm } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
 
 export default {
@@ -81,13 +108,14 @@ export default {
     },
 
     setup() {
-        const form = reactive({
+        const form = useForm({
             customer_email: null,
         });
 
-        function submit(e) {
-            Inertia.post("/subscriptions/init", {
-                customer_email: form.customer_email,
+        function submit() {
+            form.post("/subscriptions/init", {
+                preserveScroll: true,
+                onSuccess: () => form.reset("customer_email"),
             });
         }
 
@@ -95,6 +123,7 @@ export default {
     },
 
     props: {
+        errors: Object,
         token: String,
         form_url: String,
     },

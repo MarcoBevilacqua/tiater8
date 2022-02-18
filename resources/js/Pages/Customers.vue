@@ -1,16 +1,31 @@
 <template>
     <breeze-authenticated-layout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Iscritti
-            </h2>
-            <small>
-                <inertia-link
-                    :href="createLink"
-                    class="font-medium text-indigo-500"
-                    >Inserisci nuovo
-                </inertia-link></small
-            >
+            <div class="grid grid-cols-2">
+                <div>
+                    <h2
+                        class="font-semibold text-xl text-gray-800 leading-tight"
+                    >
+                        Iscritti
+                    </h2>
+                    <small>
+                        <inertia-link
+                            :href="createLink"
+                            class="font-medium text-indigo-500"
+                            >Inserisci nuovo
+                        </inertia-link></small
+                    >
+                </div>
+                <div class="text-right">
+                    <label class="block text-gray-700"></label>
+                    <input
+                        class="border-2 border-gray-300 bg-white h-10 px-5 rounded-md text-sm focus:outline-none"
+                        type="search"
+                        placeholder="Cerca..."
+                        v-model="search"
+                    />
+                </div>
+            </div>
         </template>
         <template #main>
             <container>
@@ -42,7 +57,10 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <tr v-for="customer in customers" :key="customer.email">
+                        <tr
+                            v-for="customer in customers.data"
+                            :key="customer.email"
+                        >
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div
@@ -86,23 +104,46 @@
                         </tr>
                     </tbody>
                 </table>
+                <Pagination :links="customers.links" />
             </container>
         </template>
     </breeze-authenticated-layout>
 </template>
 
 <script>
+import { Inertia } from "@inertiajs/inertia";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
 import Container from "@/Layouts/Container";
+import Pagination from "@/Shared/Pagination";
+import TableSearch from "@/Shared/TableSearch";
+import throttle from "lodash/throttle";
 
 export default {
     components: {
+        Pagination,
+        TableSearch,
         BreezeAuthenticatedLayout,
         Container,
     },
     props: {
         customers: Object,
         createLink: String,
+    },
+    watch: {
+        search: {
+            handler: throttle(function () {
+                Inertia.get(
+                    "customers",
+                    { search: this.search },
+                    { preserveState: true, preserveScroll: true }
+                );
+            }, 150),
+        },
+    },
+    data() {
+        return {
+            search: "",
+        };
     },
 };
 </script>

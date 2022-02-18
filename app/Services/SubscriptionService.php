@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Subscription;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 class SubscriptionService
 {
@@ -24,6 +25,7 @@ class SubscriptionService
     ];
 
     private static $contactLabels = [
+        Subscription::NO_CONTACT => 'nessun contatto',
         Subscription::PHONE_CONTACT => 'via telefono',
         Subscription::WHATSAPP_CONTACT => 'via whatsapp',
     ];
@@ -48,24 +50,36 @@ class SubscriptionService
         return self::$statusLabels[$status];
     }
 
-    public static function getFancyActivityLabel(int $activity)
+    public static function getFancyActivityLabel(int $activity = null)
     {
+        if (!in_array($activity, self::$activityLabels)) {
+            return "";
+        }
         return self::$activityLabels[$activity];
     }
 
-    public static function getFancyContactLabel(int $contact)
+    public static function getFancyContactLabel(int $contact = null)
     {
+        if (!in_array($contact, self::$contactLabels)) {
+            return "";
+        }
         return self::$contactLabels[$contact];
     }
 
     public static function getSubscriptionByEmail(string $email)
     {
         return Subscription::where('subscription_email', '=', $email)
-        ->where('status', Subscription::PENDING)
+        ->where('status', '!=', Subscription::PENDING)
         ->count() > 0;
     }
 
-    public static function subscriptionCanBeConfirmed(string $token)
+    /**
+     * Check if subscription can be confirmed
+     * @param string $token
+     *
+     * @return Collection
+     */
+    public static function subscriptionCanBeConfirmed(string $token) : Collection
     {
         $subscriptionByToken = Subscription::where('token', $token)
         ->first();
@@ -76,5 +90,23 @@ class SubscriptionService
 
         return collect([$subscriptionByToken->expires_at > Carbon::now(), $subscriptionByToken->subscription_email]);
         //&& $subscriptionByToken->status === Subscription::TO_BE_COMPLETED;
+    }
+
+    /**
+     * get year_from and year_to for subscription
+     *
+     * @return Collection
+     */
+    public static function getSubscriptionYears()
+    {
+        $expirationMonth = config('app.subscriptions.expiration_month');
+        $renovationMonth = config('app.subscriptions.renovation_month');
+
+        $year = (Carbon::now()->month > $expirationMonth &&
+        Carbon::now()->month <= $renovationMonth) ?
+        Carbon::now()->year + 1 :
+        Carbon::now()->year;
+         
+        return collect(['from' => $year, 'to' => $year + 1]);
     }
 }

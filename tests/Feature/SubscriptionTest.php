@@ -27,19 +27,39 @@ class SubscriptionTest extends TestCase
     /**
      * @test
      *
+     * should soft delete subscription
+     * @return void
+     */
+    public function shoulDeleteSubscription()
+    {
+        $this->actingAs($this->admin);
+        $subscription = Subscription::factory()->create();
+
+        $response = $this->delete('/subscriptions/'. $subscription->id);
+        $response->assertRedirect();
+        $this->assertDatabaseCount('subscriptions', 1);
+        $this->assertSoftDeleted('subscriptions', [
+            'id' => $subscription->id,
+            'subscription_email' => $subscription->subscription_email
+        ]);
+    }
+
+    /**
+     * @test
+     *
      * the subscription init test
      * @return void
      */
     public function initSubscriptionTest()
     {
         $this->actingAs($this->admin);
-        $response = $this->post('/subscriptions/init', ['customer_email' => 'abc123']);
+        $response = $this->post('/subscriptions/init', ['customer_email' => 'abc123@mail.com']);
         /** database assertions */
         $this->assertDatabaseCount('subscriptions', 1);
         $this->assertDatabaseHas('subscriptions', [
             'customer_id' => null,
             'status' => 0,
-            'subscription_email' => 'abc123'
+            'subscription_email' => 'abc123@mail.com'
 
         ]);
         $response->assertStatus(302);
@@ -103,18 +123,17 @@ class SubscriptionTest extends TestCase
             'last_name' => 'Bevilacqua',
             'email' => $subscriptionToBeCompleted->subscription_email,
             'sub_token' => $subscriptionToBeCompleted->token,
-            'year_from' => '2021',
-            'year_to' => '2022',
             'city' => 'my City',
             'province' => 'FG',
             'resident' => 'aaaa',
             'birth' => '1982-07-20',
             'phone' => 3333333,
             'address' => 'Fake address',
-            'postal_code' => 989797
+            'postal_code' => 989797,
+            'fiscal_code' => 'ABCUIO678TYHGC67'
         ];
 
-        $response = $this->post('/public/subscriptions/complete', $subscriptionData);
+        $this->post('/over/subscriptions/complete', $subscriptionData);
 
         $this->assertDatabaseHas('customers', [
             'email' => $subscriptionToBeCompleted->subscription_email,
@@ -126,6 +145,44 @@ class SubscriptionTest extends TestCase
 
         $this->assertDatabaseHas('subscriptions', [
             'status' => Subscription::TO_BE_CONFIRMED
+        ]);
+    }
+
+    /**
+     * @test
+     *
+     *
+     * @return void
+     */
+    public function subscriptionFromPublicRouteShouldHaveProperYears()
+    {
+        $subscriptionToBeCompleted = Subscription::factory()->toBeCompleted()->create();
+
+        //subscription has to be confirmed, user should fill the form
+        $this->assertDatabaseHas('subscriptions', ['status' => 1]);
+        //user fills the form and hit "submit"
+        $subscriptionData = [
+            'first_name' => 'Marco',
+            'last_name' => 'Bevilacqua',
+            'email' => $subscriptionToBeCompleted->subscription_email,
+            'sub_token' => $subscriptionToBeCompleted->token,
+            'city' => 'my City',
+            'province' => 'FG',
+            'resident' => 'aaaa',
+            'birth' => '1982-07-20',
+            'phone' => 3333333,
+            'address' => 'Fake address',
+            'postal_code' => 989797,
+            'fiscal_code' => 'HKUIDIUHAISUFYIH'
+        ];
+
+        //create subscription
+        $this->post('/over/subscriptions/complete', $subscriptionData);
+
+        $this->assertDatabaseHas('subscriptions', [
+            'subscription_email' => $subscriptionToBeCompleted->subscription_email,
+            'year_from' => Carbon::now()->year,
+            'year_to' => Carbon::now()->year + 1
         ]);
     }
 }

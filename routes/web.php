@@ -1,9 +1,10 @@
 <?php
 
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\MailTestController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\PDFController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\ShowController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -18,26 +19,23 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+Route::redirect('/', 'login', 301);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard')->with('generateLink', URL::route('subscriptions.generate'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::prefix('public')->group(function () {
+Route::prefix('over')->group(function () {
+    //the public email confirmation
+    Route::get('/subscriptions/start', [SubscriptionController::class, 'start'])->name('subscriptions.start');
+    //the public init email invitation
+    Route::post('/subscriptions/init', [SubscriptionController::class, 'publicInit']);
     //the subscription confirmation
     Route::get('/subscriptions/confirmed', [SubscriptionController::class, 'confirmed']);
     //the subscription form visualization
     Route::get('/subscriptions/fill/{token}', [SubscriptionController::class, 'fill'])->name('subscriptions.fill');
     //the subscription submit
-    Route::post('/subscriptions/complete', [SubscriptionController::class, 'complete']);
+    Route::post('/subscriptions/complete', [SubscriptionController::class, 'complete'])->name('subscriptions.complete');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -51,6 +49,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/subscriptions', SubscriptionController::class);
     
     Route::resource('/customers', CustomerController::class);
+
+    Route::resource('/shows', ShowController::class);
 });
 
 require __DIR__.'/auth.php';

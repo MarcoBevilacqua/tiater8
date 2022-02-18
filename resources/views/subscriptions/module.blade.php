@@ -13,12 +13,18 @@
     <div class="row">
         <span class="leading-5"> telefono {{ $customer->phone}} email {{ $customer->email}}</span>
     </div>    
+    @if ($contact_type !== "")
     <div class="my-8 font-bold">
         <span class="leading-5">desidera essere contattato {{$contact_type}}</span>
-    </div>                        
+    </div>    
+    @endif
+        
+    @if ($activity !== "")
     <div class="row font-bold">
         <span>per comunicazioni riguardanti {{ $activity }}</span>
-    </div>       
+    </div> 
+    @endif
+      
     <div class="font-bold my-6">
         <h3>chiede</h3>
     </div>
@@ -38,9 +44,6 @@
     </div>
     <div class="my-4 text-right" style="text-align: right;margin: 10px 100px 10px 0;">
         Firma <br />
-    </div>
-    <div class="my-6 "></div>
-            <p>Tessera n. {{ $subscriptionId }}</p>
     </div>
 </div>
 @endsection

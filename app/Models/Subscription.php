@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Subscription extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'customer_id',
@@ -49,6 +50,7 @@ class Subscription extends Model
     /**
      * the contact options
      */
+    const NO_CONTACT = 2;
     const PHONE_CONTACT = 0;
     const WHATSAPP_CONTACT = 1;
 

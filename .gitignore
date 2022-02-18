@@ -10,14 +10,21 @@ app/storage/
 # Laravel 5 & Lumen specific
 public/storage
 public/hot
+public/img
 
 # Laravel 5 & Lumen specific with changed public path
 public_html/storage
 public_html/hot
 
+# Laravel packages
+_ide_helper_models.php
+_ide_helper.php
+
 storage/*.key
 .env
+.env.production
 Homestead.yaml
 Homestead.json
 /.vagrant
 .phpunit.result.cache
+.phpstorm.meta.php
