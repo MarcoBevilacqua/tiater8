@@ -4,6 +4,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MailTestController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\PDFController;
+use App\Http\Controllers\PublicSubscriptionController;
 use App\Http\Controllers\ShowController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -27,22 +28,22 @@ Route::get('/dashboard', function () {
 
 Route::prefix('over')->group(function () {
     //the public email confirmation
-    Route::get('/subscriptions/start', [SubscriptionController::class, 'start'])->name('subscriptions.start');
+    Route::get('/subscriptions/start', [PublicSubscriptionController::class, 'index'])->name('subscriptions.start');
     //the public init email invitation
-    Route::post('/subscriptions/init', [SubscriptionController::class, 'publicInit']);
+    Route::post('/subscriptions/init', [PublicSubscriptionController::class, 'store']);
     //the subscription confirmation
     Route::get('/subscriptions/confirmed', [SubscriptionController::class, 'confirmed']);
     //the subscription form visualization
-    Route::get('/subscriptions/fill/{token}', [SubscriptionController::class, 'fill'])->name('subscriptions.fill');
+    Route::get('/subscriptions/fill/{token}', [PublicSubscriptionController::class, 'edit'])->name('subscriptions.fill');
     //the subscription submit
-    Route::post('/subscriptions/complete', [SubscriptionController::class, 'complete'])->name('subscriptions.complete');
+    Route::post('/subscriptions/complete', [PublicSubscriptionController::class, 'update'])->name('subscriptions.complete');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
     //the init subscription generation link view
     Route::get('/subscriptions/generate', [SubscriptionController::class, 'generate'])->name('subscriptions.generate');
     //the init subscription
-    Route::post('/subscriptions/init', [SubscriptionController::class, 'init']);
+    Route::post('/subscriptions/init', [PublicSubscriptionController::class, 'store']);
     //the subscription module PDF preview
     Route::get('/subscriptions/module/{subscriptionId}', [PDFController::class, 'subscriptionModule'])->name('pdf.subscriptions.module');
 
