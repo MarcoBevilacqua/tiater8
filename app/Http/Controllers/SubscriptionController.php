@@ -151,7 +151,7 @@ class SubscriptionController extends Controller
             Subscription::findOrFail($subscription->id)->delete();
         } catch (\Exception $exception) {
             Log::error("Cannot find subscription {$subscription->id}");
-            return false;
+            return Redirect::to('subscriptions')->with('error', 'Cannot delete subscription');
         }
 
         Log::info("Subscription successfully deleted");
