@@ -160,37 +160,52 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div
-                                        class="px-4 py-3 bg-gray-50 text-right sm:px-6"
-                                    >
-                                        <a
-                                            :href="route('subscriptions.index')"
-                                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-4"
+                                    <div class="grid grid-cols-2">
+                                        <div
+                                            class="grid-col-span-1 px-4 py-3 bg-gray-50 text-left sm:px-6"
                                         >
-                                            Torna alla lista
-                                        </a>
-                                        <a
-                                            v-if="subscription.status != 0"
-                                            target="_blank"
-                                            :href="
-                                                route(
-                                                    'pdf.subscriptions.module',
-                                                    {
-                                                        subscriptionId:
-                                                            subscription.id,
-                                                    }
-                                                )
-                                            "
-                                            class="bg-white mr-4 py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            <button
+                                                @click="delete"
+                                                type="button"
+                                                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                            >
+                                                Cancella
+                                            </button>
+                                        </div>
+                                        <div
+                                            class="grid-col-span-1 px-4 py-3 bg-gray-50 text-right sm:px-6"
                                         >
-                                            Stampa Modulo
-                                        </a>
-                                        <button
-                                            type="submit"
-                                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                        >
-                                            Salva
-                                        </button>
+                                            <a
+                                                :href="
+                                                    route('subscriptions.index')
+                                                "
+                                                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-4"
+                                            >
+                                                Torna alla lista
+                                            </a>
+                                            <a
+                                                v-if="subscription.status != 0"
+                                                target="_blank"
+                                                :href="
+                                                    route(
+                                                        'pdf.subscriptions.module',
+                                                        {
+                                                            subscriptionId:
+                                                                subscription.id,
+                                                        }
+                                                    )
+                                                "
+                                                class="bg-white mr-4 py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            >
+                                                Stampa Modulo
+                                            </a>
+                                            <button
+                                                type="submit"
+                                                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            >
+                                                Salva
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -249,6 +264,11 @@ export default {
                 {
                     onSuccess: () => this.form.reset(),
                 }
+            );
+        },
+        delete() {
+            this.form.delete(
+                this.route("subscriptions.destroy", this.subscription)
             );
         },
     },
