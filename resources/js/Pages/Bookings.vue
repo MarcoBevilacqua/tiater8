@@ -40,7 +40,6 @@
 import { Inertia } from "@inertiajs/inertia";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
 import Map from "@/Components/Bookings/Map";
-import Place from "@/Components/Bookings/Place";
 import Container from "@/Layouts/Container";
 import Pagination from "@/Shared/Pagination";
 import TableSearch from "@/Shared/TableSearch";
@@ -53,7 +52,6 @@ export default {
         BreezeAuthenticatedLayout,
         Container,
         Map,
-        Place,
     },
     props: {
         bookings: Object,
