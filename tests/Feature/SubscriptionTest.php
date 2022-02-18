@@ -33,11 +33,15 @@ class SubscriptionTest extends TestCase
     public function shoulDeleteSubscription()
     {
         $this->actingAs($this->admin);
-        $subscription = Subscription::factory()->make();
+        $subscription = Subscription::factory()->create();
 
-        $this->call("DELETE", '/subscriptions/', $subscription->toArray());
-
-        $this->assertDatabaseMissing('subscriptions', ['id' => $subscription->id]);
+        $response = $this->delete('/subscriptions/'. $subscription->id);
+        $response->assertRedirect();
+        $this->assertDatabaseCount('subscriptions', 1);
+        $this->assertSoftDeleted('subscriptions', [
+            'id' => $subscription->id,
+            'subscription_email' => $subscription->subscription_email
+        ]);
     }
 
     /**
