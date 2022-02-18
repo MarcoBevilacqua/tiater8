@@ -1,3 +1,23 @@
+v0.0.9
+
+-   error message on public subscription
+
+v0.0.8
+
+-   public subscription fixed on retry
+
+v0.0.7
+
+-   fiscal code required for subscription
+
+v0.0.6
+
+-   search bar and pagination on index
+
+v0.0.5
+
+-   public url for subscription
+
 v0.0.3
 
 -   validation on subscription from email

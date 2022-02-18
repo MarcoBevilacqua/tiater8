@@ -15,6 +15,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
 
 class SubscriptionController extends Controller
 {
@@ -23,10 +24,6 @@ class SubscriptionController extends Controller
     public function __construct()
     {
         $this->rules = [
-            'complete' => [
-                'first_name' => 'required',
-                'last_name' => 'required'
-            ],
             'store' => [
                 'customer_id' => 'exists:App\Models\Customer,id',
                 'status' => 'required|numeric',
@@ -42,13 +39,16 @@ class SubscriptionController extends Controller
      * the subscription index
      * @return Inertia view
      */
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render(
             'Subscriptions',
-            ['subscriptions' => Subscription::orderByDesc('id')
-                ->get()
-                ->map(function (Subscription $subscription) {
+            ['subscriptions' => Subscription::when($request->has('search'), function ($query) use ($request) {
+                $query->where('subscription_email', 'LIKE', '%' . $request->search . '%');
+            })
+                ->orderByDesc('id')
+                ->paginate(25)
+                ->through(function (Subscription $subscription) {
                     return [
                     'id' => $subscription->id,
                     'customer' => $subscription->subscription_email,
@@ -155,6 +155,15 @@ class SubscriptionController extends Controller
     }
 
     /**
+     * render the view to generate invitation mail
+     * @return Inertia view
+     */
+    public function start()
+    {
+        return Inertia::render('Public/SelfInvitation');
+    }
+
+    /**
      * the subscription init (return the form url)
      *
      * @param Request $request
@@ -163,14 +172,14 @@ class SubscriptionController extends Controller
     public function init(Request $request)
     {
         $request->validate([
-            'customer_email' => 'required|email:filter|unique:subscriptions,subscription_email'
+            'customer_email' => 'required|email:filter'
         ]);
 
         //check if email has already been taken
         $shouldBeBlocked = SubscriptionService::getSubscriptionByEmail($request->customer_email);
         if ($shouldBeBlocked) {
             Log::error("Subscription with email {$request->customer_email} has already been stored");
-            return Inertia::render('Subscription/GenerateSubscriptionLink', ['errors.customer_email' => "Subscription with email {$request->customer_email} has already been stored"]);
+            return Redirect::back()->with('error', "Indirizzo email non disponibile");
         }
 
         //the url to be returned
@@ -178,8 +187,8 @@ class SubscriptionController extends Controller
 
         //create a to-be-confirmed subscription
         try {
-            Subscription::create([
-                'subscription_email' => $request->customer_email,
+            Subscription::updateOrCreate([
+                'subscription_email' => $request->customer_email], [
                 'status' => Subscription::PENDING,
                 'token' => $randomString,
                 'customer_id' => null,
@@ -210,6 +219,49 @@ class SubscriptionController extends Controller
         return Redirect::route('subscriptions.index');
     }
 
+    /**
+     * the subscription PUBLIC init
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function publicInit(Request $request)
+    {
+        $request->validate([
+            'customer_email' => 'required|email:filter'
+        ]);
+
+        //check if email has already been taken
+        $shouldBeBlocked = SubscriptionService::getSubscriptionByEmail($request->customer_email);
+        if ($shouldBeBlocked) {
+            Log::error("Subscription with email {$request->customer_email} has already been stored");
+            return Redirect::back()->with('error', "Indirizzo email non disponibile");
+        }
+
+        //the url to be returned
+        $randomString = substr(str_shuffle(MD5(microtime())), 0, 22);
+
+        //create a to-be-confirmed subscription
+        try {
+            Subscription::updateOrCreate([
+                'subscription_email' => $request->customer_email], [
+                'status' => Subscription::PENDING,
+                'token' => $randomString,
+                'customer_id' => null,
+                'year_from' => Carbon::now()->year,
+                'year_to' => Carbon::now()->year + 1,
+            ]);
+        } catch (Exception $exception) {
+            Log::error("Cannot create pending subscription with email {$request->customer_email} and token {$randomString}: {$exception->getMessage()}");
+            abort(500);
+        }
+
+        Log::info("Pending Subscription for email {$request->customer_email} has been created!", [__CLASS__, __FUNCTION__]);
+
+        return Redirect::to(URL::signedRoute('subscriptions.fill', [
+                'token' => $randomString]));
+    }
+
     public function fill(string $token)
     {
         try {
@@ -231,6 +283,7 @@ class SubscriptionController extends Controller
         return Inertia::render('Public/CompleteSubscription', [
             'sub_token' => $token,
             'activities' => SubscriptionService::getAllFancyActivityLabels(),
+            'default_contact' => Subscription::NO_CONTACT,
             'contacts' => SubscriptionService::getAllFancyContactLabels(),
             'url' => route('subscriptions.complete')
         ]);
@@ -253,6 +306,7 @@ class SubscriptionController extends Controller
             'phone' => 'required',
             'birth' => 'required',
             'resident' => 'required',
+            'fiscal_code' => 'required|size:16'
          ]);
 
         //TODO: check if subscription is valid
@@ -264,14 +318,8 @@ class SubscriptionController extends Controller
         //checking if data is correct
         $canHandleSubscription = SubscriptionService::subscriptionCanBeConfirmed($request->input('sub_token'));
 
-        if (!$canHandleSubscription->first()) {
+        if ($canHandleSubscription && !$canHandleSubscription->first()) {
             Log::error("Cannot find subscription with token " . $request->input('sub_token'));
-            abort(400);
-        }
-        
-        //validate the request
-        if (!$request->validate($this->rules['complete'])) {
-            Log::info("Cannot validate Request");
             abort(400);
         }
 
@@ -288,10 +336,11 @@ class SubscriptionController extends Controller
                 'resident' => $request->input('resident'),
                 'address' => $request->input('address'),
                 'postal_code' => $request->input('postal_code'),
+                'fiscal_code' => $request->input('fiscal_code'),
             ]);
         } catch (\Exception $ex) {
             Log::error("Cannot create customer with data " . implode(",", $request->all()) . ": Error: {$ex->getMessage()}");
-            return false;
+            return Redirect::back()->with('error', "Errore durante l'elaborazione della richiesta, si prega di riprovare.");
         }
 
         Log::info("Customer with ID {$customer->id} successfully created", [__CLASS__, __FUNCTION__]);

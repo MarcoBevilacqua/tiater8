@@ -1,30 +1,37 @@
-<template>
-    <breeze-authenticated-layout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Users
-            </h2>
-        </template>
-        <template #main>
-            <container>
-                <div
-                    class="flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8"
-                >
-                    <div class="max-w-md w-full space-y-8">
-                        <div>
-                            <h2
-                                class="mt-6 text-center text-2xl font-extrabold text-gray-900"
-                            >
-                                Invia Mail di tesseramento
-                            </h2>
-                        </div>
-                        <form class="mt-8 space-y-6" @submit.prevent="submit">
+<template #guest>
+    <div>
+        <container>
+            <div class="mt-5 md:mt-10 lg:mt-10 md:px-12 lg:px-24">
+                <div class="flex justify-items-center">
+                    <div class="w-full">
+                        <img
+                            class="mx-auto rounded-md"
+                            :src="'/img/common/logo.jpg'"
+                            alt="pci_logo"
+                            width="120"
+                            height="80"
+                        />
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 md:grid md:grid-cols-3 md:gap-6">
+                    <div
+                        class="col-span-3 mt-10 md:mt-5 md:col-span-3 text-center"
+                    >
+                        <h2
+                            class="mt-6 text-center text-2xl xs:text-sm font-extrabold text-gray-900"
+                        >
+                            Ciao, inserisci la tua mail!
+                        </h2>
+                        <small
+                            >Sarai reindirizzato al form di completamento
+                            dati</small
+                        >
+                    </div>
+                    <div
+                        class="col-span-3 mx-8 md:col-start-2 md:col-span-1 md:mx-2"
+                    >
+                        <form class="mt-4 space-y-6" @submit.prevent="submit">
                             <input type="hidden" name="remember" value="true" />
-                            <input
-                                type="hidden"
-                                name="_token"
-                                v-bind:value="token"
-                            />
                             <div class="rounded-md shadow-sm -space-y-px">
                                 <div>
                                     <label for="customer_email" class="sr-only"
@@ -35,8 +42,8 @@
                                         id="customer_email"
                                         name="customer_email"
                                         type="email"
-                                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                        placeholder="Inserisci indirizzo mail"
+                                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm text-center"
+                                        placeholder="Il tuo indirizzo mail"
                                     />
                                 </div>
                             </div>
@@ -49,7 +56,7 @@
                                         class="absolute left-0 inset-y-0 flex items-center pl-3"
                                     >
                                     </span>
-                                    Invita
+                                    Conferma
                                 </button>
                             </div>
                             <div v-else>
@@ -81,41 +88,50 @@
                                     Operazione in corso...
                                 </button>
                             </div>
-                            <div
-                                v-if="form.errors.customer_email"
-                                class="text-center rounded-md shadow-sm font-semibold bg-red-200 text-red-600 text-sm p-2"
-                            >
-                                <span>{{ form.errors.customer_email }}</span>
-                            </div>
                         </form>
+                        <div
+                            v-if="
+                                $page.props.flash.error ||
+                                Object.keys($page.props.errors).length > 0
+                            "
+                            class="mt-4 text-center rounded-md shadow-sm font-semibold bg-red-200 text-red-600 text-sm p-2"
+                        >
+                            {{ $page.props.flash.error }}
+                        </div>
+                        <div v-else>
+                            {{ $page.props.flash.success }}
+                        </div>
                     </div>
                 </div>
-            </container>
-        </template>
-    </breeze-authenticated-layout>
+            </div>
+        </container>
+    </div>
 </template>
 
 <script>
-import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
 import Container from "@/Layouts/Container";
 import { useForm } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
 
 export default {
     components: {
-        BreezeAuthenticatedLayout,
         Container,
     },
-
+    data() {
+        return {
+            show: true,
+        };
+    },
     setup() {
         const form = useForm({
             customer_email: null,
         });
 
         function submit() {
-            form.post("/subscriptions/init", {
+            form.post("/over/subscriptions/init", {
                 preserveScroll: true,
                 onSuccess: () => form.reset("customer_email"),
+                onError: () => form.reset("customer_email"),
             });
         }
 
@@ -126,6 +142,14 @@ export default {
         errors: Object,
         token: String,
         form_url: String,
+    },
+    watch: {
+        "$page.props.flash": {
+            handler() {
+                this.show = true;
+            },
+            deep: true,
+        },
     },
 };
 </script>
