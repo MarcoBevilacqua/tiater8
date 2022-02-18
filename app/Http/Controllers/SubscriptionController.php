@@ -200,9 +200,4 @@ class SubscriptionController extends Controller
         return Redirect::to(URL::signedRoute('subscriptions.fill', [
                 'token' => $randomString]));
     }
-
-    public function confirmed()
-    {
-        return Inertia::render('Subscription/Confirmed');
-    }
 }

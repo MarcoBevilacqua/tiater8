@@ -28,11 +28,11 @@ Route::get('/dashboard', function () {
 
 Route::prefix('over')->group(function () {
     //the public email confirmation
-    Route::get('/subscriptions/start', [PublicSubscriptionController::class, 'index'])->name('subscriptions.start');
-    //the public init email invitation
+    Route::get('/subscriptions', [PublicSubscriptionController::class, 'index']);
+    //the public subscription entry point
+    Route::get('/subscriptions/start', [PublicSubscriptionController::class, 'create'])->name('subscriptions.start');
+    //the public init subscription
     Route::post('/subscriptions/init', [PublicSubscriptionController::class, 'store']);
-    //the subscription confirmation
-    Route::get('/subscriptions/confirmed', [SubscriptionController::class, 'confirmed']);
     //the subscription form visualization
     Route::get('/subscriptions/fill/{token}', [PublicSubscriptionController::class, 'edit'])->name('subscriptions.fill');
     //the subscription submit
@@ -41,7 +41,7 @@ Route::prefix('over')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     //the init subscription generation link view
-    Route::get('/subscriptions/generate', [SubscriptionController::class, 'generate'])->name('subscriptions.generate');
+    Route::get('/subscriptions/generate', [PublicSubscriptionController::class, 'show'])->name('subscriptions.generate');
     //the init subscription
     Route::post('/subscriptions/init', [PublicSubscriptionController::class, 'store']);
     //the subscription module PDF preview

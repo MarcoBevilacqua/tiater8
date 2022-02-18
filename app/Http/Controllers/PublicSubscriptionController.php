@@ -21,7 +21,8 @@ class PublicSubscriptionController extends Controller
     /**
      * PAIRINGS WITH SUBSCRIPTION CONTROLLER METHODS
      *
-     * INDEX --> START
+     * INDEX --> CONFIRMED
+     * CREATE --> START
      * SHOW --> GENERATE
      * STORE --> INIT
      * EDIT --> FILL
@@ -29,11 +30,16 @@ class PublicSubscriptionController extends Controller
      * CONFIRMED???????
      */
 
+    public function index()
+    {
+        return Inertia::render('Public/Confirmed');
+    }
+
     /**
      * render the view to generate invitation mail
      * @return Inertia view
      */
-    public function index()
+    public function create()
     {
         return Inertia::render('Public/SelfInvitation');
     }
@@ -86,27 +92,25 @@ class PublicSubscriptionController extends Controller
 
         Log::info("Pending Subscription for email {$request->customer_email} has been created!", [__CLASS__, __FUNCTION__]);
 
-        /**
-         * TODO: run this code only if subscription is not generated from public entry point (over/start)
-         */
-        try {
-            Mail::to($request->customer_email)
+        if (!$request->is('over/*')) {
+            try {
+                Mail::to($request->customer_email)
             ->send(new SubscriptionToComplete(URL::signedRoute('subscriptions.fill', [
                 'token' => $randomString])));
-        } catch (\Exception $exception) {
-            Log::error("Cannot send Mail to {$request->customer_email}: " . $exception->getMessage());
+            } catch (\Exception $exception) {
+                Log::error("Cannot send Mail to {$request->customer_email}: " . $exception->getMessage());
+            }
+            if (Mail::failures()) {
+                Log::error("Cannot send email!!!");
+            } else {
+                Log::info("Mail to {$request->customer_email} has been sent! Redirecting...", [__CLASS__, __FUNCTION__]);
+            }
+            return Redirect::route('subscriptions.index');
         }
-        if (Mail::failures()) {
-            Log::error("Cannot send email!!!");
-        } else {
-            Log::info("Mail to {$request->customer_email} has been sent! Redirecting...", [__CLASS__, __FUNCTION__]);
-        }
-        /**
-         * END TODO
-         */
-        
 
-        return Redirect::route('subscriptions.index');
+        
+        return Redirect::to(URL::signedRoute('subscriptions.fill', [
+                'token' => $randomString]));
     }
 
     /**
@@ -231,10 +235,6 @@ class PublicSubscriptionController extends Controller
         Log::info("redirecting to subscriptions/" . $request->input('sub_token') . "/confirmed");
         
         /** TODO: Redirect on public simple view */
-        return redirect()
-            ->action(
-                [SubscriptionController::class, 'confirmed'],
-                ['email' => $request->input('email')]
-            );
+        return Redirect::to('over/subscriptions/');
     }
 }
