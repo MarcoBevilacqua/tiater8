@@ -12,7 +12,7 @@ class Show extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['name', 'description', 'places', 'full_price', 'image', 'half_price', 'url'];
+    protected $fillable = ['title', 'description', 'places', 'full_price', 'image', 'half_price', 'url'];
     
     /**
      * has-many relationship with events table

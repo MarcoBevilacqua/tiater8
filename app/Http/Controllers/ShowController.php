@@ -28,7 +28,7 @@ class ShowController extends Controller
                 return [
                     'id' => $show->id,
                     'title' => $show->title,
-                    'description' => Str::limit($show->description, 100),
+                    'description' => Str::limit($show->description, 120),
                     'edit' => route('shows.edit', ['show' => $show->id])
                 ];
             }),
@@ -54,9 +54,11 @@ class ShowController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'title' => 'required',
             'description' => 'required',
-            'url' => 'required|url'
+            'url' => 'required|url',
+            'full_price' => 'required',
+            'half_price' => 'required'
         ]);
 
         //check if input has file
@@ -66,18 +68,19 @@ class ShowController extends Controller
 
         Show::create(
             [
-            'name'          => $request->title,
+            'title'          => $request->title,
             'description'   => $request->description,
             'url'           => $request->url,
+            'full_price'    => $request->full_price,
+            'half_price'    => $request->half_price,
+            'places'        => 50,
             'image' => $request->hasFile('image') ?
                 asset('/img/' . $request->file('image')->getClientOriginalName()) :
                 ""
             ]
         );
-
-        //redirect
-        session('message', 'spettacolo creato correttamente');
-        return redirect('shows');
+        
+        return Redirect::to('shows')->with('success', 'spettacolo creato correttamente');
     }
 
 
@@ -103,7 +106,7 @@ class ShowController extends Controller
     {
         //validate
         $request->validate(
-            ['name' => 'required',
+            ['title' => 'required',
             'description' => 'required',
             'url' => 'required|url']
         );
@@ -117,13 +120,6 @@ class ShowController extends Controller
         ->with('errors', "Show not found");
         }
 
-        /** TODO: move this data into event */
-        /**
-        $show->places = $data['places'];
-        $show->full_price = $data['full_price'];
-        $show->half_price = $data['half_price'];
-        */
-
         //check if input has file
         if ($request->hasFile('image')) {
             //call service method
@@ -131,9 +127,11 @@ class ShowController extends Controller
         }
 
         $show->update(
-            ['name' => $request->name,
+            ['title' => $request->title,
             'description' => $request->description,
             'url' => $request->url,
+            'full_price'    => $request->full_price,
+            'half_price'    => $request->half_price,
             'image' => $request->hasFile('image') ?
                 asset('/img/' . $request->file('image')->getClientOriginalName()) :
                 $show->image
@@ -161,17 +159,13 @@ class ShowController extends Controller
     public function destroy($id)
     {
         //delete
-        $show = Show::findOrFail($id);
-
         try {
-            $show->delete();
-        } catch (Exception $ex) {
-            \Log::error("Cannot delete show");
-            return redirect('show');
+            Show::findOrFail($id)->delete();
+        } catch (\Exception $exception) {
+            Log::error("Cannot delete show with id {$id}");
+            return Redirect::to('shows.index')->with('error', 'Impossibile cancellare lo spettacolo');
         }
 
-        //redirect
-        session('message', 'spettacolo eliminato');
-        return redirect('show');
+        return redirect('show')->with('success', 'spettacolo eliminato');
     }
 }

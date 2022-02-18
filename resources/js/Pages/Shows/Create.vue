@@ -54,14 +54,14 @@
                                                         >Titolo</label
                                                     >
                                                     <input
-                                                        v-model="form.name"
+                                                        v-model="form.title"
                                                         type="text"
-                                                        name="name"
-                                                        id="name"
+                                                        name="title"
+                                                        id="title"
                                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                     />
-                                                    <div v-if="errors.name">
-                                                        {{ errors.name }}
+                                                    <div v-if="errors.title">
+                                                        {{ errors.title }}
                                                     </div>
                                                 </div>
                                                 <div
@@ -108,6 +108,47 @@
                                                         "
                                                     >
                                                         {{ errors.description }}
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="grid grid-cols-4 gap-4"
+                                                >
+                                                    <div
+                                                        class="sm:col-span-2 col-span-2 py-5"
+                                                    >
+                                                        <label
+                                                            for="full_price"
+                                                            class="block text-sm font-medium text-gray-700"
+                                                            >Prezzo pieno</label
+                                                        >
+                                                        <input
+                                                            v-model="
+                                                                form.full_price
+                                                            "
+                                                            type="number"
+                                                            name="full_price"
+                                                            id="full_price"
+                                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        />
+                                                    </div>
+                                                    <div
+                                                        class="sm:col-span-2 col-span-2 py-5"
+                                                    >
+                                                        <label
+                                                            for="half_price"
+                                                            class="block text-sm font-medium text-gray-700"
+                                                            >Prezzo
+                                                            ridotto</label
+                                                        >
+                                                        <input
+                                                            v-model="
+                                                                form.half_price
+                                                            "
+                                                            name="half_price"
+                                                            id="half_price"
+                                                            type="number"
+                                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        />
                                                     </div>
                                                 </div>
                                             </div>

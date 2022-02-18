@@ -213,6 +213,8 @@ export default {
                 description: this.show.description,
                 image: this.show.image,
                 url: this.show.url,
+                half_price: this.show.half_price,
+                full_price: this.show.full_price,
             }),
         };
     },
