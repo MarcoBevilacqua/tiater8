@@ -27,3 +27,8 @@ Homestead.json
 /.vagrant
 .phpunit.result.cache
 .phpstorm.meta.php
+
+.git
+.github
+_ide_helper.php
+_ide_helper_models.php
