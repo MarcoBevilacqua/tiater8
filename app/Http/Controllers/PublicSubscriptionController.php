@@ -29,6 +29,9 @@ class PublicSubscriptionController extends Controller
      * UPDATE --> COMPLETE
      */
 
+    /**
+     * Renders "confirmed" page
+     */
     public function index()
     {
         return Inertia::render('Public/Confirmed');
