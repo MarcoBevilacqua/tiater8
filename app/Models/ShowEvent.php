@@ -12,6 +12,6 @@ class ShowEvent extends Model
 
     public function show()
     {
-        $this->belongsTo(Show::class);
+        return $this->belongsTo(Show::class);
     }
 }
