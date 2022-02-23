@@ -2,17 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use Booking;
-use App\ShowEvent;
-use Show;
-use Carbon\Carbon;
-use Illuminate\Http\Request as Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
-use Log;
+use App\Models\ShowEvent;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
+use Inertia\Inertia;
 
-class EventController extends Controller
+class ShowEventController extends Controller
 {
+    public function index()
+    {
+        return Inertia::render('ShowEvents', [
+            'events' => ShowEvent::orderBy('show_date')
+            ->get()
+            ->map(function (ShowEvent $showEvent) {
+                return [
+                    'id' => $showEvent->id,
+                    'show' => $showEvent->show->title,
+                    'date' => $showEvent->show_date
+                ];
+            }),
+            'createLink' => URL::route('show-events.create')
+        ]);
+    }
 
     /**
      * @param $id
