@@ -25,6 +25,11 @@
                                 name="_token"
                                 v-bind:value="token"
                             />
+                            <input
+                                type="hidden"
+                                name="private"
+                                v-bind:value="private"
+                            />
                             <div class="rounded-md shadow-sm -space-y-px">
                                 <div>
                                     <label for="customer_email" class="sr-only"
@@ -35,7 +40,7 @@
                                         id="customer_email"
                                         name="customer_email"
                                         type="email"
-                                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                        class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                         placeholder="Inserisci indirizzo mail"
                                     />
                                 </div>
@@ -110,6 +115,7 @@ export default {
     setup() {
         const form = useForm({
             customer_email: null,
+            private: true,
         });
 
         function submit() {
