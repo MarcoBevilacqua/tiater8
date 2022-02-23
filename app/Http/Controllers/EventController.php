@@ -11,17 +11,8 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Log;
 
-
 class EventController extends Controller
 {
-
-    /**
-     * @return mixed
-     */
-    public function create()
-    {
-        return view('crud/eventi.create');
-    }
 
     /**
      * @param $id
@@ -29,8 +20,7 @@ class EventController extends Controller
      */
     public function edit($id)
     {
-        if(!$id)
-        {
+        if (!$id) {
             return false;
         }
         
@@ -80,15 +70,12 @@ class EventController extends Controller
         $event->total_qnt = $data['full_price_qnt'] + $data['half_price_qnt'];
 
         try {
-
             $event->save();
 
             if ($event->exists) {
                 Log::info("Evento creato con ID: {$event->id}");
             }
-
         } catch (\Exception $ex) {
-
             Log::error("Cannot save event", $ex->getMessage());
             return response(array(
                 'success' => false,
@@ -107,20 +94,17 @@ class EventController extends Controller
      */
     public function destroy($id)
     {
-
-        if(!$id)
-        {
+        if (!$id) {
             return false;
         }
 
         $deleted = ShowShowEvent::destroy($id);
 
-        if($deleted == 0){
+        if ($deleted == 0) {
             return false;
         }
 
         return redirect($_SERVER['HTTP_REFERER']);
-
     }
 
     /**
@@ -160,14 +144,13 @@ class EventController extends Controller
         $redirect = (array_key_exists('redirect', $form)) ? $form['redirect'] : 'event/create';
 
         foreach ($form['data'] as $element) {
-
             $formatted = $element." ".$form['ora'][$dateCounter].":".
                 (($form['minuti'][$dateCounter] == "0") ? "00" : $form['minuti'][$dateCounter]);
 
             /** @var Carbon $date */
             $date = Carbon::createFromFormat("d/m/Y H:i", $formatted);
 
-            if($this->eventExists($show_id, $date)){
+            if ($this->eventExists($show_id, $date)) {
                 Log::debug("ShowEvent for show id {$show_id} and date {$date->format("d-m-Y H:i")} already exists, skipping");
                 continue;
             }
@@ -180,18 +163,14 @@ class EventController extends Controller
             $event->half_price_qnt = $half_price;
             $event->total_qnt = $full_price + $half_price;
 
-            try{
-
+            try {
                 $event->save();
 
-                if($event->exists)
-                {
+                if ($event->exists) {
                     Log::info("Evento creato con ID: {$event->id}");
                     $duplicateValues++;
                 }
-
             } catch (\Exception $ex) {
-                
                 Log::error("Cannot save event", $ex->getMessage());
                 return response(array(
                     'success'   => false,
@@ -201,7 +180,10 @@ class EventController extends Controller
             ++$dateCounter;
         }
 
-        return redirect($redirect, 302, array(
+        return redirect(
+            $redirect,
+            302,
+            array(
                 'success'   => true,
                 'elements'  => $duplicateValues
             )
@@ -215,7 +197,7 @@ class EventController extends Controller
     public function bookingList(Request $request)
     {
         $id = $request->get("id");
-        if(!$id) {
+        if (!$id) {
             return false;
         }
 
@@ -232,7 +214,7 @@ class EventController extends Controller
         $full_price_total = 0;
         $half_price_total = 0;
 
-        if(!$id){
+        if (!$id) {
             return view('bookConfirm');
         }
 
@@ -240,12 +222,11 @@ class EventController extends Controller
             ->join('viewer', 'bookings.viewer_id', '=', 'viewer.id')
             ->get();
 
-        if($bookingsWithViewers->count() > 0){
+        if ($bookingsWithViewers->count() > 0) {
             Log::info("Found {$bookingsWithViewers->count()} bookings for event id");
         }
 
         foreach ($bookingsWithViewers as $booking) {
-
             $booking_full_price_total = $full_price * $booking->full_price_qnt;
             $booking_half_price_total = $half_price * $booking->half_price_qnt;
 
@@ -283,7 +264,6 @@ class EventController extends Controller
         );
 
         return json_encode($data);
-
     }
 
     /**
@@ -293,10 +273,10 @@ class EventController extends Controller
      */
     protected function forShow($id)
     {
-
         $ret = DB::table('events')
             ->where('events.show_id', '=', $id)
-            ->select(DB::raw('                
+            ->select(DB::raw(
+                '                
                 COUNT(events.`id`) AS evs,
                 SUM(events.full_price_qnt + events.half_price_qnt) AS qnt,
                 (SELECT COUNT(b.id) FROM bookings b WHERE b.show_id = events.show_id) AS book'
@@ -312,10 +292,9 @@ class EventController extends Controller
      * @param $id
      * @return bool|Response
      */
-    protected function forShowId($id){
-
-        if(!$id)
-        {
+    protected function forShowId($id)
+    {
+        if (!$id) {
             return false;
         }
 
@@ -323,8 +302,7 @@ class EventController extends Controller
             ->select(['show_date', 'id', 'full_price_qnt', 'half_price_qnt', 'total_qnt'])
             ->get();
 
-        if(!$res)
-        {
+        if (!$res) {
             return false;
         }
 
@@ -352,18 +330,16 @@ class EventController extends Controller
      * @param $date
      * @return bool
      */
-    private function eventExists($showId, $date){
-
+    private function eventExists($showId, $date)
+    {
         $event = ShowShowEvent::where('show_id', '=', $showId)
             ->where('show_date', '=', $date)
             ->first();
 
-        if(!$event){
+        if (!$event) {
             return false;
         }
 
         return $event->exists();
-
     }
-
 }

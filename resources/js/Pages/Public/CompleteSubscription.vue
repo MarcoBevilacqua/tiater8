@@ -82,7 +82,10 @@
                                                 required
                                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                             />
-                                            <div v-if="errors.fiscal_code">
+                                            <div
+                                                v-if="errors.fiscal_code"
+                                                class="text-red-700 text-xs pt-2"
+                                            >
                                                 {{ errors.fiscal_code }}
                                             </div>
                                         </div>
@@ -139,6 +142,12 @@
                                                 required
                                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                             />
+                                            <div
+                                                v-if="errors.birth"
+                                                class="text-red-700 text-xs pt-2"
+                                            >
+                                                {{ errors.birth }}
+                                            </div>
                                         </div>
 
                                         <div
@@ -326,16 +335,31 @@
                         role="alert"
                         v-if="
                             $page.props.flash.error ||
-                            (Object.keys($page.props.errors).length > 0 &&
-                                message)
+                            (Object.keys($page.props.errors).length > 0 && show)
                         "
                     >
-                        <span class="block sm:inline">{{
-                            $page.props.flash.error
-                        }}</span>
+                        <div v-if="$page.props.flash.error">
+                            <span class="block sm:inline">{{
+                                $page.props.flash.error
+                            }}</span>
+                        </div>
+                        <div v-else>
+                            <span
+                                class="block sm:inline"
+                                v-if="
+                                    Object.keys($page.props.errors).length === 1
+                                "
+                                >Errore nella compilazione dei dati</span
+                            >
+                            <span v-else
+                                >Rilevati
+                                {{ Object.keys($page.props.errors).length }}
+                                errori nella compilazione dei dati.</span
+                            >
+                        </div>
                         <span
                             class="absolute top-0 bottom-0 right-0 px-4 py-3"
-                            @click="message = null"
+                            @click="show = false"
                         >
                             <svg
                                 class="fill-current h-6 w-6 text-red-500"
@@ -365,9 +389,12 @@ export default {
     components: {
         Container,
     },
-
+    data() {
+        return {
+            show: true,
+        };
+    },
     props: {
-        message: String,
         errors: Object,
         sub_token: String,
         contacts: Array,
@@ -375,7 +402,14 @@ export default {
         activities: Array,
         url: String,
     },
-
+    watch: {
+        "$page.props.flash": {
+            handler() {
+                this.show = true;
+            },
+            deep: true,
+        },
+    },
     setup() {
         const form = useForm({
             first_name: null,

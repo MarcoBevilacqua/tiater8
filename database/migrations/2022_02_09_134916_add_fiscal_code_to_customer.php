@@ -14,7 +14,7 @@ class AddFiscalCodeToCustomer extends Migration
     public function up()
     {
         Schema::table('customers', function (Blueprint $table) {
-            $table->string('fiscal_code', 16)->nullable(false);
+            $table->string('fiscal_code', 16)->nullable(true);
         });
     }
 

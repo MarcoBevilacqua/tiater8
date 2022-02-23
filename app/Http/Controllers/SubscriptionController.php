@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\SubscriptionToComplete;
-use App\Mail\SubscriptionFilled;
 use App\Models\Customer;
 use App\Services\SubscriptionService;
 use App\Models\Subscription;
@@ -13,9 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\Rule;
 
 class SubscriptionController extends Controller
 {

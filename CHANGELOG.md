@@ -1,3 +1,8 @@
+v0.1.0
+
+-   subscription soft delete
+-   public subscription controller (to separate from subscription controller)
+
 v0.0.9
 
 -   error message on public subscription
