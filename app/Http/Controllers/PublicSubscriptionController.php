@@ -27,7 +27,6 @@ class PublicSubscriptionController extends Controller
      * STORE --> INIT
      * EDIT --> FILL
      * UPDATE --> COMPLETE
-     * CONFIRMED???????
      */
 
     public function index()
@@ -92,6 +91,8 @@ class PublicSubscriptionController extends Controller
 
         Log::info("Pending Subscription for email {$request->customer_email} has been created!", [__CLASS__, __FUNCTION__]);
 
+        //if request is coming from the admin area, mail should be sent as invitation.
+        //otherwise, just make the redirect to the subscription.fill route
         if (!$request->is('over/*')) {
             try {
                 Mail::to($request->customer_email)
