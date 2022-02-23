@@ -17,11 +17,13 @@ class CreateShowsTable extends Migration
             $table->string("title");
             $table->string("description");
             $table->integer("places");
-            $table->float("full_price", 4, 2);
-            $table->float("half_price", 4, 2);
+            $table->float("full_price", 8, 2);
+            $table->float("half_price", 8, 2);
             $table->string('image');
             $table->string('url');
-            $table->timestamps();
+            $table->tinyInteger('full_price_qnt');
+            $table->tinyInteger('half_price_qnt');
+            $table->tinyInteger('total_qnt');
         });
     }
 
