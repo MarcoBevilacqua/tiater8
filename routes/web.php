@@ -7,6 +7,7 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PublicSubscriptionController;
 use App\Http\Controllers\ShowController;
+use App\Http\Controllers\ShowEventController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -55,6 +56,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/bookings', BookingController::class);
 
     Route::resource('/shows', ShowController::class);
+
+    Route::resource('/show-events', ShowEventController::class);
 });
 
 require __DIR__.'/auth.php';

@@ -20,43 +20,40 @@ class BookingController extends Controller
 {
     public function index()
     {
-        /**
-         * TODO: how to structure the bookings collection?
-         */
         return Inertia::render('Bookings', [
             'bookings' => Booking::orderByDesc('id')
             ->get()
+            ->groupBy('show_event_id')
             ->map(function (Booking $booking) {
                 return [
-                    'id' => $booking->id
-                ];
-            }),
-            'customers' => Subscription::active()->get()
-            ->map(function (Subscription $subscription) {
-                return [
-                    'id' => $subscription->id,
-                    'name' => $subscription->customer->first_name . ' ' . $subscription->customer->last_name
+                    'id' => $booking->id,
+                    'show' => $booking->showEvent->show->title,
+                    'date' => $booking->showEvent->show->show_date,
+                    'places' => $booking->showEvent->full_price_qnt
                 ];
             }),
             'createLink' => URL::route('bookings.create')
         ]);
     }
 
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function edit($id)
+    {
+        /**
+         * TODO: how to structure the bookings collection?
+         */
+        $booking = Booking::where($id)->findOrFail();
+        $events = Show::find($booking->show_id)->getEvents();
+        return view('crud/prenotazioni.edit', array('booking' => $booking, 'events' => $events));
+    }
+
     public function show($code)
     {
         $booking = Booking::where('public_code', $code)->get();
         return view('crud/prenotazioni.show', array('booking' => $booking));
-    }
-
-    /**
-     * @param $code
-     * @return $this
-     */
-    public function edit($code)
-    {
-        $booking = Booking::wherePublicCode($code)->firstOrFail();
-        $events = Show::find($booking->show_id)->getEvents();
-        return view('crud/prenotazioni.edit', array('booking' => $booking, 'events' => $events));
     }
 
     /**
