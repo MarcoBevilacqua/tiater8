@@ -13,9 +13,8 @@ class CreateShowsTable extends Migration
     public function up()
     {
         Schema::create('shows', function (Blueprint $table) {
-            $table->engine = 'InnoDB';
             $table->id();
-            $table->string("name");
+            $table->string("title");
             $table->string("description");
             $table->integer("places");
             $table->float("full_price", 8, 2);

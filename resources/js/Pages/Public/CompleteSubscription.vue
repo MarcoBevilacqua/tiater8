@@ -1,322 +1,383 @@
 <template #guest>
-    <container>
-        <div class="mt-5 md:mt-10 lg:mt-10 md:px-12 lg:px-24">
-            <div class="flex justify-items-center">
-                <div class="w-full">
-                    <img
-                        class="mx-auto rounded-md"
-                        :src="'/img/common/logo.jpg'"
-                        alt="pci_logo"
-                    />
+    <div>
+        <container>
+            <div class="mt-5 md:mt-10 lg:mt-10 md:px-12 lg:px-24">
+                <div class="flex justify-items-center">
+                    <div class="w-full">
+                        <img
+                            class="mx-auto rounded-md"
+                            :src="'/img/common/logo.jpg'"
+                            alt="pci_logo"
+                        />
+                    </div>
                 </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid md:grid-cols-3 md:gap-6">
-                <div class="mt-10 md:mt-5 md:col-span-3">
-                    <form @submit.prevent="submit">
-                        <div class="shadow overflow-hidden sm:rounded-md">
-                            <div
-                                class="px-4 py-3 bg-gray-50 text-center sm:px-6"
-                            >
-                                <p>Completa la tua iscrizione</p>
-                            </div>
-                            <div class="px-4 py-5 bg-white sm:p-6">
+                <div class="grid grid-cols-1 md:grid md:grid-cols-3 md:gap-6">
+                    <div class="mt-10 md:mt-5 md:col-span-3">
+                        <form @submit.prevent="submit">
+                            <div class="shadow overflow-hidden sm:rounded-md">
                                 <div
-                                    class="grid grid-cols-12 gap-2 md:grid-cols-6 lg:grid-cols-6 md:gap-6 lg:gap-6"
+                                    class="px-4 py-3 bg-gray-50 text-center sm:px-6"
                                 >
-                                    <div
-                                        class="col-span-12 md:col-span-2 lg:col-span-2"
+                                    <p>Completa la tua iscrizione</p>
+                                    <small
+                                        >(I campi contrassegnati con * sono
+                                        obbligatori)</small
                                     >
-                                        <label
-                                            for="first_name"
-                                            class="block text-sm font-medium text-gray-700"
-                                            >Nome</label
-                                        >
-                                        <input
-                                            v-model="form.first_name"
-                                            type="text"
-                                            name="first_name"
-                                            id="first_name"
-                                            required
-                                            autocomplete="given-name"
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        />
-                                    </div>
-
+                                </div>
+                                <div class="px-4 py-5 bg-white sm:p-6">
                                     <div
-                                        class="col-span-12 md:col-span-4 lg:col-span-4"
+                                        class="grid grid-cols-12 gap-2 md:grid-cols-6 lg:grid-cols-6 md:gap-6 lg:gap-6"
                                     >
-                                        <label
-                                            for="last_name"
-                                            class="block text-sm font-medium text-gray-700"
-                                            >Cognome</label
+                                        <div
+                                            class="col-span-12 md:col-span-2 lg:col-span-2"
                                         >
-                                        <input
-                                            v-model="form.last_name"
-                                            type="text"
-                                            name="last_name"
-                                            id="last_name"
-                                            required
-                                            autocomplete="family-name"
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        />
-                                    </div>
-
-                                    <div
-                                        class="col-span-8 md:col-span-2 lg:col-span-2"
-                                    >
-                                        <label
-                                            for="city"
-                                            class="block text-sm font-medium text-gray-700"
-                                            >Nato a</label
-                                        >
-                                        <input
-                                            v-model="form.city"
-                                            type="text"
-                                            name="city"
-                                            id="city"
-                                            required
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        />
-                                    </div>
-
-                                    <div
-                                        class="col-span-4 md:col-span-1 lg:col-span-1"
-                                    >
-                                        <label
-                                            for="province"
-                                            class="block text-sm font-medium text-gray-700"
-                                            >Provincia</label
-                                        >
-                                        <input
-                                            v-model="form.province"
-                                            type="text"
-                                            name="province"
-                                            id="province"
-                                            required
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        />
-                                    </div>
-
-                                    <div
-                                        class="col-span-6 md:col-span-2 lg:col-span-1"
-                                    >
-                                        <label
-                                            for="birth"
-                                            class="block text-sm font-medium text-gray-700"
-                                            >Il</label
-                                        >
-                                        <input
-                                            v-model="form.birth"
-                                            type="date"
-                                            name="birth"
-                                            id="birth"
-                                            required
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        />
-                                    </div>
-
-                                    <div
-                                        class="col-span-6 md:col-span-2 lg:col-span-2"
-                                    >
-                                        <label
-                                            for="fiscal_code"
-                                            class="block text-sm font-medium text-gray-700"
-                                            >Codice Fiscale</label
-                                        >
-                                        <input
-                                            v-model="form.fiscal_code"
-                                            type="text"
-                                            name="fiscal_code"
-                                            id="fiscal_code"
-                                            required
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        />
-                                        <div v-if="errors.fiscal_code">
-                                            {{ errors.fiscal_code }}
+                                            <label
+                                                for="first_name"
+                                                class="block text-sm font-medium text-gray-700"
+                                                >Nome*</label
+                                            >
+                                            <input
+                                                v-model="form.first_name"
+                                                type="text"
+                                                name="first_name"
+                                                id="first_name"
+                                                required
+                                                autocomplete="given-name"
+                                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            />
                                         </div>
-                                    </div>
 
-                                    <div
-                                        class="col-span-6 sm:col-span-2 lg:col-span-2"
-                                    >
-                                        <label
-                                            for="resident"
-                                            class="block text-sm font-medium text-gray-700"
-                                            >Residente a</label
+                                        <div
+                                            class="col-span-12 md:col-span-2 lg:col-span-2"
                                         >
-                                        <input
-                                            v-model="form.resident"
-                                            type="text"
-                                            name="resident"
-                                            id="resident"
-                                            required
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        />
-                                    </div>
-
-                                    <div
-                                        class="col-span-8 md:col-span-2 lg:col-span-2"
-                                    >
-                                        <label
-                                            for="address"
-                                            class="block text-sm font-medium text-gray-700"
-                                            >Indirizzo</label
-                                        >
-                                        <input
-                                            v-model="form.address"
-                                            type="text"
-                                            name="address"
-                                            id="address"
-                                            required
-                                            autocomplete="street-address"
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        />
-                                    </div>
-
-                                    <div
-                                        class="col-span-4 md:col-span-1 lg:col-span-1"
-                                    >
-                                        <label
-                                            for="postal_code"
-                                            class="block text-sm font-medium text-gray-700"
-                                            >CAP</label
-                                        >
-                                        <input
-                                            v-model="form.postal_code"
-                                            type="number"
-                                            name="postal_code"
-                                            id="postal_code"
-                                            required
-                                            autocomplete="postal-code"
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        />
-                                    </div>
-
-                                    <div
-                                        class="col-span-8 md:col-span-2 lg:col-span-2"
-                                    >
-                                        <label
-                                            for="phone"
-                                            class="block text-sm font-medium text-gray-700"
-                                            >Telefono</label
-                                        >
-                                        <input
-                                            v-model="form.phone"
-                                            type="text"
-                                            name="phone"
-                                            id="phone"
-                                            required
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        />
-                                    </div>
-
-                                    <div
-                                        class="col-span-6 md:col-span-2 lg:col-span-2"
-                                    >
-                                        <label
-                                            for="contact_type"
-                                            class="block text-sm font-medium text-gray-700"
-                                            >Contatto</label
-                                        >
-                                        <select
-                                            v-model="form.contact_type"
-                                            name="contact_type"
-                                            id="contact_type"
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        >
-                                            <option
-                                                v-for="(key, value) in contacts"
-                                                :value="value"
-                                                :key="value"
-                                                >{{ key }}</option
+                                            <label
+                                                for="last_name"
+                                                class="block text-sm font-medium text-gray-700"
+                                                >Cognome*</label
                                             >
-                                        </select>
-                                    </div>
+                                            <input
+                                                v-model="form.last_name"
+                                                type="text"
+                                                name="last_name"
+                                                id="last_name"
+                                                required
+                                                autocomplete="family-name"
+                                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            />
+                                        </div>
 
-                                    <div
-                                        v-if="
-                                            form.contact_type != default_contact
-                                        "
-                                        class="col-span-6 md:col-span-2 lg:col-span-2"
-                                    >
-                                        <label
-                                            for="activity"
-                                            class="block text-sm font-medium text-gray-700"
-                                            >Per attività riguardanti
-                                        </label>
-                                        <select
-                                            v-model="form.activity"
-                                            name="activity"
-                                            id="activity"
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        <div
+                                            class="col-span-12 md:col-span-2 lg:col-span-2"
                                         >
-                                            <option
-                                                v-for="(key,
-                                                value) in activities"
-                                                :value="value"
-                                                :key="value"
-                                                >{{ key }}</option
+                                            <label
+                                                for="fiscal_code"
+                                                class="block text-sm font-medium text-gray-700"
+                                                >Codice Fiscale*</label
                                             >
-                                        </select>
-                                    </div>
+                                            <input
+                                                v-model="form.fiscal_code"
+                                                type="text"
+                                                name="fiscal_code"
+                                                id="fiscal_code"
+                                                required
+                                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            />
+                                            <div
+                                                v-if="errors.fiscal_code"
+                                                class="text-red-700 text-xs pt-2"
+                                            >
+                                                {{ errors.fiscal_code }}
+                                            </div>
+                                        </div>
 
-                                    <input
-                                        type="hidden"
-                                        v-model="form.sub_token"
-                                        name="sub_token"
-                                        id="sub_token"
-                                    />
+                                        <div
+                                            class="col-span-8 md:col-span-2 lg:col-span-2"
+                                        >
+                                            <label
+                                                for="city"
+                                                class="block text-sm font-medium text-gray-700"
+                                                >Nato a*</label
+                                            >
+                                            <input
+                                                v-model="form.city"
+                                                type="text"
+                                                name="city"
+                                                id="city"
+                                                required
+                                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            />
+                                        </div>
+
+                                        <div
+                                            class="col-span-4 md:col-span-1 lg:col-span-1"
+                                        >
+                                            <label
+                                                for="province"
+                                                class="block text-sm font-medium text-gray-700"
+                                                >Provincia*</label
+                                            >
+                                            <input
+                                                v-model="form.province"
+                                                type="text"
+                                                name="province"
+                                                id="province"
+                                                required
+                                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            />
+                                        </div>
+
+                                        <div
+                                            class="col-span-6 md:col-span-2 lg:col-span-2"
+                                        >
+                                            <label
+                                                for="birth"
+                                                class="block text-sm font-medium text-gray-700"
+                                                >Il*</label
+                                            >
+                                            <input
+                                                v-model="form.birth"
+                                                type="date"
+                                                name="birth"
+                                                id="birth"
+                                                required
+                                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            />
+                                            <div
+                                                v-if="errors.birth"
+                                                class="text-red-700 text-xs pt-2"
+                                            >
+                                                {{ errors.birth }}
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="col-span-6 sm:col-span-2 lg:col-span-2"
+                                        >
+                                            <label
+                                                for="resident"
+                                                class="block text-sm font-medium text-gray-700"
+                                                >Residente a*</label
+                                            >
+                                            <input
+                                                v-model="form.resident"
+                                                type="text"
+                                                name="resident"
+                                                id="resident"
+                                                required
+                                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            />
+                                        </div>
+
+                                        <div
+                                            class="col-span-8 md:col-span-2 lg:col-span-2"
+                                        >
+                                            <label
+                                                for="address"
+                                                class="block text-sm font-medium text-gray-700"
+                                                >Indirizzo*</label
+                                            >
+                                            <input
+                                                v-model="form.address"
+                                                type="text"
+                                                name="address"
+                                                id="address"
+                                                required
+                                                autocomplete="street-address"
+                                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            />
+                                        </div>
+
+                                        <div
+                                            class="col-span-4 md:col-span-1 lg:col-span-1"
+                                        >
+                                            <label
+                                                for="postal_code"
+                                                class="block text-sm font-medium text-gray-700"
+                                                >CAP*</label
+                                            >
+                                            <input
+                                                v-model="form.postal_code"
+                                                type="number"
+                                                name="postal_code"
+                                                id="postal_code"
+                                                required
+                                                autocomplete="postal-code"
+                                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            />
+                                        </div>
+
+                                        <div
+                                            class="col-span-8 md:col-span-2 lg:col-span-2"
+                                        >
+                                            <label
+                                                for="phone"
+                                                class="block text-sm font-medium text-gray-700"
+                                                >Telefono*</label
+                                            >
+                                            <input
+                                                v-model="form.phone"
+                                                type="text"
+                                                name="phone"
+                                                id="phone"
+                                                required
+                                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            />
+                                        </div>
+
+                                        <div
+                                            class="col-span-6 md:col-span-2 lg:col-span-2"
+                                        >
+                                            <label
+                                                for="contact_type"
+                                                class="block text-sm font-medium text-gray-700"
+                                                >Contatto</label
+                                            >
+                                            <select
+                                                v-model="form.contact_type"
+                                                name="contact_type"
+                                                id="contact_type"
+                                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            >
+                                                <option
+                                                    v-for="(key,
+                                                    value) in contacts"
+                                                    :value="value"
+                                                    :key="value"
+                                                    >{{ key }}</option
+                                                >
+                                            </select>
+                                        </div>
+
+                                        <div
+                                            v-if="
+                                                form.contact_type !=
+                                                default_contact
+                                            "
+                                            class="col-span-6 md:col-span-2 lg:col-span-2"
+                                        >
+                                            <label
+                                                for="activity"
+                                                class="block text-sm font-medium text-gray-700"
+                                                >Per attività riguardanti
+                                            </label>
+                                            <select
+                                                v-model="form.activity"
+                                                name="activity"
+                                                id="activity"
+                                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            >
+                                                <option
+                                                    v-for="(key,
+                                                    value) in activities"
+                                                    :value="value"
+                                                    :key="value"
+                                                    >{{ key }}</option
+                                                >
+                                            </select>
+                                        </div>
+
+                                        <input
+                                            type="hidden"
+                                            v-model="form.sub_token"
+                                            name="sub_token"
+                                            id="sub_token"
+                                        />
+                                    </div>
+                                </div>
+                                <div
+                                    v-if="!form.processing"
+                                    class="px-4 py-3 bg-gray-50 text-center sm:px-6"
+                                >
+                                    <button
+                                        type="submit"
+                                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    >
+                                        Completa il tuo tesseramento
+                                    </button>
+                                </div>
+                                <div
+                                    v-else
+                                    class="px-4 py-3 bg-gray-50 text-center sm:px-6"
+                                >
+                                    <button
+                                        type="button"
+                                        class="inline-flex justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-400 hover:bg-indigo-600 transition ease-in-out duration-150 cursor-not-allowed"
+                                        disabled=""
+                                    >
+                                        <svg
+                                            class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <circle
+                                                class="opacity-25"
+                                                cx="12"
+                                                cy="12"
+                                                r="10"
+                                                stroke="currentColor"
+                                                stroke-width="4"
+                                            ></circle>
+                                            <path
+                                                class="opacity-75"
+                                                fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                            ></path>
+                                        </svg>
+                                        Operazione in corso...
+                                    </button>
                                 </div>
                             </div>
-                            <div
-                                v-if="!form.processing"
-                                class="px-4 py-3 bg-gray-50 text-center sm:px-6"
-                            >
-                                <button
-                                    type="submit"
-                                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                >
-                                    Completa il tuo tesseramento
-                                </button>
-                            </div>
-                            <div
-                                v-else
-                                class="px-4 py-3 bg-gray-50 text-center sm:px-6"
-                            >
-                                <button
-                                    type="button"
-                                    class="inline-flex justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-400 hover:bg-indigo-600 transition ease-in-out duration-150 cursor-not-allowed"
-                                    disabled=""
-                                >
-                                    <svg
-                                        class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <circle
-                                            class="opacity-25"
-                                            cx="12"
-                                            cy="12"
-                                            r="10"
-                                            stroke="currentColor"
-                                            stroke-width="4"
-                                        ></circle>
-                                        <path
-                                            class="opacity-75"
-                                            fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                        ></path>
-                                    </svg>
-                                    Operazione in corso...
-                                </button>
-                            </div>
+                        </form>
+                    </div>
+                    <div
+                        class="text-center col-span-3 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                        role="alert"
+                        v-if="
+                            $page.props.flash.error ||
+                            (Object.keys($page.props.errors).length > 0 && show)
+                        "
+                    >
+                        <div v-if="$page.props.flash.error">
+                            <span class="block sm:inline">{{
+                                $page.props.flash.error
+                            }}</span>
                         </div>
-                    </form>
+                        <div v-else>
+                            <span
+                                class="block sm:inline"
+                                v-if="
+                                    Object.keys($page.props.errors).length === 1
+                                "
+                                >Errore nella compilazione dei dati</span
+                            >
+                            <span v-else
+                                >Rilevati
+                                {{ Object.keys($page.props.errors).length }}
+                                errori nella compilazione dei dati.</span
+                            >
+                        </div>
+                        <span
+                            class="absolute top-0 bottom-0 right-0 px-4 py-3"
+                            @click="show = false"
+                        >
+                            <svg
+                                class="fill-current h-6 w-6 text-red-500"
+                                role="button"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20"
+                            >
+                                <title>Close</title>
+                                <path
+                                    d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"
+                                />
+                            </svg>
+                        </span>
+                    </div>
                 </div>
             </div>
-        </div>
-    </container>
+        </container>
+    </div>
 </template>
 
 <script>
@@ -328,7 +389,11 @@ export default {
     components: {
         Container,
     },
-
+    data() {
+        return {
+            show: true,
+        };
+    },
     props: {
         errors: Object,
         sub_token: String,
@@ -337,7 +402,14 @@ export default {
         activities: Array,
         url: String,
     },
-
+    watch: {
+        "$page.props.flash": {
+            handler() {
+                this.show = true;
+            },
+            deep: true,
+        },
+    },
     setup() {
         const form = useForm({
             first_name: null,
@@ -358,6 +430,7 @@ export default {
         function submit() {
             form.post("/over/subscriptions/complete", {
                 preserveScroll: true,
+                preserveState: true,
                 onSuccess: () => form.reset(),
             });
         }

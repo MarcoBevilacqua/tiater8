@@ -14,12 +14,12 @@ class AddInfoToCustomers extends Migration
     public function up()
     {
         Schema::table('customers', function (Blueprint $table) {
-            $table->string('city');
+            $table->string('city')->nullable(true);
             $table->date('birth')->nullable(true);
-            $table->string('resident');
-            $table->string('address');
-            $table->string('postal_code');
-            $table->string('province');
+            $table->string('resident')->nullable(true);
+            $table->string('address')->nullable(true);
+            $table->string('postal_code')->nullable(true);
+            $table->string('province')->nullable(true);
         });
     }
 

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Subscription;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 class SubscriptionService
 {
@@ -24,7 +25,7 @@ class SubscriptionService
     ];
 
     private static $contactLabels = [
-        Subscription::NO_CONTACT => 'non desidero essere contattato',
+        Subscription::NO_CONTACT => 'nessun contatto',
         Subscription::PHONE_CONTACT => 'via telefono',
         Subscription::WHATSAPP_CONTACT => 'via whatsapp',
     ];
@@ -68,11 +69,17 @@ class SubscriptionService
     public static function getSubscriptionByEmail(string $email)
     {
         return Subscription::where('subscription_email', '=', $email)
-        ->where('status', Subscription::PENDING)
+        ->where('status', '!=', Subscription::PENDING)
         ->count() > 0;
     }
 
-    public static function subscriptionCanBeConfirmed(string $token)
+    /**
+     * Check if subscription can be confirmed
+     * @param string $token
+     *
+     * @return Collection
+     */
+    public static function subscriptionCanBeConfirmed(string $token) : Collection
     {
         $subscriptionByToken = Subscription::where('token', $token)
         ->first();

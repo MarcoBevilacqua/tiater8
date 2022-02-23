@@ -1,3 +1,16 @@
+v0.1.0
+
+-   subscription soft delete
+-   public subscription controller (to separate from subscription controller)
+
+v0.0.9
+
+-   error message on public subscription
+
+v0.0.8
+
+-   public subscription fixed on retry
+
 v0.0.7
 
 -   fiscal code required for subscription

@@ -53,6 +53,16 @@
                                 class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
                             >
                                 <breeze-nav-link
+                                    :href="route('shows.index')"
+                                    :active="route().current('shows.index')"
+                                >
+                                    Spettacoli
+                                </breeze-nav-link>
+                            </div>
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
+                            >
+                                <breeze-nav-link
                                     :href="route('bookings.index')"
                                     :active="route().current('bookings.index')"
                                 >
