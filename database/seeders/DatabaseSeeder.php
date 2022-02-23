@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ShowEvent;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,7 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             ShowSeeder::class,
-            //ViewerSeeder::class,
+            ShowEventSeeder::class,
             //BookingSeeder::class
         ]);
     }
