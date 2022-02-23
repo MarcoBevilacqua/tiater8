@@ -20,23 +20,14 @@ class ShowFactory extends Factory
      * @return array
      */
     public function definition()
-    {        
-        $fullPriceQnt   = $this->faker->numberBetween(20, 60);
-        $halfPriceQnt   = $this->faker->numberBetween(1, $fullPriceQnt);
-        $totalQnt       = $fullPriceQnt + $halfPriceQnt;
-    
-        $image          = $this->faker->imageUrl(480, 640);
-
+    {
         return [
-            'name'              => $this->faker->words(mt_rand(1, 3), true),
+            'title'             => $this->faker->words(mt_rand(1, 3), true),
             'description'       => $this->faker->realText(),
             'places'            => $this->faker->numberBetween(0, 50),
-            'full_price_qnt'    => $fullPriceQnt,
-            'half_price_qnt'    => $halfPriceQnt,
-            'total_qnt'         => $totalQnt,
             'full_price'        => $this->faker->randomFloat(0, 1, 12),
             'half_price'        => $this->faker->randomFloat(0, 1, 6),
-            'image'             => $image,
+            'image'             => $this->faker->imageUrl(480, 640),
             'url'               => $this->faker->url
         ];
     }
