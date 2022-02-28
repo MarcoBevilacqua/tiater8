@@ -13,7 +13,9 @@ use Illuminate\View\View;
 use Validator;
 use Log;
 use Illuminate\Http\Request as Request;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class BookingController extends Controller
@@ -37,6 +39,7 @@ class BookingController extends Controller
     }
 
     /**
+     * show the places map
      * @param int $id
      * @return $this
      */
@@ -45,9 +48,19 @@ class BookingController extends Controller
         /**
          * TODO: how to structure the bookings collection?
          */
-        $booking = Booking::where($id)->findOrFail();
-        $events = Show::find($booking->show_id)->getEvents();
-        return view('crud/prenotazioni.edit', array('booking' => $booking, 'events' => $events));
+        $booking = Booking::findOrFail($id);
+        return Inertia::render(
+            'Bookings/Form',
+            ['booked' => $booking->toArray(),
+            'bookings' => Booking::where('show_event_id', $booking->show_event_id)->get()
+            ->map(function (Booking $booking) {
+                return [
+                    'id' => $booking->id,
+                    'show' => $booking->showEvent->show->title
+                ];
+            }),
+            ]
+        );
     }
 
     public function show($code)
@@ -63,10 +76,24 @@ class BookingController extends Controller
      */
     public function create()
     {
-        //shows form create new
-        return view(
-            'crud/prenotazioni.create',
-            ['shows' => Show::pluck('name', 'id')]
+        return Inertia::render(
+            'Bookings/Create',
+            ['shows' => Show::orderByDesc('created_at')
+            ->get()
+            ->map(function (Show $show) {
+                return [
+                    'id' => $show->id,
+                    'title' => $show->title
+                ];
+            }),
+            'customers' => Customer::all()
+            ->map(function (Customer $customer) {
+                return [
+                    'id' => $customer->id,
+                    'name' => $customer->first_name . " " . $customer->last_name
+                ];
+            }),
+            '_method' => 'POST']
         );
     }
 
@@ -136,59 +163,25 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
+        $validated = $request->validate([
+            'customer_id' => 'required|exists:customers,id',
+            'show_event_id' => 'required',
+        ]);
 
-        if (!$data || empty($data)) {
-            return false;
-        }
+        $booking = null;
 
-        //vars
-        $returnVars = array();
-        $factory = Factory::create();
-        $factory->addProvider('Faker\Provider\Miscellaneous');
-        $paid = array_key_exists('paid', $data) ? true : false;
-
-        $token = new Booking();
-
-        $token->viewer_id = $data['viewer'];
-        $token->event_id = $data['date'];
-        $token->show_id = $data['show'];
-        $token->paid = $paid;
-        $token->full_price_qnt = $data['full_price_qnt'];
-        $token->half_price_qnt = $data['half_price_qnt'];
-        $token->total_qnt = $data['full_price_qnt'] + $data['half_price_qnt'];
-        $token->booking_date = new \DateTime();
-        $token->place_code = $data['place_code'];
-        $token->public_code = $this->createPublicCode();
-        $token->booking_code = $factory->sha256;
-
-
-        //TODO Controlli su disponibilità posti
-
-        //salva prenotazione
         try {
-            $token->save();
+            $booking = Booking::create([
+                'customer_id' => $request->customer_id,
+                'show_event_id' => $request->show_event_id,
+                'booking_code' => strtoupper(Str::random(8))
+            ]);
         } catch (\Exception $ex) {
-            \Session::flash('save_error', $ex->getMessage());
-            Log::error("Booking not saved: " . $ex->getMessage());
-            return view('crud/prenotazioni/create');
+            Log::error("Cannot save booking: {$ex->getMessage()}");
+            return Redirect::to('bookings/create')->with('error', 'Invalid data');
         }
 
-        if ($token->exists()) {
-            $returnVars['token'] = $token;
-
-            $event = ShowEvent::find($data['date']);
-            $show = Show::find($data['show']);
-
-            $returnVars['event'] = $event;
-            $returnVars['show'] = $show;
-            $returnVars['viewer'] = Viewer::find($data['viewer']);
-
-            //$afterBookingEventOps = $this->afterBookingEvent($event, $toRemoveArray);
-            //$afterBookingShowOps = $this->afterBookingShow($show, $toRemoveSum);
-        }
-
-        return view('bookConfirm', ['data' => $returnVars]);
+        return Redirect::to('bookings/edit/' . $booking->id);
     }
 
     /**

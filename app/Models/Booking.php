@@ -13,12 +13,18 @@ class Booking extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'customer_id',
+        'show_event_id',
+        'booking_code'
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function showEvent()
     {
-        return $this->hasOne(ShowEvent::class);
+        return $this->belongsTo(ShowEvent::class);
     }
 
     /**
@@ -26,6 +32,6 @@ class Booking extends Model
      */
     public function customer()
     {
-        return $this->hasOne(Customer::class);
+        return $this->belongsTo(Customer::class);
     }
 }

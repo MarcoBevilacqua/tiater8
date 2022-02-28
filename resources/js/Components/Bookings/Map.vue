@@ -42,8 +42,6 @@ export default {
         CustomRow,
     },
     props: {
-        bookings: Object,
-        customers: Object,
         createLink: String,
     },
     methods: {

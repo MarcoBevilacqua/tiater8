@@ -8,13 +8,6 @@
                     >
                         Prenotazioni
                     </h2>
-                    <small>
-                        <inertia-link
-                            :href="createLink"
-                            class="font-medium text-indigo-500"
-                            >Inserisci nuovo
-                        </inertia-link></small
-                    >
                 </div>
                 <div class="text-right">
                     <label class="block text-gray-700"></label>
@@ -30,7 +23,7 @@
         <template #main>
             <container>
                 <div class="container map-container">
-                    <Map :customers="customers" />
+                    <Map />
                 </div>
             </container>
         </template> </breeze-authenticated-layout
@@ -55,8 +48,7 @@ export default {
     },
     props: {
         bookings: Object,
-        customers: Object,
-        createLink: String,
+        booked: Object,
     },
 };
 </script>

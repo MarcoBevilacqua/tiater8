@@ -58,6 +58,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/shows', ShowController::class);
 
     Route::resource('/show-events', ShowEventController::class);
+
+    Route::get('/events/{showId}', [ShowEventController::class, 'forShow']);
 });
 
 require __DIR__.'/auth.php';

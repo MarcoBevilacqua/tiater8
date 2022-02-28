@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ShowEvent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 
@@ -282,18 +283,17 @@ class ShowEventController extends Controller
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function forShow($id)
+    protected function forShow($showId)
     {
-        $ret = DB::table('events')
-            ->where('events.show_id', '=', $id)
-            ->select(DB::raw(
-                '                
-                COUNT(events.`id`) AS evs,
-                SUM(events.full_price_qnt + events.half_price_qnt) AS qnt,
-                (SELECT COUNT(b.id) FROM bookings b WHERE b.show_id = events.show_id) AS book'
-            ))
-            ->groupBy('events.show_id')
-            ->get();
+        $ret = ShowEvent::where('show_id', '=', $showId)
+            ->get()
+            ->map(function (ShowEvent $showEvent) {
+                return [
+                    'id' => $showEvent->id,
+                    'date' => $showEvent->show_date
+                ];
+            })
+            ;
 
         return \Response::json($ret);
     }
@@ -309,7 +309,7 @@ class ShowEventController extends Controller
             return false;
         }
 
-        $res = \ShowShowEvent::where('show_id', $id)
+        $res = ShowEvent::where('show_id', $id)
             ->select(['show_date', 'id', 'full_price_qnt', 'half_price_qnt', 'total_qnt'])
             ->get();
 
@@ -327,7 +327,7 @@ class ShowEventController extends Controller
      */
     protected function forMonth($month)
     {
-        $events = \ShowShowEvent::whereRaw('MONTH(show_date) = ?', [$month])
+        $events = ShowEvent::whereRaw('MONTH(show_date) = ?', [$month])
             ->whereRaw('show_date >= NOW()')
             ->join('shows', 'show_id', '=', 'shows.id')
             ->select(['show_date', 'shows.name'])
@@ -343,7 +343,7 @@ class ShowEventController extends Controller
      */
     private function eventExists($showId, $date)
     {
-        $event = ShowShowEvent::where('show_id', '=', $showId)
+        $event = ShowEvent::where('show_id', '=', $showId)
             ->where('show_date', '=', $date)
             ->first();
 

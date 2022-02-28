@@ -56,20 +56,7 @@
                                 Prenotazione per:
                             </p>
                         </div>
-                        <div class="mt-2">
-                            <select
-                                name="customer_id"
-                                id="customer_id"
-                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                            >
-                                <option> ---- </option>
-                                <option
-                                    v-for="customer in this.$parent.customers"
-                                    :value="customer.id"
-                                    >{{ customer.name }}
-                                </option>
-                            </select>
-                        </div>
+                        <div class="mt-2"></div>
                     </div>
                 </div>
                 <div class="bg-gray-50 px-4 pt-3 sm:px-6">
@@ -97,7 +84,6 @@
 export default {
     props: {
         showModal: Boolean,
-        customers: Array,
         place: Number,
         row: String,
     },
