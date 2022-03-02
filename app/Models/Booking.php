@@ -16,8 +16,9 @@ class Booking extends Model
     protected $fillable = [
         'customer_id',
         'show_event_id',
-        'booking_code'
-    ];
+        'booking_code',
+        'number_of_places'
+        ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

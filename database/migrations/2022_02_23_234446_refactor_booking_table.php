@@ -19,7 +19,9 @@ class RefactorBookingTable extends Migration
 
             $table->unsignedBigInteger('show_event_id');
             $table->string('booking_code', 8);
-        
+            $table->tinyInteger('number_of_places');
+            $table->tinyInteger('place')->nullable(true);
+            $table->tinyInteger('row')->nullable(true);
             $table->foreign('show_event_id')->references('id')->on('show_events');
             $table->foreign('customer_id')->references('id')->on('customers');
             

@@ -6,7 +6,7 @@
                     <h2
                         class="font-semibold text-xl text-gray-800 leading-tight"
                     >
-                        Prenotazioni
+                        Posto per: {{ booked.customer }} - {{ booked.show }}
                     </h2>
                 </div>
                 <div class="text-right">
@@ -23,7 +23,7 @@
         <template #main>
             <container>
                 <div class="container map-container">
-                    <Map />
+                    <Map :booking="booked" :method="_method" />
                 </div>
             </container>
         </template> </breeze-authenticated-layout
@@ -49,6 +49,7 @@ export default {
     props: {
         bookings: Object,
         booked: Object,
+        _method: String,
     },
 };
 </script>

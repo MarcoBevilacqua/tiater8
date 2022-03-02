@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ShowSeeder::class,
             ShowEventSeeder::class,
+            CustomerSeeder::class,
             //BookingSeeder::class
         ]);
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ShowEvent;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
@@ -290,7 +291,7 @@ class ShowEventController extends Controller
             ->map(function (ShowEvent $showEvent) {
                 return [
                     'id' => $showEvent->id,
-                    'date' => $showEvent->show_date
+                    'date' => Carbon::createFromTimeString($showEvent->show_date)->format('l d F Y - h:i'),
                 ];
             })
             ;

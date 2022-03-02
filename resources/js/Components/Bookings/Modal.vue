@@ -49,23 +49,21 @@
                             class="text-lg leading-6 font-medium text-gray-900"
                             id="modal-title"
                         >
-                            Posto: {{ row }}{{ place }}
+                            Posto: {{ this.$parent.row
+                            }}{{ this.$parent.place }}
                         </h3>
-                        <div class="mt-2">
-                            <p class="text-sm text-gray-500">
-                                Prenotazione per:
-                            </p>
-                        </div>
                         <div class="mt-2"></div>
                     </div>
                 </div>
                 <div class="bg-gray-50 px-4 pt-3 sm:px-6">
-                    <button
-                        type="button"
-                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm"
-                    >
-                        Conferma
-                    </button>
+                    <form @submit.prevent="update">
+                        <button
+                            type="submit"
+                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm"
+                        >
+                            Conferma
+                        </button>
+                    </form>
                 </div>
                 <div class="bg-gray-50 px-4 py-2 sm:px-6">
                     <a
@@ -81,11 +79,43 @@
 </template>
 
 <script>
+import Container from "@/Layouts/Container";
+import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
+import { useForm } from "@inertiajs/inertia-vue3";
+
 export default {
     props: {
         showModal: Boolean,
+        booking: Number,
         place: Number,
         row: String,
+    },
+    data() {
+        return {
+            placeFromParent: null,
+            form: this.$inertia
+                .form({
+                    booking: this.booking,
+                    place: null,
+                    row: null,
+                })
+                .transform((data) => ({
+                    ...data,
+                    place: this.$props.place,
+                    row: this.$props.row,
+                })),
+        };
+    },
+    methods: {
+        setPlace(a) {
+            console.log(a);
+            this.form.place = a;
+        },
+        update() {
+            this.form.put(this.route("bookings.update", this.form), {
+                onSuccess: () => this.form.reset(),
+            });
+        },
     },
 };
 </script>

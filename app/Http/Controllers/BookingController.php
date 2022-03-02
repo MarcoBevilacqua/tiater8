@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Models\Customer;
 use App\Models\Show;
-use App\Models\ShowEvent;
-use App\Models\Subscription;
-use App\Models\Viewer;
+use Carbon\Carbon;
 use Faker\Factory;
 use Illuminate\View\View;
 use Validator;
@@ -25,13 +23,15 @@ class BookingController extends Controller
         return Inertia::render('Bookings', [
             'bookings' => Booking::orderByDesc('id')
             ->get()
-            ->groupBy('show_event_id')
+            // ->groupBy('show_event_id')
             ->map(function (Booking $booking) {
                 return [
                     'id' => $booking->id,
                     'show' => $booking->showEvent->show->title,
-                    'date' => $booking->showEvent->show->show_date,
-                    'places' => $booking->showEvent->full_price_qnt
+                    'customer' => $booking->customer->full_name,
+                    'date' => Carbon::createFromTimeString($booking->showEvent->show_date)->format('l d F Y - h:i'),
+                    'places' => $booking->number_of_places,
+                    'edit' => URL::route('bookings.edit', $booking)
                 ];
             }),
             'createLink' => URL::route('bookings.create')
@@ -51,7 +51,12 @@ class BookingController extends Controller
         $booking = Booking::findOrFail($id);
         return Inertia::render(
             'Bookings/Form',
-            ['booked' => $booking->toArray(),
+            ['booked' => [
+                'id' => $booking->id,
+                'customer' => $booking->customer->full_name,
+                'show' => $booking->showEvent->show->title,
+
+            ],
             'bookings' => Booking::where('show_event_id', $booking->show_event_id)->get()
             ->map(function (Booking $booking) {
                 return [
@@ -59,14 +64,9 @@ class BookingController extends Controller
                     'show' => $booking->showEvent->show->title
                 ];
             }),
+            '_method'  => 'put',
             ]
         );
-    }
-
-    public function show($code)
-    {
-        $booking = Booking::where('public_code', $code)->get();
-        return view('crud/prenotazioni.show', array('booking' => $booking));
     }
 
     /**
@@ -90,7 +90,7 @@ class BookingController extends Controller
             ->map(function (Customer $customer) {
                 return [
                     'id' => $customer->id,
-                    'name' => $customer->first_name . " " . $customer->last_name
+                    'name' => $customer->full_name
                 ];
             }),
             '_method' => 'POST']
@@ -102,58 +102,27 @@ class BookingController extends Controller
      * @param $code
      * @return mixed
      */
-    public function update(Request $request, $code)
+    public function update(Request $request)
     {
-        $data = $request->all();
-
-        $event_id = $data['event_id'];
-        $full_price = $data['full_price_qnt'];
-        $half_price = $data['half_price_qnt'];
-        $paid = $data['paid'];
-        $place_code = $data['place_code'];
-
-
-        //validazione
-        $rules = array(
-            'event_id' => 'required',
-            'full_price_qnt' => 'required|numeric',
-            'half_price_qnt' => 'required|numeric',
-            'paid' => 'required',
-            'place_code' => 'required'
-        );
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return redirect('prenotazioni/'. $code . '/edit')
-                ->withErrors($validator);
-        } else {
-
-            /** @var Booking $booking */
-            $booking = Booking::wherePublicCode($code)->first();
-
-            if ($booking) {
-
-                //pulling off places from show
-                $show = Show::find($booking->show_id);
-                $show->places += ($booking->full_price_qnt + $booking->half_price_qnt);
-
-                $booking->event_id = $event_id;
-                $booking->full_price_qnt = $full_price;
-                $booking->half_price_qnt = $half_price;
-                $booking->place_code = $place_code;
-                $booking->paid = $paid;
-
-                try {
-                    $booking->save();
-                } catch (\Exception $ex) {
-                    Log::error("cannot update booking: {$ex->getMessage()}");
-                    return redirect('prenotazioni/'. $code . '/edit');
-                }
-
-                return redirect('book/get/list/' . $show->url);
-            }
+        $request->validate([
+            'place' => 'required',
+            'row' => 'required',
+            'booking' => 'required|exists:bookings,id'
+        ]);
+            
+        try {
+            $booking = Booking::findOrFail($request->booking);
+        } catch (\Exception $exception) {
+            Log::error("Cannot update booking: {$exception->getMessage()}");
+            return Redirect::back()->with('error', "Errori nella richiesta");
         }
+
+        $booking->update([
+                'place' => $request->place,
+                'row' => $request->row
+            ]);
+
+        return Redirect::to('bookings');
     }
 
     /**
@@ -163,7 +132,7 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'customer_id' => 'required|exists:customers,id',
             'show_event_id' => 'required',
         ]);
@@ -174,14 +143,15 @@ class BookingController extends Controller
             $booking = Booking::create([
                 'customer_id' => $request->customer_id,
                 'show_event_id' => $request->show_event_id,
-                'booking_code' => strtoupper(Str::random(8))
+                'booking_code' => strtoupper(Str::random(8)),
+                'number_of_places' => 1
             ]);
         } catch (\Exception $ex) {
             Log::error("Cannot save booking: {$ex->getMessage()}");
             return Redirect::to('bookings/create')->with('error', 'Invalid data');
         }
 
-        return Redirect::to('bookings/edit/' . $booking->id);
+        return Redirect::to('bookings/' . $booking->id .'/edit');
     }
 
     /**

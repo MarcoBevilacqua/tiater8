@@ -27,6 +27,12 @@
                                 scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
+                                Spettatore
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            >
                                 Data
                             </th>
                             <th
@@ -51,6 +57,15 @@
                                         class="text-sm font-medium text-gray-900"
                                     >
                                         {{ booking.show }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div
+                                        class="text-sm font-medium text-gray-900"
+                                    >
+                                        {{ booking.customer }}
                                     </div>
                                 </div>
                             </td>
@@ -83,7 +98,7 @@
                                     >
                                         <inertia-link
                                             class="text-blue-700 inline-flex items-center font-semibold tracking-wide"
-                                            :href="'show-event.edit'"
+                                            :href="booking.edit"
                                             >Modifica</inertia-link
                                         >
                                     </div>
@@ -107,7 +122,7 @@ export default {
         Container,
     },
     props: {
-        events: Object,
+        bookings: Object,
         createLink: String,
     },
 };

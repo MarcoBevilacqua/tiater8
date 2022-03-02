@@ -24,12 +24,7 @@ class ShowEventFactory extends Factory
     {
         return [
             'show_id' => Show::factory(),
-            'show_date' => $this->faker->dateTimeBetween('+0 days', '+2 years'),
-            'full_price_qnt' => $this->faker->numberBetween(0, 50),
-            'half_price_qnt' => $this->faker->numberBetween(0, 25),
-            'total_qnt' => $this->faker->numberBetween(0, 40),
-            'full_price' => $this->faker->numberBetween(0, 10),
-            'half_price' => $this->faker->numberBetween(0, 5)
+            'show_date' => $this->faker->dateTimeBetween('+0 days', '+2 years')
         ];
     }
 }

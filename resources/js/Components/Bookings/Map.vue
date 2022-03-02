@@ -25,6 +25,7 @@
     <Modal
         :showModal="showModal"
         @close-modal="modalClose"
+        :booking="booking.id"
         :place="this.place"
         :row="this.row"
     />
@@ -42,7 +43,9 @@ export default {
         CustomRow,
     },
     props: {
+        booking: Object,
         createLink: String,
+        method: String,
     },
     methods: {
         modalShow(row, place) {
