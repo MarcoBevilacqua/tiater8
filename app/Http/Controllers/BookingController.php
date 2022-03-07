@@ -49,6 +49,22 @@ class BookingController extends Controller
          * TODO: how to structure the bookings collection?
          */
         $booking = Booking::findOrFail($id);
+        $bookingsCollection = Booking::select(['id', 'customer_id', 'place_number', 'row_letter'])->where('show_event_id', $booking->show_event_id)->get()
+        
+        ->groupBy('row_letter')
+        // ->map()
+        ->toArray();
+        
+
+        // ->map(function ($groupedBooking) {
+        //     return [
+        //         'id' => $groupedBooking[0]->id,
+        //         'customer_id' => $groupedBooking[0]->customer_id,
+        //         'place' => $groupedBooking[0]->place_number
+        //     ];
+        // });
+        
+
         return Inertia::render(
             'Bookings/Form',
             ['booked' => [
@@ -57,13 +73,16 @@ class BookingController extends Controller
                 'show' => $booking->showEvent->show->title,
 
             ],
-            'bookings' => Booking::where('show_event_id', $booking->show_event_id)->get()
-            ->map(function (Booking $booking) {
-                return [
-                    'id' => $booking->id,
-                    'show' => $booking->showEvent->show->title
-                ];
-            }),
+            'bookings' => $bookingsCollection
+            
+            // ->map(function (Booking $booking) {
+            //     return [
+            //         'id' => $booking->id,
+            //         'customer' => $booking->customer->full_name,
+            //         'show' => $booking->showEvent->show->title
+            //     ];
+            // })
+            ,
             '_method'  => 'put',
             ]
         );
@@ -118,8 +137,8 @@ class BookingController extends Controller
         }
 
         $booking->update([
-                'place' => $request->place,
-                'row' => $request->row
+                'place_number' => $request->place,
+                'row_letter' => $request->row
             ]);
 
         return Redirect::to('bookings');

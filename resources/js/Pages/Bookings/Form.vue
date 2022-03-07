@@ -23,7 +23,11 @@
         <template #main>
             <container>
                 <div class="container map-container">
-                    <Map :booking="booked" :method="_method" />
+                    <Map
+                        :booking="booked"
+                        :bookings="bookings"
+                        :method="_method"
+                    />
                 </div>
             </container>
         </template> </breeze-authenticated-layout

@@ -17,7 +17,9 @@ class Booking extends Model
         'customer_id',
         'show_event_id',
         'booking_code',
-        'number_of_places'
+        'number_of_places',
+        'place_number',
+        'row_letter'
         ];
 
     /**
