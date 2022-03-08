@@ -88,6 +88,7 @@
         </div>
     </div>
     <Modal
+        v-if="this.showModal"
         :showModal="showModal"
         @close-modal="modalClose"
         :booking="booking.id"

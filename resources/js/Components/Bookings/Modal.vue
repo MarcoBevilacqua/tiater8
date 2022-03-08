@@ -92,7 +92,6 @@ export default {
     },
     data() {
         return {
-            placeFromParent: null,
             form: this.$inertia
                 .form({
                     booking: this.booking,
@@ -108,7 +107,6 @@ export default {
     },
     methods: {
         setPlace(a) {
-            console.log(a);
             this.form.place = a;
         },
         update() {

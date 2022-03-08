@@ -1,16 +1,39 @@
 <template>
     <breeze-authenticated-layout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Prenotazioni
-            </h2>
-            <small>
-                <inertia-link
-                    :href="createLink"
-                    class="font-medium text-indigo-500"
-                    >Inserisci nuovo
-                </inertia-link></small
-            >
+            <div class="grid grid-cols-2">
+                <div>
+                    <h2
+                        class="font-semibold text-xl text-gray-800 leading-tight"
+                    >
+                        Prenotazioni
+                    </h2>
+                    <small>
+                        <inertia-link
+                            :href="createLink"
+                            class="font-medium text-indigo-500"
+                            >Inserisci nuovo
+                        </inertia-link></small
+                    >
+                </div>
+                <div class="flex justify-end">
+                    <div>
+                        <label class="block text-gray-700"
+                            >Seleziona spettacolo</label
+                        >
+                        <select
+                            name="show_id"
+                            id="show_id"
+                            v-model="show_id"
+                            class="w-72 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        >
+                            <option v-for="show in shows" :value="show.id">
+                                {{ show.title }}</option
+                            >
+                        </select>
+                    </div>
+                </div>
+            </div>
         </template>
         <template #main>
             <container>
@@ -22,12 +45,6 @@
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
                                 Spettacolo
-                            </th>
-                            <th
-                                scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                            >
-                                Spettatore
                             </th>
                             <th
                                 scope="col"
@@ -60,15 +77,6 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div
-                                        class="text-sm font-medium text-gray-900"
-                                    >
-                                        {{ booking.customer }}
-                                    </div>
-                                </div>
-                            </td>
                             <td
                                 class="px-6 py-4 text-clip truncate whitespace-nowrap"
                             >
@@ -87,11 +95,11 @@
                                     <div
                                         class="text-sm font-medium text-gray-900"
                                     >
-                                        {{ booking.places }}
+                                        {{ booking.total }}/50
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-6 py- 4 whitespace-nowrap">
+                            <!--<td class="px-6 py- 4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div
                                         class="text-sm font-medium text-gray-900"
@@ -101,6 +109,65 @@
                                             :href="booking.edit"
                                             >Modifica</inertia-link
                                         >
+                                    </div>
+                                </div>
+                            </td>-->
+                            <td class="px-6 py- 4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div
+                                        class="text-sm font-medium text-gray-900"
+                                    >
+                                        <div class="ml-3 relative">
+                                            <breeze-dropdown
+                                                align="right"
+                                                width="48"
+                                            >
+                                                <template #trigger>
+                                                    <span
+                                                        class="inline-flex rounded-md"
+                                                    >
+                                                        <span
+                                                            class="text-blue-700 inline-flex items-center font-semibold tracking-wide"
+                                                            >Azioni
+
+                                                            <svg
+                                                                class="ml-2 -mr-0.5 h-4 w-4"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                viewBox="0 0 20 20"
+                                                                fill="currentColor"
+                                                            >
+                                                                <path
+                                                                    fill-rule="evenodd"
+                                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                                    clip-rule="evenodd"
+                                                                />
+                                                            </svg>
+                                                        </span>
+                                                    </span>
+                                                </template>
+
+                                                <template #content>
+                                                    <breeze-dropdown-link
+                                                        :href="booking.edit"
+                                                        method="get"
+                                                        as="button"
+                                                    >
+                                                        Modifica Prenotazione
+                                                    </breeze-dropdown-link>
+                                                    <breeze-dropdown-link
+                                                        :href="
+                                                            route(
+                                                                'bookings.create'
+                                                            )
+                                                        "
+                                                        method="get"
+                                                        as="button"
+                                                    >
+                                                        Aggiungi prenotazione
+                                                    </breeze-dropdown-link>
+                                                </template>
+                                            </breeze-dropdown>
+                                        </div>
                                     </div>
                                 </div>
                             </td>
@@ -113,17 +180,43 @@
 </template>
 
 <script>
+import { Inertia } from "@inertiajs/inertia";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
 import Container from "@/Layouts/Container";
+import BreezeDropdown from "@/Components/Dropdown";
+import BreezeDropdownLink from "@/Components/DropdownLink";
+import TableSearch from "@/Shared/TableFilter";
+import throttle from "lodash/throttle";
 
 export default {
     components: {
+        BreezeDropdown,
+        BreezeDropdownLink,
         BreezeAuthenticatedLayout,
         Container,
+        TableSearch,
     },
+
     props: {
+        shows: Object,
         bookings: Object,
         createLink: String,
+    },
+    watch: {
+        show_id: {
+            handler: throttle(function () {
+                Inertia.get(
+                    "bookings",
+                    { show_id: this.show_id },
+                    { preserveState: true, preserveScroll: true }
+                );
+            }, 250),
+        },
+    },
+    data() {
+        return {
+            show_id: null,
+        };
     },
 };
 </script>

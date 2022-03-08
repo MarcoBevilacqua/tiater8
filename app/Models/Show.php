@@ -9,8 +9,6 @@ class Show extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
-
     protected $fillable = ['title', 'description', 'places', 'full_price', 'image', 'half_price', 'url'];
     
     /**

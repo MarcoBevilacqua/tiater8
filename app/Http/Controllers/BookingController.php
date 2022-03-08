@@ -8,9 +8,9 @@ use App\Models\Show;
 use Carbon\Carbon;
 use Faker\Factory;
 use Illuminate\View\View;
-use Validator;
 use Log;
 use Illuminate\Http\Request as Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
@@ -18,20 +18,32 @@ use Inertia\Inertia;
 
 class BookingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('Bookings', [
-            'bookings' => Booking::orderByDesc('id')
-            ->get()
-            // ->groupBy('show_event_id')
-            ->map(function (Booking $booking) {
+            'shows' => Show::get()
+            ->map(function (Show $show) {
                 return [
-                    'id' => $booking->id,
-                    'show' => $booking->showEvent->show->title,
-                    'customer' => $booking->customer->full_name,
-                    'date' => Carbon::createFromTimeString($booking->showEvent->show_date)->format('l d F Y - h:i'),
-                    'places' => $booking->number_of_places,
-                    'edit' => URL::route('bookings.edit', $booking)
+                    'id' => $show->id,
+                    'title' => $show->title,
+                    'description' => Str::limit($show->description, 120),
+                    'edit' => route('shows.edit', ['show' => $show->id])
+                ];
+            }),
+            'bookings' => DB::table('bookings')
+            ->join('show_events', 'bookings.show_event_id', '=', 'show_events.id')
+            ->join('shows', 'show_events.show_id', '=', 'shows.id')
+            ->selectRaw('count(bookings.id) as booking_nr, shows.title, show_events.show_date, show_events.id as event_id')
+            ->where('show_events.show_id', '=', $request->show_id)
+            ->groupBy('show_events.show_date', 'shows.title', 'show_events.id')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->event_id,
+                    'total' => $item->booking_nr,
+                    'show' => $item->title,
+                    'date' => Carbon::createFromTimeString($item->show_date)->format('l d F Y - H:i'),
+                    'edit' => URL::route('bookings.edit', $item->event_id)
                 ];
             }),
             'createLink' => URL::route('bookings.create')
