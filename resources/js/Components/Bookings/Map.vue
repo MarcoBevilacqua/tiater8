@@ -89,9 +89,10 @@
     </div>
     <Modal
         v-if="this.showModal"
-        :showModal="showModal"
+        @show-modal="showModal"
         @close-modal="modalClose"
-        :booking="booking.id"
+        :customerList="customers"
+        :customerId="this.customer?.id"
         :place="this.place"
         :row="this.row"
     />
@@ -109,15 +110,17 @@ export default {
         CustomRow,
     },
     props: {
-        booking: Object,
-        bookings: Array,
+        bookings: Object,
+        customers: Object,
+        showEventId: Number,
         createLink: String,
         method: String,
     },
     methods: {
-        modalShow(row, place) {
+        modalShow(row, place, customer) {
             this.place = place;
             this.row = row;
+            this.customer = this.customers[customer];
             this.showModal = true;
         },
         modalClose() {
@@ -127,8 +130,11 @@ export default {
         },
         getBookedPlacesForRow(row) {
             if (!this.bookings[row]) return [];
-            let p = this.bookings[row].map((boo) => {
-                return boo.place_number;
+            let p = this.bookings[row].map((booking) => {
+                return {
+                    place_number: booking.place_number,
+                    customer_id: booking.customer_id,
+                };
             });
             return p;
         },
@@ -136,6 +142,7 @@ export default {
     data() {
         return {
             showModal: false,
+            customer: null,
             place: null,
             row: null,
         };

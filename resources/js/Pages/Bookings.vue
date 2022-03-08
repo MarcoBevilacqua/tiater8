@@ -44,12 +44,6 @@
                                 scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Spettacolo
-                            </th>
-                            <th
-                                scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                            >
                                 Data
                             </th>
                             <th
@@ -68,15 +62,6 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         <tr v-for="booking in bookings" :key="booking.id">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div
-                                        class="text-sm font-medium text-gray-900"
-                                    >
-                                        {{ booking.show }}
-                                    </div>
-                                </div>
-                            </td>
                             <td
                                 class="px-6 py-4 text-clip truncate whitespace-nowrap"
                             >

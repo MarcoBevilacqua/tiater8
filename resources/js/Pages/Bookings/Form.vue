@@ -6,17 +6,9 @@
                     <h2
                         class="font-semibold text-xl text-gray-800 leading-tight"
                     >
-                        Posto per: {{ booked.customer }} - {{ booked.show }}
+                        Prenotazioni "{{ show.title }}"
                     </h2>
-                </div>
-                <div class="text-right">
-                    <label class="block text-gray-700"></label>
-                    <input
-                        class="border-2 border-gray-300 bg-white h-10 px-5 rounded-md text-sm focus:outline-none"
-                        type="search"
-                        placeholder="Cerca..."
-                        v-model="search"
-                    />
+                    <small>{{ show.date }}</small>
                 </div>
             </div>
         </template>
@@ -24,8 +16,9 @@
             <container>
                 <div class="container map-container">
                     <Map
-                        :booking="booked"
                         :bookings="bookings"
+                        :customers="customers"
+                        :showEventId="show.id"
                         :method="_method"
                     />
                 </div>
@@ -52,7 +45,8 @@ export default {
     },
     props: {
         bookings: Object,
-        booked: Object,
+        customers: Object,
+        show: Object,
         _method: String,
     },
 };

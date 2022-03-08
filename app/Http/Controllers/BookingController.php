@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Models\Customer;
 use App\Models\Show;
+use App\Models\ShowEvent;
 use Carbon\Carbon;
 use Faker\Factory;
 use Illuminate\View\View;
@@ -31,7 +32,7 @@ class BookingController extends Controller
                 ];
             }),
             'bookings' => DB::table('bookings')
-            ->join('show_events', 'bookings.show_event_id', '=', 'show_events.id')
+            ->rightJoin('show_events', 'bookings.show_event_id', '=', 'show_events.id')
             ->join('shows', 'show_events.show_id', '=', 'shows.id')
             ->selectRaw('count(bookings.id) as booking_nr, shows.title, show_events.show_date, show_events.id as event_id')
             ->where('show_events.show_id', '=', $request->show_id)
@@ -52,49 +53,46 @@ class BookingController extends Controller
 
     /**
      * show the places map
-     * @param int $id
+     * @param int $id the show event id
      * @return $this
      */
     public function edit($id)
     {
-        /**
-         * TODO: how to structure the bookings collection?
-         */
-        $booking = Booking::findOrFail($id);
-        $bookingsCollection = Booking::select(['id', 'customer_id', 'place_number', 'row_letter'])->where('show_event_id', $booking->show_event_id)->get()
+        $showEvent = ShowEvent::findOrFail($id);
+        $bookingsCollection = Booking::select(['id', 'customer_id', 'place_number', 'row_letter'])
+        ->where('show_event_id', $id)->get()
         
         ->groupBy('row_letter')
-        // ->map()
-        ->toArray();
         
-
+    
         // ->map(function ($groupedBooking) {
         //     return [
-        //         'id' => $groupedBooking[0]->id,
-        //         'customer_id' => $groupedBooking[0]->customer_id,
-        //         'place' => $groupedBooking[0]->place_number
+        //         'id' => $groupedBooking->id,
+        //         'customer_id' => $groupedBooking->customer_id,
+        //         'place' => $groupedBooking->place_number
         //     ];
-        // });
+        // })
+
+        ->toArray();
         
 
         return Inertia::render(
             'Bookings/Form',
-            ['booked' => [
-                'id' => $booking->id,
-                'customer' => $booking->customer->full_name,
-                'show' => $booking->showEvent->show->title,
-
+            [
+            'bookings' => $bookingsCollection,
+            'show' => [
+                'id' => $id,
+                'title' => $showEvent->show->title,
+                'date' => Carbon::createFromTimeString($showEvent->show_date)->format('l d F Y - H:i')
             ],
-            'bookings' => $bookingsCollection
-            
-            // ->map(function (Booking $booking) {
-            //     return [
-            //         'id' => $booking->id,
-            //         'customer' => $booking->customer->full_name,
-            //         'show' => $booking->showEvent->show->title
-            //     ];
-            // })
-            ,
+            'customers' => Customer::all()
+            ->keyBy('id')
+            ->map(function (Customer $customer) {
+                return [
+                    'id' => $customer->id,
+                    'name' => $customer->full_name
+                ];
+            }),
             '_method'  => 'put',
             ]
         );
@@ -138,11 +136,15 @@ class BookingController extends Controller
         $request->validate([
             'place' => 'required',
             'row' => 'required',
-            'booking' => 'required|exists:bookings,id'
+            'customer_id' => 'required|exists:customers,id',
+            'show_event_id' => 'required|exists:show_events,id',
         ]);
             
         try {
-            $booking = Booking::findOrFail($request->booking);
+            $booking = Booking::where([
+                ['customer_id', '=', $request->customer_id],
+                ['show_event_id', '=', $request->show_event_id]])
+            ->firstOrFail();
         } catch (\Exception $exception) {
             Log::error("Cannot update booking: {$exception->getMessage()}");
             return Redirect::back()->with('error', "Errori nella richiesta");
@@ -153,7 +155,7 @@ class BookingController extends Controller
                 'row_letter' => $request->row
             ]);
 
-        return Redirect::to('bookings');
+        return Redirect::to('bookings/' . $request->show_event_id .'/edit');
     }
 
     /**
@@ -168,13 +170,13 @@ class BookingController extends Controller
             'show_event_id' => 'required',
         ]);
 
-        $booking = null;
-
         try {
-            $booking = Booking::create([
+            Booking::create([
                 'customer_id' => $request->customer_id,
                 'show_event_id' => $request->show_event_id,
                 'booking_code' => strtoupper(Str::random(8)),
+                'place_number' => $request->place,
+                'row_letter' => $request->row,
                 'number_of_places' => 1
             ]);
         } catch (\Exception $ex) {
@@ -182,7 +184,7 @@ class BookingController extends Controller
             return Redirect::to('bookings/create')->with('error', 'Invalid data');
         }
 
-        return Redirect::to('bookings/' . $booking->id .'/edit');
+        return Redirect::to('bookings/' . $request->show_event_id .'/edit');
     }
 
     /**
