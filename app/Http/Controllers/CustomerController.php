@@ -116,9 +116,7 @@ class CustomerController extends Controller
             'birth' => 'required',
             'resident' => 'required',
         ]);
-
-        Log::debug("Valid data: " . implode(",", $validated));
-
+        
         Log::info("updating customer with id: {$request->input('id')}");
         try {
             Customer::updateOrCreate(
