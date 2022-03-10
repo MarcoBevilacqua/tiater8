@@ -1,3 +1,8 @@
+v0.1.1
+
+-   flash messages refactor
+-   added delete action on show form
+
 v0.1.0
 
 -   subscription soft delete
