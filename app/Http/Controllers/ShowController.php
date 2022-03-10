@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Show;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use Intervention\Image\Facades\Image;
 use App\Services\ShowService;
 
 class ShowController extends Controller
@@ -22,7 +20,7 @@ class ShowController extends Controller
     public function index()
     {
         return Inertia::render('Shows', [
-            'shows' => Show::orderByDesc('created_at')
+            'shows' => Show::orderByDesc('id')
             ->get()
             ->map(function (Show $show) {
                 return [
@@ -66,9 +64,10 @@ class ShowController extends Controller
             ShowService::saveImage($request->file('image'));
         }
 
-        Show::create(
-            [
-            'title'          => $request->title,
+        try {
+            Show::create(
+                [
+            'title'         => $request->title,
             'description'   => $request->description,
             'url'           => $request->url,
             'full_price'    => $request->full_price,
@@ -78,9 +77,13 @@ class ShowController extends Controller
                 asset('/img/' . $request->file('image')->getClientOriginalName()) :
                 ""
             ]
-        );
+            );
+        } catch (\Exception $exception) {
+            Log::error("Cannot create show: {$exception->getMessage()}");
+            Redirect::back()->with("error", "Errore durante l'elaborazione");
+        }
         
-        return Redirect::to('shows')->with('success', 'spettacolo creato correttamente');
+        return Redirect::route('shows.index')->with("success", "Operazione completata con succcesso");
     }
 
 
@@ -107,17 +110,14 @@ class ShowController extends Controller
         //validate
         $request->validate(
             ['title' => 'required',
-            'description' => 'required',
-            'url' => 'required|url']
+            'description' => 'required']
         );
 
-    
         try {
             $show = Show::findOrFail($request->id);
         } catch (\Exception $ex) {
             Log::error("Cannot find show with id {$request->id}");
-            return Redirect::route('shows.edit', ['id' => $request->id])
-        ->with('errors', "Show not found");
+            return Redirect::back()->with("error", "Impossibile aggiornare i dati");
         }
 
         //check if input has file
@@ -126,8 +126,9 @@ class ShowController extends Controller
             ShowService::saveImage($request->file('image'));
         }
 
-        $show->update(
-            ['title' => $request->title,
+        try {
+            $show->update(
+                ['title' => $request->title,
             'description' => $request->description,
             'url' => $request->url,
             'full_price'    => $request->full_price,
@@ -136,19 +137,13 @@ class ShowController extends Controller
                 asset('/img/' . $request->file('image')->getClientOriginalName()) :
                 $show->image
             ]
-        );
-
-
-        try {
-            $show->save();
+            );
         } catch (\Exception $ex) {
-            \Log::alert("Cannot Update Show: {$ex->getMessage()}");
-            return redirect('shows.index', 302, ['message' => "Impossibile aggiornare il record"]);
+            Log::error("Cannot Update Show: {$ex->getMessage()}");
+            return Redirect::route('shows.index')->with("error", "Impossibile aggiornare il record");
         }
-
-        //redirect to spettacoli
-        session('message', 'spettacolo modificato con successo');
-        return redirect('shows');
+        
+        return Redirect::route('shows.index')->with("success", "Dati aggiornati correttamente");
     }
 
     /**
@@ -162,10 +157,10 @@ class ShowController extends Controller
         try {
             Show::findOrFail($id)->delete();
         } catch (\Exception $exception) {
-            Log::error("Cannot delete show with id {$id}");
-            return Redirect::to('shows.index')->with('error', 'Impossibile cancellare lo spettacolo');
+            Log::error("Cannot delete show with id {$id}: {$exception->getMessage()}");
+            return Redirect::route('shows.index')->with("error", "Impossibile cancellare lo spettacolo");
         }
 
-        return redirect('show')->with('success', 'spettacolo eliminato');
+        return Redirect::route('shows.index')->with('success', "Dati eliminati correttamente");
     }
 }
