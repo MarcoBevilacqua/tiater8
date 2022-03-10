@@ -115,6 +115,8 @@ class CustomerController extends Controller
             'phone' => 'required',
             'birth' => 'required',
             'resident' => 'required',
+            'fiscal_code' => 'required',
+            'postal_code' => 'required',
         ]);
         
         Log::info("updating customer with id: {$request->input('id')}");
