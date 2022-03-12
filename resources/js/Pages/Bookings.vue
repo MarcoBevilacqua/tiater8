@@ -84,25 +84,12 @@
                                     </div>
                                 </div>
                             </td>
-                            <!--<td class="px-6 py- 4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div
-                                        class="text-sm font-medium text-gray-900"
-                                    >
-                                        <inertia-link
-                                            class="text-blue-700 inline-flex items-center font-semibold tracking-wide"
-                                            :href="booking.edit"
-                                            >Modifica</inertia-link
-                                        >
-                                    </div>
-                                </div>
-                            </td>-->
                             <td class="px-6 py- 4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div
                                         class="text-sm font-medium text-gray-900"
                                     >
-                                        <div class="ml-3 relative">
+                                        <div class="relative">
                                             <breeze-dropdown
                                                 align="right"
                                                 width="48"

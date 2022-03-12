@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Show;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use Intervention\Image\Facades\Image;
 use App\Services\ShowService;
 
 class ShowController extends Controller
@@ -29,7 +27,9 @@ class ShowController extends Controller
                     'id' => $show->id,
                     'title' => $show->title,
                     'description' => Str::limit($show->description, 120),
-                    'edit' => route('shows.edit', ['show' => $show->id])
+                    'dates' => $show->events()->count(),
+                    'edit' => route('shows.edit', ['show' => $show->id]),
+                    'add_date' => route('show-events.index', ['show' => $show->id])
                 ];
             }),
             'createLink' => URL::route('shows.create')
@@ -80,7 +80,7 @@ class ShowController extends Controller
             ]
         );
         
-        return Redirect::to('shows')->with('success', 'spettacolo creato correttamente');
+        return Redirect::to('shows')->with('success', 'Spettacolo creato correttamente');
     }
 
 
@@ -116,8 +116,8 @@ class ShowController extends Controller
             $show = Show::findOrFail($request->id);
         } catch (\Exception $ex) {
             Log::error("Cannot find show with id {$request->id}");
-            return Redirect::route('shows.edit', ['id' => $request->id])
-        ->with('errors', "Show not found");
+            return Redirect::back()
+        ->with('errors', "Impossibile recuperare i dati");
         }
 
         //check if input has file

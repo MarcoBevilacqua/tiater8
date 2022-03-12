@@ -1,7 +1,7 @@
 <template>
     <breeze-authenticated-layout>
         <template #header>
-            <h1>Modifica "{{ show.name }}"</h1>
+            <h1>Modifica "{{ show.title }}"</h1>
         </template>
         <template #main>
             <container>
@@ -104,7 +104,7 @@
                                                         "
                                                         name="description"
                                                         id="description"
-                                                        rows="12"
+                                                        rows="10"
                                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                     >
                                                     </textarea>
