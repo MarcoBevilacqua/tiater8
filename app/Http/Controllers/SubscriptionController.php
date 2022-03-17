@@ -129,14 +129,17 @@ class SubscriptionController extends Controller
             'year_to' => 'required|numeric'
         ]);
 
+        $subscription = Subscription::where('id', '=', $request->id)->firstOrFail();
         
-        Log::info("Trying to set status = {$request->input('status')} on subsription");
         try {
-            Subscription::updateOrCreate(
-                ['id' => $request->id],
+            $subscription->update(
                 [
             'status' => $request->input('status'),
             'subscription_email' => $request->input('subscription_email'),
+            'activity' => $request->input('activity'),
+            'contact_type' => $request->input('contact_type'),
+            'year_from' => $request->input('year_from'),
+            'year_to' => $request->input('year_to')
         ]
             );
         } catch (\Exception $exception) {
