@@ -52,7 +52,7 @@ class SubscriptionService
 
     public static function getFancyActivityLabel(int $activity = null)
     {
-        if (!in_array($activity, self::$activityLabels)) {
+        if (!in_array($activity, array_keys(self::$activityLabels))) {
             return "";
         }
         return self::$activityLabels[$activity];
@@ -60,7 +60,7 @@ class SubscriptionService
 
     public static function getFancyContactLabel(int $contact = null)
     {
-        if (!in_array($contact, self::$contactLabels)) {
+        if (!in_array($contact, array_keys(self::$contactLabels))) {
             return "";
         }
         return self::$contactLabels[$contact];

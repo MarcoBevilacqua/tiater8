@@ -13,17 +13,6 @@
     <div class="row">
         <span class="leading-5"> telefono {{ $customer->phone}} email {{ $customer->email}}</span>
     </div>    
-    @if ($contact_type !== "")
-    <div class="my-8 font-bold">
-        <span class="leading-5">desidera essere contattato {{$contact_type}}</span>
-    </div>    
-    @endif
-        
-    @if ($activity !== "")
-    <div class="row font-bold">
-        <span>per comunicazioni riguardanti {{ $activity }}</span>
-    </div> 
-    @endif
       
     <div class="font-bold my-6">
         <h3>chiede</h3>
@@ -31,6 +20,16 @@
     <div class=my-6>
         <p class="leading-4">di aderire all’Associazione Culturale “piccola compagnia impertinente” in qualità di socio/a ordinario/a per l’anno sociale {{ $year }}.</p>
     </div>
+    @if ($contact_type == "")
+    <div class="my-8 font-bold">
+        <span class="leading-5">Di non essere contattato per le attività dell'associazione</span>
+    </div>    
+    @else
+    <div class="row font-bold">
+        <span class="leading-5">Di essere contattato {{$contact_type}} 
+            per comunicazioni riguardanti {{ lcfirst($activity) }}</span>
+    </div> 
+    @endif
     <div class="my-4">
         <p>Conferma di avere preso visione dello Statuto e di condividere le finalità dell’Associazione.</p>
     </div>
