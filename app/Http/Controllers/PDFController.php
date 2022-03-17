@@ -14,6 +14,7 @@ class PDFController extends Controller
         $subscription = Subscription::findOrFail($subscriptionId);
         $subscriptionContactType = ($subscription->contact_type == Subscription::NO_CONTACT) ?
         "" : SubscriptionService::getFancyContactLabel($subscription->contact_type);
+        $subscriptionActity = $subscriptionContactType == "" ? "" : SubscriptionService::getFancyActivityLabel($subscription->activity);
         $pdf = PDF::loadView('subscriptions.module', [
             'subscriptionId' => $subscription->id,
             'customer' => $subscription->customer,
@@ -21,7 +22,7 @@ class PDFController extends Controller
             'now_date' => Carbon::now()->format('d/m/y'),
             'year' => $subscription->year_from . "/" . $subscription->year_to,
             'contact_type' => $subscriptionContactType,
-            'activity' => SubscriptionService::getFancyActivityLabel($subscription->activity)
+            'activity' => $subscriptionActity
             ])
             ->setOptions(['isHtml5ParserEnabled' => true, 'defaultFont' => 'Nunito']);
         return $pdf->stream();
