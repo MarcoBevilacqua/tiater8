@@ -14,7 +14,8 @@ class PDFController extends Controller
         $subscription = Subscription::findOrFail($subscriptionId);
         $subscriptionContactType = ($subscription->contact_type == Subscription::NO_CONTACT) ?
         "" : SubscriptionService::getFancyContactLabel($subscription->contact_type);
-        $subscriptionActity = $subscriptionContactType == "" ? "" : SubscriptionService::getFancyActivityLabel($subscription->activity);
+        $subscriptionActity = ($subscription->activity) ? "" :
+        SubscriptionService::getFancyActivityLabel($subscription->activity);
         $pdf = PDF::loadView('subscriptions.module', [
             'subscriptionId' => $subscription->id,
             'customer' => $subscription->customer,
