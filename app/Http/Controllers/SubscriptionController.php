@@ -90,9 +90,10 @@ class SubscriptionController extends Controller
             Subscription::create($validated + ['subscription_email' => Customer::findOrFail($validated['customer_id'])->email]);
         } catch (\Exception $exception) {
             Log::error("Cannot create subscription: {$exception->getMessage()}");
+            Redirect::back()->with("error", "Errore durante l'elaborazione");
         }
 
-        return Redirect::route('subscriptions.index');
+        return Redirect::route('subscriptions.index')->with("success", "Operazione completata con successo");
     }
 
     /**
@@ -128,17 +129,25 @@ class SubscriptionController extends Controller
             'year_to' => 'required|numeric'
         ]);
 
+        $subscription = Subscription::where('id', '=', $request->id)->firstOrFail();
         
-        Log::info("Trying to set status = {$request->input('status')} on subsription");
-        Subscription::updateOrCreate(
-            ['id' => $request->id],
-            [
+        try {
+            $subscription->update(
+                [
             'status' => $request->input('status'),
             'subscription_email' => $request->input('subscription_email'),
+            'activity' => $request->input('activity'),
+            'contact_type' => $request->input('contact_type'),
+            'year_from' => $request->input('year_from'),
+            'year_to' => $request->input('year_to')
         ]
-        );
+            );
+        } catch (\Exception $exception) {
+            Log::error("Cannot update subscription: {$exception->getMessage()}");
+            Redirect::back()->with("error", "Impossibile aggiornare i dati");
+        }
 
-        return Redirect::route('subscriptions.index');
+        return Redirect::route('subscriptions.index')->with("success", "Dati aggiornati correttamente");
     }
 
     public function destroy(Subscription $subscription)
@@ -146,12 +155,12 @@ class SubscriptionController extends Controller
         try {
             Subscription::findOrFail($subscription->id)->delete();
         } catch (\Exception $exception) {
-            Log::error("Cannot find subscription {$subscription->id}");
-            return Redirect::to('subscriptions')->with('error', 'Cannot delete subscription');
+            Log::error("Cannot find subscription with ID {$subscription->id}: {$exception->getMessage()}");
+            return Redirect::to('subscriptions')->with('error', 'Impossibile cancellare la sottoscrizione');
         }
 
         Log::info("Subscription successfully deleted");
-        return Redirect::to('subscriptions')->with('success', 'Subscription successfully deleted');
+        return Redirect::to('subscriptions')->with('success', 'Cancellazione avvenuta correttamente');
     }
 
     /**

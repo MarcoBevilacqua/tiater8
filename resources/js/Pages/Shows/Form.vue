@@ -160,21 +160,34 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div
-                                        class="px-4 py-3 bg-gray-50 text-right sm:px-6"
-                                    >
-                                        <a
-                                            :href="route('shows.index')"
-                                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-4"
+                                    <div class="grid grid-cols-2">
+                                        <div
+                                            class="grid-col-span-1 px-4 py-3 bg-gray-50 text-left sm:px-6"
                                         >
-                                            Torna alla lista
-                                        </a>
-                                        <button
-                                            type="submit"
-                                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            <button
+                                                @click="delete"
+                                                type="button"
+                                                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                            >
+                                                Cancella
+                                            </button>
+                                        </div>
+                                        <div
+                                            class="grid-col-span-1px-4 py-3 bg-gray-50 text-right sm:px-6"
                                         >
-                                            Salva
-                                        </button>
+                                            <a
+                                                :href="route('shows.index')"
+                                                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-4"
+                                            >
+                                                Torna alla lista
+                                            </a>
+                                            <button
+                                                type="submit"
+                                                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            >
+                                                Salva
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -224,6 +237,9 @@ export default {
             this.form.post(this.route("shows.update", this.show.id), {
                 onSuccess: () => this.form.reset(),
             });
+        },
+        delete() {
+            this.form.delete(this.route("shows.destroy", this.show));
         },
     },
 };

@@ -54,6 +54,7 @@ class CustomerController extends Controller
             'city' => 'required',
             'province' => 'required',
             'postal_code' => 'required',
+            'fiscal_code' => 'required',
             'phone' => 'required',
             'resident' => 'required',
             'birth' => 'required'
@@ -63,10 +64,10 @@ class CustomerController extends Controller
             Customer::create($validated);
         } catch (\Exception $exception) {
             Log::error("Cannot create customer: {$exception->getMessage()}");
-            return Redirect::route('customers.create');
+            return Redirect::back()->with("error", "Errore durante l'elaborazione");
         }
 
-        return Redirect::route('customers.index');
+        return Redirect::to('customers.index')->with("success", "Operazione completata con succcesso");
     }
 
     /**
@@ -81,7 +82,7 @@ class CustomerController extends Controller
             Log::info("Customer: {$customer}");
         } catch (\Exception $ex) {
             Log::error("Cannot find customer with Id: {$id}");
-            return false;
+            return Redirect::back()->with("error", "Errore durante l'elaborazione: {$ex->getMessage()}");
         }
 
         return Inertia::render('Customers/Form', [
@@ -114,10 +115,10 @@ class CustomerController extends Controller
             'phone' => 'required',
             'birth' => 'required',
             'resident' => 'required',
+            'fiscal_code' => 'required',
+            'postal_code' => 'required',
         ]);
-
-        Log::debug("Valid data: " . implode(",", $validated));
-
+        
         Log::info("updating customer with id: {$request->input('id')}");
         try {
             Customer::updateOrCreate(
@@ -126,8 +127,22 @@ class CustomerController extends Controller
             );
         } catch (\Exception $exception) {
             Log::error("Cannot update customer: {$exception->getMessage()}");
+            Redirect::back()->with("error", "Impossibile aggiornare i dati");
         }
 
-        return Redirect::route('customers.index');
+        return Redirect::route('customers.index')->with('success', "Dati aggiornati correttamente");
+    }
+
+    public function destroy(Customer $customer)
+    {
+        try {
+            Customer::findOrFail($customer->id)->delete();
+        } catch (\Exception $exception) {
+            Log::error("Cannot find customer with ID {$customer->id}: {$exception->getMessage()}");
+            return Redirect::to('customers')->with('error', 'Impossibile cancellare la sottoscrizione');
+        }
+
+        Log::info("Customer successfully deleted");
+        return Redirect::route('customers.index')->with("success", "Dati eliminati correttamente");
     }
 }
