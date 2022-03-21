@@ -49,6 +49,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //the subscription module PDF preview
     Route::get('/subscriptions/module/{subscriptionId}', [PDFController::class, 'subscriptionModule'])->name('pdf.subscriptions.module');
 
+    //Bookings detail
+    Route::get('/bookings/show-event/{show_event_id}', [BookingController::class, 'detail'])->name('bookings.detail');
+
     Route::resource('/subscriptions', SubscriptionController::class);
     
     Route::resource('/customers', CustomerController::class);

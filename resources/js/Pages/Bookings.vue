@@ -37,7 +37,12 @@
         </template>
         <template #main>
             <container>
-                <table class="min-w-full divide-y divide-gray-200">
+                <div v-if="bookings.length == 0">
+                    <div class="text-center mx-auto p-4 text-lg">
+                        <p>Seleziona uno spettacolo dal menu a tendina</p>
+                    </div>
+                </div>
+                <table v-else class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
                             <th
@@ -54,7 +59,7 @@
                             </th>
                             <th
                                 scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
                                 Azioni
                             </th>
@@ -85,61 +90,17 @@
                                 </div>
                             </td>
                             <td class="px-6 py- 4 whitespace-nowrap">
-                                <div class="flex items-center">
+                                <div class="text-center">
                                     <div
                                         class="text-sm font-medium text-gray-900"
                                     >
-                                        <div class="relative">
-                                            <breeze-dropdown
-                                                align="right"
-                                                width="48"
-                                            >
-                                                <template #trigger>
-                                                    <span
-                                                        class="inline-flex rounded-md"
-                                                    >
-                                                        <span
-                                                            class="text-blue-700 inline-flex items-center font-semibold tracking-wide"
-                                                            >Azioni
-
-                                                            <svg
-                                                                class="ml-2 -mr-0.5 h-4 w-4"
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                viewBox="0 0 20 20"
-                                                                fill="currentColor"
-                                                            >
-                                                                <path
-                                                                    fill-rule="evenodd"
-                                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                                    clip-rule="evenodd"
-                                                                />
-                                                            </svg>
-                                                        </span>
-                                                    </span>
-                                                </template>
-
-                                                <template #content>
-                                                    <breeze-dropdown-link
-                                                        :href="booking.edit"
-                                                        method="get"
-                                                        as="button"
-                                                    >
-                                                        Modifica Prenotazione
-                                                    </breeze-dropdown-link>
-                                                    <breeze-dropdown-link
-                                                        :href="
-                                                            route(
-                                                                'bookings.create'
-                                                            )
-                                                        "
-                                                        method="get"
-                                                        as="button"
-                                                    >
-                                                        Aggiungi prenotazione
-                                                    </breeze-dropdown-link>
-                                                </template>
-                                            </breeze-dropdown>
-                                        </div>
+                                        <inertia-link
+                                            class="text-blue-700 inline-flex items-center font-semibold tracking-wide"
+                                            :href="booking.detail"
+                                            method="get"
+                                        >
+                                            Tutte le prenotazioni
+                                        </inertia-link>
                                     </div>
                                 </div>
                             </td>

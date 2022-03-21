@@ -44,6 +44,7 @@ export default {
         Map,
     },
     props: {
+        booking: Object,
         bookings: Object,
         customers: Object,
         show: Object,

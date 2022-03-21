@@ -94,18 +94,6 @@
                                                 >numero posti:</label
                                             >
                                         </select>
-                                        <select
-                                            v-model="form.show_event_id"
-                                            required
-                                            name="show_event_id"
-                                            id="show_event_id"
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        >
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                        </select>
                                     </div>
                                 </div>
                             </div>

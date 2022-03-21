@@ -9,9 +9,9 @@ use App\Models\ShowEvent;
 use Carbon\Carbon;
 use Faker\Factory;
 use Illuminate\View\View;
-use Log;
 use Illuminate\Http\Request as Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
@@ -19,6 +19,10 @@ use Inertia\Inertia;
 
 class BookingController extends Controller
 {
+    /**
+     * index showing bookings total grouped by show events
+     * @return Inertia
+     */
     public function index(Request $request)
     {
         return Inertia::render('Bookings', [
@@ -44,7 +48,30 @@ class BookingController extends Controller
                     'total' => $item->booking_nr,
                     'show' => $item->title,
                     'date' => Carbon::createFromTimeString($item->show_date)->format('l d F Y - H:i'),
-                    'edit' => URL::route('bookings.edit', $item->event_id)
+                    'detail' => URL::route('bookings.detail', ['show_event_id' => $item->event_id])
+                ];
+            }),
+            'createLink' => URL::route('bookings.create')
+        ]);
+    }
+
+    /**
+     * showing booking detail
+     * @param int $show_event_id
+     * @return Inertia
+     */
+    public function detail($show_event_id)
+    {
+        Log::info("Returning booking details for event with id {$show_event_id}...");
+        return Inertia::render('Bookings/Detail', [
+            'bookings' => Booking::where('show_event_id', '=', $show_event_id)
+            ->get()
+            ->map(function (Booking $booking) {
+                return [
+                'id' => $booking->event_id,
+                'customer' => $booking->customer->full_name,
+                'code' => $booking->full_place,
+                'edit' => URL::route('bookings.edit', $booking->show_event_id)
                 ];
             }),
             'createLink' => URL::route('bookings.create')
@@ -80,6 +107,9 @@ class BookingController extends Controller
             'Bookings/Form',
             [
             'bookings' => $bookingsCollection,
+            'booking' => Booking::where('id', '=', $id)->with(['customer' => function ($query) {
+                return $query;
+            }])->get(),
             'show' => [
                 'id' => $id,
                 'title' => $showEvent->show->title,

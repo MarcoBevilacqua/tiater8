@@ -22,6 +22,11 @@ class Booking extends Model
         'row_letter'
         ];
 
+    public function getFullPlaceAttribute()
+    {
+        return "{$this->row_letter}{$this->place_number}";
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */

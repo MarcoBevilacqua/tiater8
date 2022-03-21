@@ -21,13 +21,7 @@
                                 scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
-                                Data
-                            </th>
-                            <th
-                                scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                            >
-                                Orario
+                                Data e ora
                             </th>
                             <th
                                 scope="col"
@@ -46,18 +40,7 @@
                                     <div
                                         class="text-sm font-medium text-gray-900"
                                     >
-                                        {{ event.date }}
-                                    </div>
-                                </div>
-                            </td>
-                            <td
-                                class="px-6 py-4 text-clip truncate whitespace-nowrap"
-                            >
-                                <div class="flex items-center">
-                                    <div
-                                        class="text-sm font-medium text-gray-900"
-                                    >
-                                        {{ event.time }}
+                                        {{ event.date }} {{ event.time }}
                                     </div>
                                 </div>
                             </td>
