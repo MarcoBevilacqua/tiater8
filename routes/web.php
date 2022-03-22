@@ -46,6 +46,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/subscriptions/init', [PublicSubscriptionController::class, 'store']);
     //the subscription module PDF preview
     Route::get('/subscriptions/module/{subscriptionId}', [PDFController::class, 'subscriptionModule'])->name('pdf.subscriptions.module');
+    // changing status
+    Route::patch('/subscriptions/{subscription}/status/{status}', [SubscriptionController::class, 'updateStatus'])->name('subscriptions.update-status');
 
     Route::resource('/subscriptions', SubscriptionController::class);
     

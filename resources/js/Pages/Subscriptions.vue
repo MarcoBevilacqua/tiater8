@@ -53,9 +53,7 @@
                             <th
                                 scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                            >
-                                Azioni
-                            </th>
+                            ></th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -91,14 +89,69 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="text-sm font-medium">
-                                        <inertia-link
-                                            class="text-blue-700 inline-flex items-center font-semibold tracking-wide"
-                                            :href="subscription.edit"
-                                            >Modifica</inertia-link
-                                        >
-                                    </div>
+                                <!-- Settings Dropdown -->
+                                <div class="relative">
+                                    <breeze-dropdown align="right" width="48">
+                                        <template #trigger>
+                                            <span
+                                                class="inline-flex rounded-md"
+                                            >
+                                                <button
+                                                    type="button"
+                                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
+                                                >
+                                                    Azioni
+
+                                                    <svg
+                                                        class="ml-2 -mr-0.5 h-4 w-4"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 20 20"
+                                                        fill="currentColor"
+                                                    >
+                                                        <path
+                                                            fill-rule="evenodd"
+                                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                            clip-rule="evenodd"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                            </span>
+                                        </template>
+                                        <template #content>
+                                            <breeze-dropdown-link
+                                                :href="
+                                                    route(
+                                                        'subscriptions.edit',
+                                                        {
+                                                            subscription: subscription,
+                                                        }
+                                                    )
+                                                "
+                                                method="get"
+                                                as="button"
+                                            >
+                                                Modifica
+                                            </breeze-dropdown-link>
+                                            <breeze-dropdown-link
+                                                v-if="
+                                                    subscription.statusID !== 3
+                                                "
+                                                :href="
+                                                    route(
+                                                        'subscriptions.update-status',
+                                                        {
+                                                            subscription: subscription,
+                                                            status: 3,
+                                                        }
+                                                    )
+                                                "
+                                                method="patch"
+                                                as="button"
+                                            >
+                                                Attiva Tessera
+                                            </breeze-dropdown-link>
+                                        </template>
+                                    </breeze-dropdown>
                                 </div>
                             </td>
                         </tr>
@@ -113,6 +166,8 @@
 <script>
 import { Inertia } from "@inertiajs/inertia";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
+import BreezeDropdown from "@/Components/Dropdown";
+import BreezeDropdownLink from "@/Components/DropdownLink";
 import Container from "@/Layouts/Container";
 import Pagination from "@/Shared/Pagination";
 import throttle from "lodash/throttle";
@@ -121,6 +176,8 @@ export default {
     components: {
         Pagination,
         BreezeAuthenticatedLayout,
+        BreezeDropdown,
+        BreezeDropdownLink,
         Container,
     },
     props: {

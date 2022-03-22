@@ -49,6 +49,7 @@ class SubscriptionController extends Controller
                     'id' => $subscription->id,
                     'customer' => $subscription->subscription_email,
                     'created' => $subscription->created_at->format('d/m/Y'),
+                    'statusID' => $subscription->status,
                     'status' => SubscriptionService::getSubFancyStatusLabel($subscription->status),
                     'edit' => URL::route('subscriptions.edit', $subscription)
                 ];
@@ -119,6 +120,11 @@ class SubscriptionController extends Controller
         ]);
     }
 
+    /**
+     * update entity
+     * @param Request $request
+     * @return Redirect
+     */
     public function update(Request $request)
     {
         $this->validate($request, [
@@ -148,6 +154,25 @@ class SubscriptionController extends Controller
         }
 
         return Redirect::route('subscriptions.index')->with("success", "Dati aggiornati correttamente");
+    }
+
+    /**
+     * update status (uses PATCH)
+     * @param int $status
+     */
+    public function updateStatus(Subscription $subscription, int $status)
+    {
+        $oldStatus = $subscription->status;
+        if ($oldStatus == $status || !in_array($status, [Subscription::ACTIVE, Subscription::EXPIRED, Subscription::INACTIVE])) {
+            Log::info("Cannot change status from {$oldStatus} to {$status}");
+            return Redirect::to('subscriptions')->with('error', 'Impossibile modificare lo status della sottoscrizione');
+        }
+
+        $subscription->update([
+            'status' => $status
+        ]);
+
+        return Redirect::to('subscriptions')->with('success', 'Sottoscrizione aggiornata correttamente');
     }
 
     public function destroy(Subscription $subscription)
