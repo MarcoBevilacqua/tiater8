@@ -130,7 +130,7 @@
                                                 method="get"
                                                 as="button"
                                             >
-                                                Modifica
+                                                Modifica tessera
                                             </breeze-dropdown-link>
                                             <breeze-dropdown-link
                                                 v-if="
