@@ -1,3 +1,7 @@
+v0.1.
+
+-   subscription change status on index
+
 v0.1.1
 
 -   flash messages refactor
