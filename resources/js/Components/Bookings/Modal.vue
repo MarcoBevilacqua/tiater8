@@ -43,14 +43,20 @@
                 class="inline-block align-bottom bg-white rounded-lg text-center overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-64"
             >
                 <div class="bg-white px-8 pt-2 pb-2 sm:p-4 sm:pb-2">
-                    <div class="text-center sm:mt-0 sm:text-center">
-                        <h3 v-if="addPlace" class="text-lg leading-6 font-medium text-gray-900">
+                    <div v-if="addPlace" class="text-center sm:mt-0 sm:text-center">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">
                             Confermi aggiunta posto <span class="fw-bold">{{ row + place }}</span> per la prenotazione?
                         </h3>
-                        <h3 v-else class="text-lg leading-6 font-medium text-gray-900">
+                        <div class="mt-2"></div>
+                    </div>
+                    <div v-else class="text-center sm:mt-0 sm:text-center">
+                        <h3 v-if="this.$parent.row_letter && this.$parent.place_number"
+                            class="text-lg leading-6 font-medium text-gray-900">
                             Confermi modifica posto da <span class="fw-bold">{{ this.$parent.customerBooking.row_letter
                             }}{{ this.$parent.customerBooking.place_number }}</span> a {{ row + place }}?
                         </h3>
+                        <h3 v-else class="text-lg leading-6 font-medium text-gray-900">Confermi scelta posto
+                            {{ row + place }}?</h3>
                         <div class="mt-2"></div>
                     </div>
                 </div>

@@ -43,13 +43,15 @@ class BookingController extends Controller
                 ->where('show_events.show_id', '=', $request->show_id)
                 ->groupBy('show_events.show_date', 'shows.title', 'show_events.id')
                 ->get()
-                ->map(function ($item) {
+                ->map(function ($item) use ($request) {
                     return [
                         'id' => $item->event_id,
                         'total' => $item->booking_nr,
                         'show' => $item->title,
                         'date' => Carbon::createFromTimeString($item->show_date)->format('l d F Y - H:i'),
-                        'detail' => URL::route('bookings.detail', ['show_event_id' => $item->event_id])
+                        'show_event_id' => $item->event_id,
+                        'detail' => URL::route('bookings.detail', ['show_event_id' => $item->event_id]),
+                        'create' => URL::route('bookings.create', ['show_id' => $request->show_id, 'show_event_id' => $item->event_id])
                     ];
                 }),
             'createLink' => URL::route('bookings.create')
@@ -147,6 +149,8 @@ class BookingController extends Controller
     public function create(Request $request): Response
     {
         $showFromRequest = Show::where('id', $request->get('show_id'))->select(['id', 'title'])->get()->toArray()[0];
+        $showEventFromRequest = ShowEvent::where('id', $request->get('show_event_id'))->select(['id', 'show_date'])->get()->toArray()[0];
+
         return Inertia::render(
             'Bookings/Create', [
                 'show' => $showFromRequest,
@@ -157,14 +161,10 @@ class BookingController extends Controller
                             'name' => $customer->full_name
                         ];
                     }),
-                'show_events' => ShowEvent::where('show_id', '=', $showFromRequest['id'])
-                    ->get()
-                    ->map(function (ShowEvent $showEvent) {
-                        return [
-                            'id' => $showEvent->id,
-                            'date' => Carbon::createFromTimeString($showEvent->show_date)->format('l d F Y - H:i')
-                        ];
-                    }),
+                'show_event' => collect([
+                    'id' => $showEventFromRequest['id'],
+                    'date' => Carbon::createFromTimeString($showEventFromRequest['show_date'])->format('l d F Y - H:i')
+                ]),
                 '_method' => 'POST']
         );
     }
@@ -214,7 +214,7 @@ class BookingController extends Controller
         ]);
 
         try {
-            Booking::create([
+            $booking = Booking::create([
                 'customer_id' => $request->customer_id,
                 'show_event_id' => $request->show_event_id,
                 'booking_code' => strtoupper(Str::random(8)),
@@ -226,7 +226,10 @@ class BookingController extends Controller
             Log::error("Cannot save booking: {$ex->getMessage()}");
             return Redirect::back()->with('error', 'Invalid data');
         }
-
+        if (!$request->row || !$request->place) {
+            //request is coming from form not from map, should redirect to update
+            return Redirect::to('bookings/' . $booking->id . '/edit');
+        }
         return Redirect::back()->with('success', 'Dati Modificati correttamente');
     }
 

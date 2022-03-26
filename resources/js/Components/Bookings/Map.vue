@@ -109,8 +109,7 @@ import Modal from "@/Components/Bookings/Modal";
 export default {
     components: {
         Modal,
-        Row,
-        CustomRow,
+        Row
     },
     props: {
         addPlace: Boolean,

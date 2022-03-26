@@ -98,12 +98,22 @@
                                     class="text-sm font-medium text-gray-900"
                                 >
                                     <inertia-link
+                                        v-if="booking.total > 0"
                                         :data="{show_id: show_id}"
                                         :href="booking.detail"
                                         class="text-blue-700 inline-flex items-center font-semibold tracking-wide"
                                         method="get"
                                     >
                                         Tutte le prenotazioni
+                                    </inertia-link>
+                                    <inertia-link
+                                        v-else
+                                        :data="{show_event_id: booking.show_event_id}"
+                                        :href="booking.create"
+                                        class="text-blue-700 inline-flex items-center font-semibold tracking-wide"
+                                        method="get"
+                                    >
+                                        Inserisci prenotazione
                                     </inertia-link>
                                 </div>
                             </div>

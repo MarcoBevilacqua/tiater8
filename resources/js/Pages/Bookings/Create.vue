@@ -1,7 +1,8 @@
 <template>
     <breeze-authenticated-layout>
         <template #header>
-            <h1>Inserisci Prenotazione per {{ show.title }}</h1>
+            <h1>Nuova Prenotazione </h1>
+            <small>{{ show.title }} / {{ show_event.date }}</small>
         </template>
         <template #main>
             <container>
@@ -36,30 +37,6 @@
                                                 :value="customer.id"
                                             >{{ customer.name }}
                                             </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-8 gap-6">
-                                    <div class="md:col-start-3 md:col-span-4 sm:col-span-3 mb-4">
-                                        <label class="block text-sm font-medium text-gray-700" for="show_date">
-                                            Date disponibili:</label>
-                                        <select
-                                            id="show_event_id"
-                                            v-model="form.show_event_id"
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                            name="show_event_id"
-                                            required
-                                        >
-                                            <option
-                                                v-for="show_event in show_events"
-                                                :value="show_event.id"
-                                            >{{ show_event.date }}
-                                            </option>
-                                            <label
-                                                class="block text-sm font-medium text-gray-700"
-                                                for="show_date"
-                                            >numero posti:</label
-                                            >
                                         </select>
                                     </div>
                                 </div>
@@ -101,7 +78,7 @@ export default {
     props: {
         errors: Object,
         customers: Object,
-        show_events: Object,
+        show_event: Object,
         show: Object,
         _method: String,
     },
@@ -110,7 +87,7 @@ export default {
         return {
             form: this.$inertia.form({
                 customer_id: this.customer_id,
-                show_event_id: this.show_event_id,
+                show_event_id: this.show_event.id,
                 _method: this._method,
             }),
         };
