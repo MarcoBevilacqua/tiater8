@@ -1,14 +1,19 @@
 <template>
     <breeze-authenticated-layout>
         <template #header>
-            <div class="grid grid-cols-2">
+            <div class="grid grid-cols-1">
                 <div>
                     <h2
                         class="font-semibold text-xl text-gray-800 leading-tight"
                     >
-                        Prenotazioni "{{ show.title }}"
+                        Modifica Prenotazione {{ customerBooking.customer.first_name
+                        }} {{ customerBooking.customer.last_name
+                        }}
+
                     </h2>
-                    <small>{{ show.date }}</small>
+                </div>
+                <div>
+                    <small>{{ show.title }} / {{ show.date }}</small>
                 </div>
             </div>
         </template>
@@ -16,7 +21,9 @@
             <container>
                 <div class="container map-container">
                     <Map
+                        :addPlace="addPlace"
                         :bookings="bookings"
+                        :customerBooking="customerBooking"
                         :customers="customers"
                         :method="_method"
                         :showEventId="show.id"
@@ -44,11 +51,11 @@ export default {
         Map,
     },
     props: {
-        booking: Object,
+        customerBooking: Object,
         bookings: Object,
         customers: Object,
         show: Object,
-        addPlaces: Boolean,
+        addPlace: Boolean,
         _method: String,
     },
 };

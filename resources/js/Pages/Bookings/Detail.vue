@@ -60,7 +60,7 @@
                                 <div
                                     class="text-sm font-medium text-gray-900"
                                 >
-                                    {{ booking.customer }}
+                                    {{ booking.customer.name }}
                                 </div>
                             </div>
                         </td>
@@ -123,7 +123,7 @@
 
                                             <template #content>
                                                 <breeze-dropdown-link
-                                                    :data="{show_id: show.id}"
+                                                    :data="{show_id: show.id, customer_id: booking.customer.id}"
                                                     :href="booking.edit"
                                                     as="button"
                                                     method="get"

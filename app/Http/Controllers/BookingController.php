@@ -70,10 +70,10 @@ class BookingController extends Controller
                 ->map(function (Booking $booking) {
                     return [
                         'id' => $booking->event_id,
-                        'customer' => $booking->customer->full_name,
+                        'customer' => collect(['id' => $booking->customer->id, 'name' => $booking->customer->full_name]),
                         'code' => $booking->full_place,
                         'created_at' => $booking->created_at->format('d/m/Y'),
-                        'edit' => URL::route('bookings.edit', $booking->show_event_id)
+                        'edit' => URL::route('bookings.edit', $booking->id)
                     ];
                 }),
             'show' => ShowEvent::where('id', '=', $show_event_id)->with(['show' => function ($query) {
@@ -86,14 +86,19 @@ class BookingController extends Controller
     /**
      * show the places map
      * @param int $id the show event id
+     * @param Request $request
      * @return Response
      */
     public function edit(int $id, Request $request): Response
     {
-        $isAddingPlaces = $request->has('addPlace') && $request->addPlace === true;
-        $showEvent = ShowEvent::findOrFail($id);
+        $isAddingPlaces = $request->has('addPlace') && $request->addPlace;
+        $booking = Booking::findOrFail($id);
+        $showEvent = ShowEvent::findOrFail($booking->show_event_id);
         $bookingsCollection = Booking::select(['id', 'customer_id', 'place_number', 'row_letter'])
-            ->where('show_event_id', $id)->get()
+            ->where([
+                ['show_event_id', '=', $booking->show_event_id],
+            ])
+            ->get()
             ->groupBy('row_letter')
 
             // ->map(function ($groupedBooking) {
@@ -111,9 +116,9 @@ class BookingController extends Controller
             'Bookings/Form',
             [
                 'bookings' => $bookingsCollection,
-                'booking' => Booking::where('id', '=', $id)->with(['customer' => function ($query) {
-                    return $query;
-                }])->get(),
+                'customerBooking' => Booking::where('id', '=', $id)->with(['customer' => function ($query) {
+                    return $query->select(['last_name', 'first_name', 'id']);
+                }])->get()->first(),
                 'show' => [
                     'id' => $id,
                     'title' => $showEvent->show->title,
@@ -127,7 +132,7 @@ class BookingController extends Controller
                             'name' => $customer->full_name
                         ];
                     }),
-                'addPlaces' => $isAddingPlaces,
+                'addPlace' => $isAddingPlaces,
                 '_method' => 'put',
             ]
         );
@@ -193,7 +198,7 @@ class BookingController extends Controller
             'row_letter' => $request->row
         ]);
 
-        return Redirect::to('bookings/' . $request->show_event_id . '/edit');
+        return Redirect::back()->with('success', 'Dati Modificati correttamente');
     }
 
     /**
@@ -219,10 +224,10 @@ class BookingController extends Controller
             ]);
         } catch (\Exception $ex) {
             Log::error("Cannot save booking: {$ex->getMessage()}");
-            return Redirect::to('bookings/create')->with('error', 'Invalid data');
+            return Redirect::back()->with('error', 'Invalid data');
         }
 
-        return Redirect::to('bookings/' . $request->show_event_id . '/edit');
+        return Redirect::back()->with('success', 'Dati Modificati correttamente');
     }
 
     /**

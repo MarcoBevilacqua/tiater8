@@ -2,99 +2,103 @@
     <div class="grid grid-cols-2 mr-6">
         <div class="col-span-1 center text-left">
             <Row
-                @show-modal="modalShow"
+                :bookedPlaces="getBookedPlacesForRow('X')"
                 :places="2"
                 :row="'X'"
-                :bookedPlaces="getBookedPlacesForRow('X')"
+                @show-modal="modalShow"
             />
         </div>
     </div>
     <div class="grid grid-cols-2 gap-x-6 bg-white-500">
         <div class="col-span-1 left">
             <Row
-                @show-modal="modalShow"
+                :bookedPlaces="getBookedPlacesForRow('A')"
                 :places="6"
                 :row="'A'"
-                :bookedPlaces="getBookedPlacesForRow('A')"
+                @show-modal="modalShow"
             />
             <Row
-                @show-modal="modalShow"
+                :bookedPlaces="getBookedPlacesForRow('B')"
                 :places="6"
                 :row="'B'"
-                :bookedPlaces="getBookedPlacesForRow('B')"
+                @show-modal="modalShow"
             />
             <Row
-                @show-modal="modalShow"
+                :bookedPlaces="getBookedPlacesForRow('C')"
                 :places="4"
                 :row="'C'"
-                :bookedPlaces="getBookedPlacesForRow('C')"
+                @show-modal="modalShow"
             />
             <Row
-                @show-modal="modalShow"
+                :bookedPlaces="getBookedPlacesForRow('D')"
                 :places="4"
                 :row="'D'"
-                :bookedPlaces="getBookedPlacesForRow('D')"
+                @show-modal="modalShow"
             />
             <Row
-                @show-modal="modalShow"
+                :bookedPlaces="getBookedPlacesForRow('E')"
                 :places="3"
                 :row="'E'"
-                :bookedPlaces="getBookedPlacesForRow('E')"
+                @show-modal="modalShow"
             />
             <Row
-                @show-modal="modalShow"
+                :bookedPlaces="getBookedPlacesForRow('F')"
                 :places="3"
                 :row="'F'"
-                :bookedPlaces="getBookedPlacesForRow('F')"
+                @show-modal="modalShow"
             />
             <Row
-                @show-modal="modalShow"
+                :bookedPlaces="getBookedPlacesForRow('G')"
                 :places="4"
                 :row="'G'"
-                :bookedPlaces="getBookedPlacesForRow('G')"
+                @show-modal="modalShow"
             />
             <Row
-                @show-modal="modalShow"
+                :bookedPlaces="getBookedPlacesForRow('H')"
                 :places="4"
                 :row="'H'"
-                :bookedPlaces="getBookedPlacesForRow('H')"
+                @show-modal="modalShow"
             />
         </div>
         <div class="col-span-1 right">
-            <CustomRow
-                @show-modal="modalShow"
+            <Row
+                :bookedPlaces="getBookedPlacesForRow('X')"
+                :custom="true"
                 :places="1"
                 :row="'X'"
-                :bookedPlaces="getBookedPlacesForRow('X')"
+                @show-modal="modalShow"
             />
             <Row
-                @show-modal="modalShow"
+                :bookedPlaces="getBookedPlacesForRow('I')"
                 :places="4"
                 :row="'I'"
-                :bookedPlaces="getBookedPlacesForRow('I')"
+                @show-modal="modalShow"
             />
             <Row
-                @show-modal="modalShow"
+                :bookedPlaces="getBookedPlacesForRow('L')"
                 :places="4"
                 :row="'L'"
-                :bookedPlaces="getBookedPlacesForRow('L')"
-            />
-            <CustomRow
                 @show-modal="modalShow"
+            />
+            <Row
+                :bookedPlaces="getBookedPlacesForRow('Y')"
+                :custom="true"
                 :places="3"
                 :row="'Y'"
-                :bookedPlaces="getBookedPlacesForRow('Y')"
+                @show-modal="modalShow"
             />
+
         </div>
     </div>
     <Modal
         v-if="this.showModal"
-        @show-modal="showModal"
-        @close-modal="modalClose"
-        :customerList="customers"
-        :customerId="this.customer?.id"
+        :addPlace="this.addPlace"
+        :customer="this.customerBooking.customer"
         :place="this.place"
         :row="this.row"
+        :showEventId="this.customerBooking.show_event_id"
+        @show-modal="showModal"
+        @close-modal="modalClose"
     />
 </template>
 
@@ -110,7 +114,9 @@ export default {
         CustomRow,
     },
     props: {
+        addPlace: Boolean,
         bookings: Object,
+        customerBooking: Object,
         customers: Object,
         showEventId: Number,
         createLink: String,
@@ -130,13 +136,12 @@ export default {
         },
         getBookedPlacesForRow(row) {
             if (!this.bookings[row]) return [];
-            let p = this.bookings[row].map((booking) => {
+            return this.bookings[row].map((booking) => {
                 return {
                     place_number: booking.place_number,
                     customer_id: booking.customer_id,
                 };
             });
-            return p;
         },
     },
     data() {
