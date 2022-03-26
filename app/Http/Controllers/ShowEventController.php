@@ -17,16 +17,16 @@ class ShowEventController extends Controller
     {
         return Inertia::render('ShowEvents', [
             'events' => ShowEvent::orderBy('show_date')
-            ->where('show_id', '=', $request->show)
-            ->get()
-            ->map(function (ShowEvent $showEvent) {
-                return [
-                    'id' => $showEvent->id,
-                    'date' => Carbon::createFromTimeString($showEvent->show_date)->format('d F Y'),
-                    'time' => Carbon::createFromTimeString($showEvent->show_date)->format('H:i'),
-                    'edit' => route('show-events.edit', ['show_event' => $showEvent->id]),
-                ];
-            }),
+                ->where('show_id', '=', $request->show)
+                ->get()
+                ->map(function (ShowEvent $showEvent) {
+                    return [
+                        'id' => $showEvent->id,
+                        'date' => Carbon::createFromTimeString($showEvent->show_date)->format('d F Y'),
+                        'time' => Carbon::createFromTimeString($showEvent->show_date)->format('H:i'),
+                        'edit' => route('show-events.edit', ['show_event' => $showEvent->id]),
+                    ];
+                }),
             'show' => Show::where('id', '=', $request->show)->firstOrFail()->title,
             'createLink' => route('show-events.create', ['show_id' => $request->show])
         ]);
@@ -44,20 +44,20 @@ class ShowEventController extends Controller
             Log::error("Cannot find event with id {$id}: {$exception->getMessage()}");
             return Redirect::route('show-events.index')->with("error", "Impossibile recuperare i dati");
         }
-        
+
         return Inertia::render(
             'ShowEvents/Form',
             [
-            'show_event' => [
-                'id' => $showEvent->id,
-                'show_id' => $showEvent->show_id,
-                'show_date' => Carbon::createFromTimeString($showEvent->show_date)->format('Y-m-d'),
-                'show_date_time' => Carbon::createFromTimeString($showEvent->show_date)->format('H:i'),
-                'show_title' => $showEvent->show->title
-            ],
-            'available_times' => ShowEvent::AVAILABLE_TIMES,
-            '_method' => 'put'
-        ]
+                'show_event' => [
+                    'id' => $showEvent->id,
+                    'show_id' => $showEvent->show_id,
+                    'show_date' => Carbon::createFromTimeString($showEvent->show_date)->format('Y-m-d'),
+                    'show_date_time' => Carbon::createFromTimeString($showEvent->show_date)->format('H:i'),
+                    'show_title' => $showEvent->show->title
+                ],
+                'available_times' => ShowEvent::AVAILABLE_TIMES,
+                '_method' => 'put'
+            ]
         );
     }
 
@@ -70,42 +70,13 @@ class ShowEventController extends Controller
         ]);
     }
 
-    /**
-     * add action function
-     * @param Request $request
-     * @return bool|Response
-     */
-    protected function store(Request $request)
-    {
-        //validation
-        $request->validate([
-            'show_id'           => 'required|numeric',
-            'show_date'         => 'required',
-            'show_date_time'    => 'required'
-        ]);
-        
-        $completeDate = ShowEventService::createCompleteDate($request->show_date, $request->show_date_time);
-
-        try {
-            ShowEvent::create([
-            'show_id' => $request->show_id,
-            'show_date' => $completeDate
-        ]);
-        } catch (\Exception $ex) {
-            Log::error("Cannot save event: {$ex->getMessage()}");
-            return Redirect::back()->with("error", "Errore nella elaborazione dei dati");
-        }
-        
-        return Redirect::route('show-events.index', ['show' => $request->show_id])->with("success", "Data creata correttamente");
-    }
-
     public function update(Request $request)
     {
         $request->validate([
             'show_date' => 'required',
             'show_date_time' => 'required'
         ]);
-        
+
         try {
             $showEvent = ShowEvent::findOrFail($request->id);
         } catch (\Exception $exception) {
@@ -126,7 +97,7 @@ class ShowEventController extends Controller
 
         return Redirect::route('show-events.index', ['show' => $showEvent->show_id])->with("success", "Dati aggiornati correttamente");
     }
-    
+
     /**
      * @param $id
      * @return bool|int
@@ -146,28 +117,37 @@ class ShowEventController extends Controller
             Log::error("Cannot find show event with id {$id}: {$exception->getMessage()}");
             return Redirect::back()->with("error", "Errore nella cancellazione");
         }
-        
+
         return Redirect::route('show-events.index', ['show' => $showEvent->show_id])
-        ->with("success", "Operazione completata correttamente");
+            ->with("success", "Operazione completata correttamente");
     }
 
     /**
-     * [async] events for show in add event page (grouped)
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * add action function
+     * @param Request $request
+     * @return bool|Response
      */
-    public function forShow($showId)
+    protected function store(Request $request)
     {
-        $ret = ShowEvent::where('show_id', '=', $showId)
-            ->get()
-            ->map(function (ShowEvent $showEvent) {
-                return [
-                    'id' => $showEvent->id,
-                    'date' => Carbon::createFromTimeString($showEvent->show_date)->format('l d F Y - h:i'),
-                ];
-            })
-            ;
+        //validation
+        $request->validate([
+            'show_id' => 'required|numeric',
+            'show_date' => 'required',
+            'show_date_time' => 'required'
+        ]);
 
-        return \Response::json($ret);
+        $completeDate = ShowEventService::createCompleteDate($request->show_date, $request->show_date_time);
+
+        try {
+            ShowEvent::create([
+                'show_id' => $request->show_id,
+                'show_date' => $completeDate
+            ]);
+        } catch (\Exception $ex) {
+            Log::error("Cannot save event: {$ex->getMessage()}");
+            return Redirect::back()->with("error", "Errore nella elaborazione dei dati");
+        }
+
+        return Redirect::route('show-events.index', ['show' => $request->show_id])->with("success", "Data creata correttamente");
     }
 }

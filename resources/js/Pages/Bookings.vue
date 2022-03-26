@@ -10,25 +10,28 @@
                     </h2>
                     <small>
                         <inertia-link
+                            :data="{show_id: this.show_id}"
                             :href="createLink"
                             class="font-medium text-indigo-500"
-                            >Inserisci nuovo
-                        </inertia-link></small
+                        >Inserisci nuovo
+                        </inertia-link>
+                    </small
                     >
                 </div>
                 <div class="flex justify-end">
                     <div>
                         <label class="block text-gray-700"
-                            >Seleziona spettacolo</label
+                        >Seleziona spettacolo</label
                         >
                         <select
-                            name="show_id"
                             id="show_id"
                             v-model="show_id"
                             class="w-72 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md"
+                            name="show_id"
                         >
                             <option v-for="show in shows" :value="show.id">
-                                {{ show.title }}</option
+                                {{ show.title }}
+                            </option
                             >
                         </select>
                     </div>
@@ -44,67 +47,67 @@
                 </div>
                 <table v-else class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
-                        <tr>
-                            <th
-                                scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                            >
-                                Data
-                            </th>
-                            <th
-                                scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                            >
-                                Posti
-                            </th>
-                            <th
-                                scope="col"
-                                class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"
-                            >
-                                Azioni
-                            </th>
-                        </tr>
+                    <tr>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            scope="col"
+                        >
+                            Data
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            scope="col"
+                        >
+                            Posti
+                        </th>
+                        <th
+                            class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            scope="col"
+                        >
+                            Azioni
+                        </th>
+                    </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <tr v-for="booking in bookings" :key="booking.id">
-                            <td
-                                class="px-6 py-4 text-clip truncate whitespace-nowrap"
-                            >
-                                <div class="flex items-center">
-                                    <div
-                                        class="text-sm font-medium text-gray-900"
-                                    >
-                                        {{ booking.date }}
-                                    </div>
+                    <tr v-for="booking in bookings" :key="booking.id">
+                        <td
+                            class="px-6 py-4 text-clip truncate whitespace-nowrap"
+                        >
+                            <div class="flex items-center">
+                                <div
+                                    class="text-sm font-medium text-gray-900"
+                                >
+                                    {{ booking.date }}
                                 </div>
-                            </td>
-                            <td
-                                class="px-6 py-4 text-clip truncate whitespace-nowrap"
-                            >
-                                <div class="flex items-center">
-                                    <div
-                                        class="text-sm font-medium text-gray-900"
-                                    >
-                                        {{ booking.total }}/50
-                                    </div>
+                            </div>
+                        </td>
+                        <td
+                            class="px-6 py-4 text-clip truncate whitespace-nowrap"
+                        >
+                            <div class="flex items-center">
+                                <div
+                                    class="text-sm font-medium text-gray-900"
+                                >
+                                    {{ booking.total }}/50
                                 </div>
-                            </td>
-                            <td class="px-6 py- 4 whitespace-nowrap">
-                                <div class="text-center">
-                                    <div
-                                        class="text-sm font-medium text-gray-900"
+                            </div>
+                        </td>
+                        <td class="px-6 py- 4 whitespace-nowrap">
+                            <div class="text-center">
+                                <div
+                                    class="text-sm font-medium text-gray-900"
+                                >
+                                    <inertia-link
+                                        :href="booking.detail"
+                                        class="text-blue-700 inline-flex items-center font-semibold tracking-wide"
+                                        method="get"
                                     >
-                                        <inertia-link
-                                            class="text-blue-700 inline-flex items-center font-semibold tracking-wide"
-                                            :href="booking.detail"
-                                            method="get"
-                                        >
-                                            Tutte le prenotazioni
-                                        </inertia-link>
-                                    </div>
+                                        Tutte le prenotazioni
+                                    </inertia-link>
                                 </div>
-                            </td>
-                        </tr>
+                            </div>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </container>
@@ -113,7 +116,7 @@
 </template>
 
 <script>
-import { Inertia } from "@inertiajs/inertia";
+import {Inertia} from "@inertiajs/inertia";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
 import Container from "@/Layouts/Container";
 import BreezeDropdown from "@/Components/Dropdown";
@@ -140,8 +143,8 @@ export default {
             handler: throttle(function () {
                 Inertia.get(
                     "bookings",
-                    { show_id: this.show_id },
-                    { preserveState: true, preserveScroll: true }
+                    {show_id: this.show_id},
+                    {preserveState: true, preserveScroll: true}
                 );
             }, 250),
         },
