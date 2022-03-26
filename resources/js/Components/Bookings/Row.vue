@@ -63,10 +63,9 @@ export default {
     },
     methods: {
         isPlaceBooked(place) {
-            return (
-                this.bookedPlaces[0]?.place_number &&
-                this.bookedPlaces[0]?.place_number == place
-            );
+            return this.bookedPlaces.filter(bookedPlace => {
+                return bookedPlace.place_number === place
+            }).length
         },
         isPlaceBookedByCustomer(row, place) {
             return row + place === this.$parent.customerBooking.row_letter + this.$parent.customerBooking.place_number;

@@ -135,10 +135,7 @@ export default {
         getBookedPlacesForRow(row) {
             if (!this.bookings[row]) return [];
             return this.bookings[row].map((booking) => {
-                return {
-                    place_number: booking.place_number,
-                    customer_id: booking.customer_id,
-                };
+                return {place_number: booking.place_number}
             });
         },
     },
