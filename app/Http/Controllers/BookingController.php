@@ -7,7 +7,7 @@ use App\Models\Customer;
 use App\Models\Show;
 use App\Models\ShowEvent;
 use Carbon\Carbon;
-use Faker\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request as Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -72,10 +72,13 @@ class BookingController extends Controller
                         'id' => $booking->event_id,
                         'customer' => $booking->customer->full_name,
                         'code' => $booking->full_place,
-                        'edit' => URL::route('bookings.edit', $booking->show_event_id),
-                        'created_at' => $booking->created_at->format('d/m/Y')
+                        'created_at' => $booking->created_at->format('d/m/Y'),
+                        'edit' => URL::route('bookings.edit', $booking->show_event_id)
                     ];
                 }),
+            'show' => ShowEvent::where('id', '=', $show_event_id)->with(['show' => function ($query) {
+                return $query->select('id', 'title');
+            }])->first()->show,
             'createLink' => URL::route('bookings.create')
         ]);
     }
@@ -83,15 +86,15 @@ class BookingController extends Controller
     /**
      * show the places map
      * @param int $id the show event id
-     * @return $this
+     * @return Response
      */
-    public function edit($id)
+    public function edit(int $id, Request $request): Response
     {
+        $isAddingPlaces = $request->has('addPlace') && $request->addPlace === true;
         $showEvent = ShowEvent::findOrFail($id);
         $bookingsCollection = Booking::select(['id', 'customer_id', 'place_number', 'row_letter'])
             ->where('show_event_id', $id)->get()
             ->groupBy('row_letter')
-
 
             // ->map(function ($groupedBooking) {
             //     return [
@@ -124,6 +127,7 @@ class BookingController extends Controller
                             'name' => $customer->full_name
                         ];
                     }),
+                'addPlaces' => $isAddingPlaces,
                 '_method' => 'put',
             ]
         );
@@ -162,10 +166,10 @@ class BookingController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @param $code
-     * @return mixed
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         $request->validate([
             'place' => 'required',
@@ -195,9 +199,9 @@ class BookingController extends Controller
     /**
      * save booking
      * @param Request $request
-     * @return bool
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'customer_id' => 'required|exists:customers,id',
@@ -223,7 +227,7 @@ class BookingController extends Controller
 
     /**
      * @param $code
-     * @return bool|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return bool|RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function destroy($code)
     {
@@ -239,36 +243,5 @@ class BookingController extends Controller
         }
 
         return redirect(\URL::to('/'));
-    }
-
-    /**
-     * @param $id
-     * @return bool|\Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
-     */
-    public function findByEvent($id)
-    {
-
-        /** @var \App\Booking $bookings */
-        $bookings = Booking::where('event_id', '=', $id);
-
-        if (!$bookings) {
-            return false;
-        }
-
-        return response($bookings->toJson());
-    }
-
-
-    /**
-     * create public code for booking search optimization
-     * @return string
-     */
-    private function createPublicCode()
-    {
-        $chars = str_split('abcdefghijklmnopqrstuvwxyz0123456789@!*_|&=');
-        $factory = Factory::create();
-        $code = $factory->randomElements($chars, 10);
-
-        return strtoupper(implode("", $code));
     }
 }

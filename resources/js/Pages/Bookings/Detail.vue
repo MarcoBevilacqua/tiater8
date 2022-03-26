@@ -6,7 +6,7 @@
                     <h2
                         class="font-semibold text-xl text-gray-800 leading-tight"
                     >
-                        Prenotazioni
+                        Prenotazioni "{{ show.title }}"
                     </h2>
                     <small>
                         <inertia-link
@@ -123,6 +123,7 @@
 
                                             <template #content>
                                                 <breeze-dropdown-link
+                                                    :data="{show_id: show.id}"
                                                     :href="booking.edit"
                                                     as="button"
                                                     method="get"
@@ -130,11 +131,8 @@
                                                     Modifica prenotazione
                                                 </breeze-dropdown-link>
                                                 <breeze-dropdown-link
-                                                    :href="
-                                                            route(
-                                                                'bookings.create'
-                                                            )
-                                                        "
+                                                    :data="{'addPlace': true}"
+                                                    :href="booking.edit"
                                                     as="button"
                                                     method="get"
                                                 >
@@ -171,6 +169,7 @@ export default {
     },
     props: {
         bookings: Object,
+        show: Object,
         createLink: String,
     },
 };

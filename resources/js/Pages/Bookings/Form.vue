@@ -18,22 +18,22 @@
                     <Map
                         :bookings="bookings"
                         :customers="customers"
-                        :showEventId="show.id"
                         :method="_method"
+                        :showEventId="show.id"
                     />
                 </div>
             </container>
-        </template> </breeze-authenticated-layout
-></template>
+        </template>
+    </breeze-authenticated-layout
+    >
+</template>
 
 <script>
-import { Inertia } from "@inertiajs/inertia";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
 import Map from "@/Components/Bookings/Map";
 import Container from "@/Layouts/Container";
 import Pagination from "@/Shared/Pagination";
 import TableSearch from "@/Shared/TableSearch";
-import throttle from "lodash/throttle";
 
 export default {
     components: {
@@ -48,6 +48,7 @@ export default {
         bookings: Object,
         customers: Object,
         show: Object,
+        addPlaces: Boolean,
         _method: String,
     },
 };

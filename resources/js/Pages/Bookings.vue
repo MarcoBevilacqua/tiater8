@@ -98,6 +98,7 @@
                                     class="text-sm font-medium text-gray-900"
                                 >
                                     <inertia-link
+                                        :data="{show_id: show_id}"
                                         :href="booking.detail"
                                         class="text-blue-700 inline-flex items-center font-semibold tracking-wide"
                                         method="get"
