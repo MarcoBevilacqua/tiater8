@@ -104,7 +104,6 @@
 
 <script>
 import Row from "@/Components/Bookings/Row";
-import CustomRow from "@/Components/Bookings/CustomRow";
 import Modal from "@/Components/Bookings/Modal";
 
 export default {
