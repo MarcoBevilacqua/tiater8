@@ -99,7 +99,6 @@
                                 >
                                     <inertia-link
                                         v-if="booking.total > 0"
-                                        :data="{show_id: show_id}"
                                         :href="booking.detail"
                                         class="text-blue-700 inline-flex items-center font-semibold tracking-wide"
                                         method="get"
