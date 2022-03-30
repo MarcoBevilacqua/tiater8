@@ -87,36 +87,14 @@
                 :row="'Y'"
                 @show-modal="modalShow"
             />
-            <div class="col-span-1 mx-auto w-full mx-auto p-4 text-left">
-                <div class="grid grid-cols-12 gap-4">
-                    <div class="col-span-1 bg-blue-600 w-8 h-4 mt-1 rounded-md"></div>
-                    <div class="col-span-10"><p>Prenotato da {{ customerBooking.customer.first_name }}
-                        {{ customerBooking.customer.last_name }}</p></div>
-                </div>
-                <div class="grid grid-cols-12 gap-4">
-                    <div class="col-span-1 bg-yellow-600 w-8 h-4 mt-1 rounded-md"></div>
-                    <div class="col-span-10"><p>Prenotato da {{ customerBooking.customer.first_name }}
-                        {{ customerBooking.customer.last_name }} (aggiuntivo)</p></div>
-                </div>
-                <div class="grid grid-cols-12 gap-4">
-                    <div class="col-span-1 bg-gray-500 w-8 h-4 mt-1 rounded-md"></div>
-                    <div class="col-span-10"><p>Prenotato da altri utenti</p></div>
-                </div>
-                <div class="grid grid-cols-12 gap-4">
-                    <div class="col-span-1 bg-green-600 w-8 h-4 mt-1 rounded-md"></div>
-                    <div class="col-span-10"><p>Posto libero (prenotabile)</p></div>
-                </div>
-            </div>
         </div>
 
     </div>
     <Modal
         v-if="this.showModal"
-        :addPlace="this.addPlace"
-        :booking="this.customerBooking"
+        :booking="this.selectedBooking"
         :place="this.place"
         :row="this.row"
-        :showEventId="this.customerBooking.show_event_id"
         @show-modal="showModal"
         @close-modal="modalClose"
     />
@@ -132,19 +110,16 @@ export default {
         Row
     },
     props: {
-        addPlace: Boolean,
         bookings: Object,
-        customerBooking: Object,
-        customers: Object,
         showEventId: Number,
-        createLink: String,
-        method: String,
     },
     methods: {
-        modalShow(row, place, customer) {
+        modalShow(row, place) {
             this.place = place;
             this.row = row;
-            this.customer = this.customers[customer];
+            this.selectedBooking = this.bookings[row]?.filter(obj => {
+                return obj.place_number === place
+            })[0]
             this.showModal = true;
         },
         modalClose() {
@@ -162,9 +137,9 @@ export default {
     data() {
         return {
             showModal: false,
-            customer: null,
             place: null,
             row: null,
+            selectedBooking: null
         };
     },
 };

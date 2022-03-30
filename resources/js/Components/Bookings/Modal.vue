@@ -40,48 +40,59 @@
         To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
     -->
             <div
-                class="inline-block align-bottom bg-white rounded-lg text-center overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-64"
+                class="inline-block align-bottom bg-white rounded-lg text-center overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-1/4"
             >
-                <div class="bg-white px-8 pt-2 pb-2 sm:p-4 sm:pb-2">
-                    <div v-if="addPlace" class="text-center sm:mt-0 sm:text-center">
+                <div class="bg-white px-8 pt-2 pb-2 sm:pt-6 sm:pb-4">
+                    <div v-if="booking" class="text-center sm:mt-0 sm:pt-2 sm:pb-6 sm:text-center">
+                        <h2
+                            class="text-lg leading-6 font-medium font-bold text-gray-900">
+                            Conferma modifica posto </h2>
+                        <div>
+                            <span class="text-md">Nominativo: {{ this.booking.customer.first_name }}
+                            {{ this.booking.customer.last_name }}</span>
+                        </div>
+                        <small class="fw-bold"> Modifica posto da
+                            {{ this.$parent.row }}{{ this.$parent.place }} a {{ row + place }}</small>
+                    </div>
+                    <div v-else>
                         <h3 class="text-lg leading-6 font-medium text-gray-900">
-                            Confermi aggiunta posto <span class="fw-bold">{{ row + place }}</span> per la prenotazione?
-                        </h3>
+                            Selezionare nominativo per posto {{ row + place }}:</h3>
                         <div class="mt-2"></div>
                     </div>
-                    <div v-else class="text-center sm:mt-0 sm:text-center">
-                        <h3 v-if="this.$parent.row_letter && this.$parent.place_number"
-                            class="text-lg leading-6 font-medium text-gray-900">
-                            Confermi modifica posto da <span class="fw-bold">{{ this.$parent.customerBooking.row_letter
-                            }}{{ this.$parent.customerBooking.place_number }}</span> a {{ row + place }}?
-                        </h3>
-                        <h3 v-else class="text-lg leading-6 font-medium text-gray-900">Confermi scelta posto
-                            {{ row + place }}?</h3>
-                        <div class="mt-2"></div>
+
+                    <div v-if="booking" class="text-center sm:mt-0 sm:pt-6 sm:pb-4 sm:text-center">
+                        <form @submit.prevent="update">
+                            <button
+                                class="w-1/3 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-1/2 sm:text-sm"
+                                type="submit"
+                            >
+                                Conferma
+                            </button>
+                        </form>
                     </div>
-                </div>
-                <div class="px-4 pt-2 pb-4 sm:px-6">
-                    <form v-if="addPlace" @submit.prevent="create">
-                        <input
-                            v-model="form.show_event_id"
-                            name="show_event_id"
-                            type="hidden"
-                        />
-                        <button
-                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-full sm:text-sm"
-                            type="submit"
-                        >
-                            Conferma
-                        </button>
-                    </form>
-                    <form v-else @submit.prevent="update">
-                        <button
-                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-full sm:text-sm"
-                            type="submit"
-                        >
-                            Aggiorna
-                        </button>
-                    </form>
+                    <div v-else class="px-6 pt-2 pb-4 sm:px-8">
+                        <form @submit.prevent="create">
+                            <select
+                                id="customer_id"
+                                v-model="form.customer_id"
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                name="customer_id"
+                                required
+                            >
+                                <option
+                                    v-for="customer in customers"
+                                    :value="customer.id"
+                                >{{ customer.name }}
+                                </option>
+                            </select>
+                            <button
+                                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-full sm:text-sm"
+                                type="submit"
+                            >
+                                Aggiorna
+                            </button>
+                        </form>
+                    </div>
                 </div>
                 <div class="bg-gray-50 px-4 py-2 sm:px-6">
                     <a
@@ -100,22 +111,19 @@
 
 export default {
     props: {
-        addPlace: Boolean,
         booking: Object,
-        showEventId: Number,
         place: Number,
         row: String,
     },
     data() {
         return {
-            form: this.$inertia
-                .form({
-                    id: this.booking.id,
-                    customer_id: this.booking.customer.id,
-                    show_event_id: this.showEventId,
-                    place: null,
-                    row: null,
-                })
+            form: this.$inertia.form({
+                id: 1,
+                customer_id: null,
+                // show_event_id: this.showEventId,
+                place: null,
+                row: null,
+            })
                 .transform((data) => ({
                     ...data,
                     place: this.$props.place,

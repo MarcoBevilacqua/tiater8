@@ -82,6 +82,7 @@
                             </div>
                         </td>
                         <td
+                             
                             class="px-6 py-4 text-clip truncate whitespace-nowrap"
                         >
                             <div class="flex items-center">

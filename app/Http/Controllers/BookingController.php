@@ -66,24 +66,43 @@ class BookingController extends Controller
      */
     public function detail(int $show_event_id): Response
     {
-        Log::info("Returning booking details for event with id {$show_event_id}...");
-        return Inertia::render('Bookings/Detail', [
-            'bookings' => Booking::where('show_event_id', '=', $show_event_id)
-                ->get()
-                ->map(function (Booking $booking) {
-                    return [
-                        'id' => $booking->event_id,
-                        'customer' => collect(['id' => $booking->customer->id, 'name' => $booking->customer->full_name]),
-                        'code' => $booking->full_place,
-                        'created_at' => $booking->created_at->format('d/m/Y'),
-                        'edit' => URL::route('bookings.edit', $booking->id)
-                    ];
-                }),
-            'show' => ShowEvent::where('id', '=', $show_event_id)->with(['show' => function ($query) {
-                return $query->select('id', 'title');
-            }])->first()->show,
-            'createLink' => URL::route('bookings.create')
-        ]);
+        Log::info("Returning booking map for event with id {$show_event_id}...");
+        $showEvent = ShowEvent::findOrFail($show_event_id);
+        $bookingsCollection = Booking::select(['id', 'customer_id', 'place_number', 'row_letter'])
+            ->where('show_event_id', '=', $show_event_id)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'customer' => Customer::select(['id', 'first_name', 'last_name'])->where('id', '=', $item->customer_id)->get()[0],
+                    'place_number' => $item->place_number,
+                    'row_letter' => $item->row_letter
+                ];
+            })
+            ->groupBy('row_letter')
+            ->toArray();
+
+
+        return Inertia::render(
+            'Bookings/Form',
+            [
+                'bookings' => $bookingsCollection,
+                'show' => [
+                    'id' => $showEvent->show->id,
+                    'title' => $showEvent->show->title,
+                    'date' => Carbon::createFromTimeString($showEvent->show_date)->format('l d F Y - H:i')
+                ],
+                /*                'customers' => Customer::all()
+                                    ->keyBy('id')
+                                    ->map(function (Customer $customer) {
+                                        return [
+                                            'id' => $customer->id,
+                                            'name' => $customer->full_name
+                                        ];
+                                    }),*/
+                'show_event' => $showEvent,
+            ]
+        );
     }
 
     /**
@@ -111,15 +130,6 @@ class BookingController extends Controller
                 ];
             })
             ->groupBy('row_letter')
-
-            // ->map(function ($groupedBooking) {
-            //     return [
-            //         'id' => $groupedBooking->id,
-            //         'customer_id' => $groupedBooking->customer_id,
-            //         'place' => $groupedBooking->place_number
-            //     ];
-            // })
-
             ->toArray();
 
 

@@ -6,10 +6,7 @@
                     <h2
                         class="font-semibold text-xl text-gray-800 leading-tight"
                     >
-                        Modifica Prenotazione {{ customerBooking.customer.first_name
-                        }} {{ customerBooking.customer.last_name
-                        }}
-
+                        Modifica Prenotazioni
                     </h2>
                 </div>
                 <div>
@@ -21,12 +18,8 @@
             <container>
                 <div class="container map-container">
                     <Map
-                        :addPlace="addPlace"
                         :bookings="bookings"
-                        :customerBooking="customerBooking"
-                        :customers="customers"
-                        :method="_method"
-                        :showEventId="show.id"
+                        :showEventId="show_event.id"
                     />
                 </div>
             </container>
@@ -40,23 +33,18 @@ import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
 import Map from "@/Components/Bookings/Map";
 import Container from "@/Layouts/Container";
 import Pagination from "@/Shared/Pagination";
-import TableSearch from "@/Shared/TableSearch";
 
 export default {
     components: {
         Pagination,
-        TableSearch,
         BreezeAuthenticatedLayout,
         Container,
         Map,
     },
     props: {
-        customerBooking: Object,
         bookings: Object,
-        customers: Object,
         show: Object,
-        addPlace: Boolean,
-        _method: String,
+        show_event: Object,
     },
 };
 </script>
