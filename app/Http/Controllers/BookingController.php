@@ -40,7 +40,8 @@ class BookingController extends Controller
                 ->rightJoin('show_events', 'bookings.show_event_id', '=', 'show_events.id')
                 ->join('shows', 'show_events.show_id', '=', 'shows.id')
                 ->selectRaw('count(bookings.id) as booking_nr, shows.title, show_events.show_date, show_events.id as event_id')
-                ->where('show_events.show_id', '=', $request->show_id)
+                ->where([['show_events.show_id', '=', $request->show_id],
+                    ['show_date', '>=', now()]])
                 ->groupBy('show_events.show_date', 'shows.title', 'show_events.id')
                 ->get()
                 ->map(function ($item) use ($request) {
@@ -101,6 +102,14 @@ class BookingController extends Controller
                 ['show_event_id', '=', $booking->show_event_id],
             ])
             ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'customer' => Customer::select(['id', 'first_name', 'last_name'])->where('id', '=', $item->customer_id)->get()[0],
+                    'place_number' => $item->place_number,
+                    'row_letter' => $item->row_letter
+                ];
+            })
             ->groupBy('row_letter')
 
             // ->map(function ($groupedBooking) {
@@ -184,15 +193,14 @@ class BookingController extends Controller
         ]);
 
         try {
-            $booking = Booking::where([
-                ['customer_id', '=', $request->customer_id],
-                ['show_event_id', '=', $request->show_event_id]])
+            $booking = Booking::where('id', '=', $request->id)
                 ->firstOrFail();
         } catch (\Exception $exception) {
             Log::error("Cannot update booking: {$exception->getMessage()}");
             return Redirect::back()->with('error', "Errori nella richiesta");
         }
 
+        Log::info("Updating booking with ID {$booking->id}: from place {$booking->row_letter}{$booking->place_number} to {$request->row}{$request->place}");
         $booking->update([
             'place_number' => $request->place,
             'row_letter' => $request->row

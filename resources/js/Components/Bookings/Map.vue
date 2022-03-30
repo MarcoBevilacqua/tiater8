@@ -87,13 +87,33 @@
                 :row="'Y'"
                 @show-modal="modalShow"
             />
-
+            <div class="col-span-1 mx-auto w-full mx-auto p-4 text-left">
+                <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-1 bg-blue-600 w-8 h-4 mt-1 rounded-md"></div>
+                    <div class="col-span-10"><p>Prenotato da {{ customerBooking.customer.first_name }}
+                        {{ customerBooking.customer.last_name }}</p></div>
+                </div>
+                <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-1 bg-yellow-600 w-8 h-4 mt-1 rounded-md"></div>
+                    <div class="col-span-10"><p>Prenotato da {{ customerBooking.customer.first_name }}
+                        {{ customerBooking.customer.last_name }} (aggiuntivo)</p></div>
+                </div>
+                <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-1 bg-gray-500 w-8 h-4 mt-1 rounded-md"></div>
+                    <div class="col-span-10"><p>Prenotato da altri utenti</p></div>
+                </div>
+                <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-1 bg-green-600 w-8 h-4 mt-1 rounded-md"></div>
+                    <div class="col-span-10"><p>Posto libero (prenotabile)</p></div>
+                </div>
+            </div>
         </div>
+
     </div>
     <Modal
         v-if="this.showModal"
         :addPlace="this.addPlace"
-        :customer="this.customerBooking.customer"
+        :booking="this.customerBooking"
         :place="this.place"
         :row="this.row"
         :showEventId="this.customerBooking.show_event_id"

@@ -101,7 +101,7 @@
 export default {
     props: {
         addPlace: Boolean,
-        customer: Object,
+        booking: Object,
         showEventId: Number,
         place: Number,
         row: String,
@@ -110,8 +110,8 @@ export default {
         return {
             form: this.$inertia
                 .form({
-                    booking: 1,
-                    customer_id: this.customer.id,
+                    id: this.booking.id,
+                    customer_id: this.booking.customer.id,
                     show_event_id: this.showEventId,
                     place: null,
                     row: null,
