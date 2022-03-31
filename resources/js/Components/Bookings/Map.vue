@@ -87,6 +87,16 @@
                 :row="'Y'"
                 @show-modal="modalShow"
             />
+            <div class="col-span-1 mx-auto w-full mx-auto p-4 text-left">
+                <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-1 bg-yellow-600 w-8 h-4 mt-1 rounded-md"></div>
+                    <div class="col-span-10"><p>Posto prenotato</p></div>
+                </div>
+                <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-1 bg-green-600 w-8 h-4 mt-1 rounded-md"></div>
+                    <div class="col-span-10"><p>Posto libero</p></div>
+                </div>
+            </div>
         </div>
 
     </div>
