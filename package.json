@@ -30,6 +30,7 @@
         "@inertiajs/inertia-vue3": "^0.4.4",
         "@prettier/plugin-php": "0.14.3",
         "prettier": "2.0.5",
+        "vuedraggable": "^4.1.0",
         "webpack": "^5.68.0"
     }
 }

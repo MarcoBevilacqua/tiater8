@@ -43,16 +43,15 @@
                 class="inline-block align-bottom bg-white rounded-lg text-center overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-1/4"
             >
                 <div class="bg-white px-8 pt-2 pb-2 sm:pt-6 sm:pb-4">
-                    <div v-if="booking" class="text-center sm:mt-0 sm:pt-2 sm:pb-6 sm:text-center">
+                    <div v-if="booking"
+                         class="text-center md:mt-0 md:pt-2 md:pb-2 sm:mt-0 sm:pt-2 sm:pb-4 sm:text-center">
                         <h2
                             class="text-lg leading-6 font-medium font-bold text-gray-900">
-                            Conferma modifica posto </h2>
+                            Modifica prenotazione</h2>
                         <div>
-                            <span class="text-md">Nominativo: {{ this.booking.customer.first_name }}
+                            <span class="text-sm">Nominativo: {{ this.booking.customer.first_name }}
                             {{ this.booking.customer.last_name }}</span>
                         </div>
-                        <small class="fw-bold"> Modifica posto da
-                            {{ this.$parent.row }}{{ this.$parent.place }} a {{ row + place }}</small>
                     </div>
                     <div v-else>
                         <h3 class="text-lg leading-6 font-medium text-gray-900">
@@ -61,14 +60,38 @@
                         <div class="mt-2"></div>
                     </div>
 
-                    <div v-if="booking" class="text-center sm:mt-0 sm:pt-6 sm:pb-4 sm:text-center">
+                    <div v-if="booking" class="text-center md:pt-2 md:pb-4 sm:mt-0 sm:pt-6 sm:pb-4 sm:text-center">
                         <form @submit.prevent="update">
-                            <button
-                                class="w-1/3 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-1/2 sm:text-sm"
-                                type="submit"
-                            >
-                                Conferma
-                            </button>
+                            <div class="grid grid-cols-2 gap-4 md:grid-cols-12 sm:col-span-2 mb-6 text-left">
+                                <div class="col-span-1 md:col-span-4 md:col-start-2 sm:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700" for="row">Fila</label>
+                                    <input
+                                        id="row"
+                                        v-model="row"
+                                        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        name="row"
+                                        type="text"
+                                    />
+                                </div>
+                                <div class="col-span-1 md:col-span-4 md:col-start-8 sm:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700" for="place">Posto</label>
+                                    <input
+                                        id="place"
+                                        v-model="place"
+                                        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        name="place"
+                                        type="number"
+                                    />
+                                </div>
+                            </div>
+                            <div class="mx-12">
+                                <button
+                                    class="w-full md:w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-1/2 sm:text-sm"
+                                    type="submit"
+                                >
+                                    Conferma
+                                </button>
+                            </div>
                         </form>
                     </div>
                     <div v-else class="px-6 pt-2 pb-4 sm:px-8">
@@ -112,6 +135,8 @@
 <script>
 
 export default {
+    components: {},
+
     props: {
         booking: Object,
         place: Number,
@@ -147,6 +172,12 @@ export default {
         },
         update() {
             this.form.put(this.route("bookings.update", this.form), {
+                onSuccess: () => this.$emit('close-modal'),
+                onError: () => this.$emit('close-modal'),
+            });
+        },
+        delete() {
+            this.form.delete(this.route("bookings.destroy", this.form), {
                 onSuccess: () => this.$emit('close-modal'),
                 onError: () => this.$emit('close-modal'),
             });
