@@ -56,7 +56,8 @@
                     </div>
                     <div v-else>
                         <h3 class="text-lg leading-6 font-medium text-gray-900">
-                            Selezionare nominativo per posto {{ row + place }}:</h3>
+                            Selezionare nominativo</h3>
+                        <small>Fila {{ row }} Posto {{ place }}</small>
                         <div class="mt-2"></div>
                     </div>
 
@@ -80,11 +81,12 @@
                                 required
                             >
                                 <option
-                                    v-for="customer in customers"
+                                    v-for="customer in this.$parent.customers"
                                     :value="customer.id"
                                 >{{ customer.name }}
                                 </option>
                             </select>
+                            <div class="my-4"></div>
                             <button
                                 class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-full sm:text-sm"
                                 type="submit"
@@ -94,9 +96,9 @@
                         </form>
                     </div>
                 </div>
-                <div class="bg-gray-50 px-4 py-2 sm:px-6">
+                <div class="bg-gray-50 hover:bg-gray-100 px-4 py-2 sm:px-6">
                     <a
-                        class="cursor-pointer mt-3 w-full inline-flex justify-center px-4 py-2 bg-transparent text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+                        class="cursor-pointer mt-3 w-full hover:bg-gray-100 inline-flex justify-center px-4 py-2 bg-transparent text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
                         @click="$emit('close-modal')"
                     >
                         Annulla
@@ -114,18 +116,20 @@ export default {
         booking: Object,
         place: Number,
         row: String,
+        showEventId: Number
     },
     data() {
         return {
             form: this.$inertia.form({
                 id: 1,
                 customer_id: null,
-                // show_event_id: this.showEventId,
+                show_event_id: null,
                 place: null,
                 row: null,
             })
                 .transform((data) => ({
                     ...data,
+                    show_event_id: this.showEventId,
                     place: this.$props.place,
                     row: this.$props.row,
                 })),
@@ -138,11 +142,13 @@ export default {
         create() {
             this.form.post(this.route("bookings.store", this.form), {
                 onSuccess: () => this.$emit('close-modal'),
+                onError: () => this.$emit('close-modal'),
             });
         },
         update() {
             this.form.put(this.route("bookings.update", this.form), {
                 onSuccess: () => this.$emit('close-modal'),
+                onError: () => this.$emit('close-modal'),
             });
         },
     },

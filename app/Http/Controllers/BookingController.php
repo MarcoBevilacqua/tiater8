@@ -87,6 +87,12 @@ class BookingController extends Controller
             'Bookings/Form',
             [
                 'bookings' => $bookingsCollection,
+                'customers' => Customer::all()->map(function (Customer $customer) {
+                    return [
+                        'id' => $customer->id,
+                        'name' => $customer->fullName
+                    ];
+                }),
                 'show' => [
                     'id' => $showEvent->show->id,
                     'title' => $showEvent->show->title,
@@ -137,6 +143,7 @@ class BookingController extends Controller
             'Bookings/Form',
             [
                 'bookings' => $bookingsCollection,
+
                 'customerBooking' => Booking::where('id', '=', $id)->with(['customer' => function ($query) {
                     return $query->select(['last_name', 'first_name', 'id']);
                 }])->get()->first(),
