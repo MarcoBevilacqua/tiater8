@@ -174,12 +174,16 @@ class BookingController extends Controller
      */
     public function create(Request $request): Response
     {
-        $showFromRequest = Show::where('id', $request->get('show_id'))->select(['id', 'title'])->get()->toArray()[0];
-        $showEventFromRequest = ShowEvent::where('id', $request->get('show_event_id'))->select(['id', 'show_date'])->get()->toArray()[0];
+        $showEventFromRequest = ShowEvent::findOrFail($request->get('show_event_id'));
 
         return Inertia::render(
-            'Bookings/Create', [
-                'show' => $showFromRequest,
+            'Bookings/Form', [
+                'bookings' => [],
+                'show' => [
+                    'id' => $showEventFromRequest->show->id,
+                    'title' => $showEventFromRequest->show->title,
+                    'date' => Carbon::createFromTimeString($showEventFromRequest->show_date)->format('l d F Y - H:i')
+                ],
                 'customers' => Customer::all()
                     ->map(function (Customer $customer) {
                         return [
@@ -187,10 +191,7 @@ class BookingController extends Controller
                             'name' => $customer->full_name
                         ];
                     }),
-                'show_event' => collect([
-                    'id' => $showEventFromRequest['id'],
-                    'date' => Carbon::createFromTimeString($showEventFromRequest['show_date'])->format('l d F Y - H:i')
-                ]),
+                'show_event' => $showEventFromRequest,
                 '_method' => 'POST']
         );
     }
@@ -255,7 +256,7 @@ class BookingController extends Controller
             //request is coming from form not from map, should redirect to update
             return Redirect::to('bookings/' . $booking->id . '/edit');
         }
-        return Redirect::back()->with('success', 'Dati Modificati correttamente');
+        return Redirect::route('bookings.detail', ['show_event_id' => $request->show_event_id])->with('success', 'Dati Modificati correttamente');
     }
 
     /**

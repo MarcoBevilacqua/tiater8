@@ -65,6 +65,7 @@
                             <div class="grid grid-cols-2 gap-4 md:grid-cols-12 sm:col-span-2 mb-6 text-left">
                                 <div class="col-span-1 md:col-span-4 md:col-start-2 sm:col-span-2">
                                     <label class="block text-sm font-medium text-gray-700" for="row">Fila</label>
+                                    <input v-model="customer_id" name="customer_id" type="hidden">
                                     <input
                                         id="row"
                                         v-model="row"
@@ -146,8 +147,8 @@ export default {
     data() {
         return {
             form: this.$inertia.form({
-                id: 1,
-                customer_id: null,
+                id: this.booking ? this.booking.id : null,
+                customer_id: this.booking ? this.booking.customer.id : null,
                 show_event_id: null,
                 place: null,
                 row: null,

@@ -62,10 +62,10 @@
         </div>
         <div class="col-span-1 right">
             <Row
-                :bookedPlaces="getBookedPlacesForRow('X')"
+                :bookedPlaces="getBookedPlacesForRow('Y')"
                 :custom="true"
                 :places="1"
-                :row="'X'"
+                :row="'Y'"
                 @show-modal="modalShow"
             />
             <Row
@@ -81,10 +81,10 @@
                 @show-modal="modalShow"
             />
             <Row
-                :bookedPlaces="getBookedPlacesForRow('Y')"
+                :bookedPlaces="getBookedPlacesForRow('Z')"
                 :custom="true"
                 :places="3"
-                :row="'Y'"
+                :row="'Z'"
                 @show-modal="modalShow"
             />
             <div class="col-span-1 mx-auto w-full mx-auto p-4 text-left">
@@ -130,7 +130,7 @@ export default {
             this.row = row;
             this.selectedBooking = this.bookings[row]?.filter(obj => {
                 return obj.place_number === place
-            })[0]
+            })[0] || null
             this.showModal = true;
         },
         modalClose() {
