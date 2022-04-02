@@ -34,7 +34,7 @@ class SubscriptionService
     {
         return self::$statusLabels;
     }
-    
+
     public static function getAllFancyActivityLabels()
     {
         return self::$activityLabels;
@@ -69,8 +69,8 @@ class SubscriptionService
     public static function getSubscriptionByEmail(string $email)
     {
         return Subscription::where('subscription_email', '=', $email)
-        ->where('status', '!=', Subscription::PENDING)
-        ->count() > 0;
+                ->where('status', '!=', Subscription::PENDING)
+                ->count() > 0;
     }
 
     /**
@@ -79,10 +79,10 @@ class SubscriptionService
      *
      * @return Collection
      */
-    public static function subscriptionCanBeConfirmed(string $token) : Collection
+    public static function subscriptionCanBeConfirmed(string $token): Collection
     {
-        $subscriptionByToken = Subscription::where('token', $token)
-        ->first();
+        $subscriptionByToken = Subscription::where('token', '=', $token)
+            ->first();
 
         if (!$subscriptionByToken) {
             return false;
@@ -103,10 +103,10 @@ class SubscriptionService
         $renovationMonth = config('app.subscriptions.renovation_month');
 
         $year = (Carbon::now()->month > $expirationMonth &&
-        Carbon::now()->month <= $renovationMonth) ?
-        Carbon::now()->year + 1 :
-        Carbon::now()->year;
-         
+            Carbon::now()->month <= $renovationMonth) ?
+            Carbon::now()->year + 1 :
+            Carbon::now()->year;
+
         return collect(['from' => $year, 'to' => $year + 1]);
     }
 }
