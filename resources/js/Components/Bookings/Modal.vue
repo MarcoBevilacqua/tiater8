@@ -52,72 +52,71 @@
                             <span class="text-sm">Nominativo: {{ this.booking.customer.first_name }}
                             {{ this.booking.customer.last_name }}</span>
                         </div>
+                        <div class="text-center md:pt-6 md:pb-2 sm:mt-2 sm:pt-6 sm:pb-4 sm:text-center">
+                            <form @submit.prevent="update">
+                                <div class="grid grid-cols-2 gap-4 md:grid-cols-12 sm:col-span-2 mb-6 text-left">
+                                    <div class="col-span-1 md:col-span-4 md:col-start-3 sm:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700" for="row">Fila</label>
+                                        <input v-model="customer_id" name="customer_id" type="hidden">
+                                        <input
+                                            id="row"
+                                            v-model="row"
+                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            name="row"
+                                            type="text"
+                                        />
+                                    </div>
+                                    <div class="col-span-1 md:col-span-4 md:col-start-7 sm:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700" for="place">Posto</label>
+                                        <input
+                                            id="place"
+                                            v-model="place"
+                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            name="place"
+                                            type="number"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="mx-12">
+                                    <button
+                                        class="w-full md:w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-5 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-1/2 sm:text-sm"
+                                        type="submit"
+                                    >
+                                        Conferma
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                     <div v-else>
                         <h3 class="text-lg leading-6 font-medium text-gray-900">
                             Selezionare nominativo</h3>
                         <small>Fila {{ row }} Posto {{ place }}</small>
                         <div class="mt-2"></div>
-                    </div>
-
-                    <div v-if="booking" class="text-center md:pt-2 md:pb-4 sm:mt-0 sm:pt-6 sm:pb-4 sm:text-center">
-                        <form @submit.prevent="update">
-                            <div class="grid grid-cols-2 gap-4 md:grid-cols-12 sm:col-span-2 mb-6 text-left">
-                                <div class="col-span-1 md:col-span-4 md:col-start-2 sm:col-span-2">
-                                    <label class="block text-sm font-medium text-gray-700" for="row">Fila</label>
-                                    <input v-model="customer_id" name="customer_id" type="hidden">
-                                    <input
-                                        id="row"
-                                        v-model="row"
-                                        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        name="row"
-                                        type="text"
-                                    />
-                                </div>
-                                <div class="col-span-1 md:col-span-4 md:col-start-8 sm:col-span-2">
-                                    <label class="block text-sm font-medium text-gray-700" for="place">Posto</label>
-                                    <input
-                                        id="place"
-                                        v-model="place"
-                                        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        name="place"
-                                        type="number"
-                                    />
-                                </div>
-                            </div>
-                            <div class="mx-12">
+                        <div class="px-6 pt-2 pb-4 sm:px-8">
+                            <form @submit.prevent="create">
+                                <select
+                                    id="customer_id"
+                                    v-model="form.customer_id"
+                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                    name="customer_id"
+                                    required
+                                >
+                                    <option
+                                        v-for="customer in this.$parent.customers"
+                                        :value="customer.id"
+                                    >{{ customer.name }}
+                                    </option>
+                                </select>
+                                <div class="my-4"></div>
                                 <button
-                                    class="w-full md:w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-1/2 sm:text-sm"
+                                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-full sm:text-sm"
                                     type="submit"
                                 >
-                                    Conferma
+                                    Aggiorna
                                 </button>
-                            </div>
-                        </form>
-                    </div>
-                    <div v-else class="px-6 pt-2 pb-4 sm:px-8">
-                        <form @submit.prevent="create">
-                            <select
-                                id="customer_id"
-                                v-model="form.customer_id"
-                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                name="customer_id"
-                                required
-                            >
-                                <option
-                                    v-for="customer in this.$parent.customers"
-                                    :value="customer.id"
-                                >{{ customer.name }}
-                                </option>
-                            </select>
-                            <div class="my-4"></div>
-                            <button
-                                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-full sm:text-sm"
-                                type="submit"
-                            >
-                                Aggiorna
-                            </button>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <div class="bg-gray-50 hover:bg-gray-100 px-4 py-2 sm:px-6">
