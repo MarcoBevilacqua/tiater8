@@ -2,17 +2,18 @@
     <div :class="'grid gap-4 grid-cols-' + places">
         <div v-for="place in places" key="place">
             <div class="col-span-1">
-                <div
-                    class="relative flex justify-center mt-2 px-6 py-2 text-center rounded bg-gray-200"
-                >
+                <div class="flex justify-center mt-2 px-6 py-2 text-center rounded-t bg-gray-200">
                     <button
                         :class="[custom ? 'rounded-full' : 'rounded-lg', 'rounded-lg', isPlaceBooked(place) ? 'bg-yellow-600 hover:bg-yellow-800' : 'bg-green-600 hover:bg-green-800']"
                         class="block focus:ring-4 focus:ring-blue-300 text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                         type="button"
-                        @click="$emit('show-modal', row, place)"
-                    >
+                        @click="$emit('show-modal', row, place)">
                         <span class="text-sm">{{ row }}{{ place }}</span>
                     </button>
+                </div>
+                <div v-show="isPlaceBooked(place)"
+                     class="flex justify-center px-6 pb-2 text-center rounded-b-md bg-gray-200 text-sm">
+                    <span class="text-xs">{{ showPlaceOwner(row, place) }}</span>
                 </div>
             </div>
         </div>
@@ -48,11 +49,10 @@ export default {
                 return;
             }
             let info = this.$parent.bookings[row].filter(booking => {
-                return booking.place_number == place
+                return booking.place_number === place
             })
             if (info) {
-
-                return "BOOKED BY " + info[0].customer['first_name'] + " " + info[0].customer['last_name'];
+                return info[0].customer['last_name'];
             }
         },
         showRefInfo() {
