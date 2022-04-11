@@ -57,7 +57,7 @@
                                 <div class="grid grid-cols-2 gap-4 md:grid-cols-12 sm:col-span-2 mb-6 text-left">
                                     <div class="col-span-1 md:col-span-4 md:col-start-3 sm:col-span-2">
                                         <label class="block text-sm font-medium text-gray-700" for="row">Fila</label>
-                                        <input v-model="customer_id" name="customer_id" type="hidden">
+                                        <input v-model="form.customer_id" name="customer_id" type="hidden">
                                         <input
                                             id="row"
                                             v-model="row"
@@ -95,19 +95,28 @@
                         <div class="mt-2"></div>
                         <div class="px-6 pt-2 pb-4 sm:px-8">
                             <form @submit.prevent="create">
-                                <select
-                                    id="customer_id"
-                                    v-model="form.customer_id"
-                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    name="customer_id"
-                                    required
-                                >
-                                    <option
-                                        v-for="customer in this.$parent.customers"
-                                        :value="customer.id"
-                                    >{{ customer.name }}
-                                    </option>
-                                </select>
+                                <input id="customer_id" v-model="form.customer_id" type="hidden"
+                                />
+                                <input v-model="search"
+                                       autocomplete="false"
+                                       class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                       name="search"
+                                       placeholder="Cerca il nominativo..."
+                                       type="text"
+                                />
+                                <div id="suggestions" class="relative">
+                                    <div v-show="suggestions.length"
+                                         class="absolute top-100 mt-1 w-full border bg-white shadow-xl rounded">
+                                        <div class="p-3">
+                                            <ul v-for="suggestion in this.suggestions">
+                                                <li class="cursor-pointer p-2 flex block w-full rounded hover:bg-gray-100"
+                                                    @click="pickSuggestion(suggestion)">
+                                                    {{ suggestion.first_name }} {{ suggestion.last_name }}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="my-4"></div>
                                 <button
                                     class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-full sm:text-sm"
@@ -134,9 +143,10 @@
 
 <script>
 
-export default {
-    components: {},
+import throttle from "lodash/throttle";
+import axios from "axios";
 
+export default {
     props: {
         booking: Object,
         place: Number,
@@ -145,9 +155,11 @@ export default {
     },
     data() {
         return {
+            search: "",
+            suggestions: [],
             form: this.$inertia.form({
                 id: this.booking ? this.booking.id : null,
-                customer_id: this.booking ? this.booking.customer.id : null,
+                customer_id: null,
                 show_event_id: null,
                 place: null,
                 row: null,
@@ -182,6 +194,28 @@ export default {
                 onError: () => this.$emit('close-modal'),
             });
         },
+        pickSuggestion(pickedSuggestion) {
+            this.form.customer_id = pickedSuggestion.id
+            this.search = pickedSuggestion.first_name + " " + pickedSuggestion.last_name
+            this.suggestions = []
+        }
     },
+    watch: {
+        search: {
+            handler: throttle(function () {
+                axios.get(
+                    '/api/customers', {
+                        params:
+                            {term: this.search}
+                    }
+                ).then(res => {
+                    this.suggestions = res.data
+                }).catch(err => {
+                    console.log(err)
+                })
+            }, 150),
+            deep: true
+        }
+    }
 };
 </script>
