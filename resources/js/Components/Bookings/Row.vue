@@ -44,10 +44,8 @@ export default {
             }).length
         },
         showPlaceOwner(row, place) {
-            if (!this.isPlaceBooked(place)) {
-                console.log("place not booked");
-                return;
-            }
+            if (!this.isPlaceBooked(place)) return;
+
             let info = this.$parent.bookings[row].filter(booking => {
                 return booking.place_number === place
             })

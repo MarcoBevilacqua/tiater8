@@ -159,7 +159,7 @@ export default {
             suggestions: [],
             form: this.$inertia.form({
                 id: this.booking ? this.booking.id : null,
-                customer_id: null,
+                customer_id: this.booking ? this.booking.customer.id : null,
                 show_event_id: null,
                 place: null,
                 row: null,
