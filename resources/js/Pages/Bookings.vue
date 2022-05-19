@@ -40,12 +40,36 @@
         </template>
         <template #main>
             <container>
-                <div v-if="bookings.length == 0">
+                <div v-if="this.loading"
+                     class="relative w-1/2 h-auto mx-auto bg-gray-50 text-center sm:px-6">
+                    <div class="absolute inset-0 px-4 py-3">
+                        <svg
+                            class="animate-spin mx-auto h-10 w-10 text-indigo-500"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <circle
+                                class="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                stroke-width="4"
+                            ></circle>
+                            <path
+                                class="opacity-75"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                fill="currentColor"
+                            ></path>
+                        </svg>
+                    </div>
+                </div>
+                <div v-if="bookings.length == 0 && !this.loading">
                     <div class="text-center mx-auto p-4 text-lg">
                         <p>Seleziona uno spettacolo dal menu a tendina</p>
                     </div>
                 </div>
-                <table v-else class="min-w-full divide-y divide-gray-200">
+                <table v-if="!this.loading && bookings.length > 0" class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                     <tr>
                         <th
@@ -82,7 +106,7 @@
                             </div>
                         </td>
                         <td
-                             
+
                             class="px-6 py-4 text-clip truncate whitespace-nowrap"
                         >
                             <div class="flex items-center">
@@ -133,7 +157,6 @@ import Container from "@/Layouts/Container";
 import BreezeDropdown from "@/Components/Dropdown";
 import BreezeDropdownLink from "@/Components/DropdownLink";
 import TableSearch from "@/Shared/TableFilter";
-import throttle from "lodash/throttle";
 
 export default {
     components: {
@@ -151,18 +174,28 @@ export default {
     },
     watch: {
         show_id: {
-            handler: throttle(function () {
+            handler() {
                 Inertia.get(
                     "bookings",
                     {show_id: this.show_id},
-                    {preserveState: true, preserveScroll: true}
+                    {
+                        preserveState: true, preserveScroll: true,
+                        onStart: () => {
+                            this.loading = true
+                        },
+                        onFinish: () => {
+                            this.loading = false
+                        },
+                    }
                 );
-            }, 250),
+
+            }
         },
     },
     data() {
         return {
             show_id: null,
+            loading: false
         };
     },
 };
