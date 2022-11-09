@@ -260,22 +260,18 @@ class BookingController extends Controller
     }
 
     /**
-     * @param $code
-     * @return bool|RedirectResponse|\Illuminate\Routing\Redirector
+     * @param Booking $booking
+     * @return RedirectResponse
      */
-    public function destroy($code)
+    public function destroy(Booking $booking): RedirectResponse
     {
-        if (!$code) {
-            return false;
-        }
-
         try {
-            Booking::wherePublicCode($code)->delete();
+            $booking->delete();
         } catch (\Exception $ex) {
             Log::alert("Cannot delete booking: {$ex->getMessage()}");
-            return false;
+            Redirect::back()->with('error', 'Error while deleting booking');
         }
 
-        return redirect(\URL::to('/'));
+        return Redirect::back();
     }
 }

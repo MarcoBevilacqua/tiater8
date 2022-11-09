@@ -86,6 +86,15 @@
                                     </button>
                                 </div>
                             </form>
+                            <form @submit.prevent="delete">
+                                <input v-model="form.customer_id" name="customer_id" type="hidden">
+                                <button
+                                    class="w-full md:w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-5 py-2 text-red-600 font-medium hover:underline sm:w-1/2 sm:text-sm"
+                                    type="submit"
+                                >
+                                    Cancella
+                                </button>
+                            </form>
                         </div>
                     </div>
                     <div v-else>
