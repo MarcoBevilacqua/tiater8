@@ -38,4 +38,9 @@ class Customer extends Model
     {
         return $this->hasMany(Subscription::class);
     }
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
 }

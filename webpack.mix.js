@@ -21,6 +21,14 @@ mix.js("resources/js/app.js", "public/js")
     ])
     .webpackConfig(require("./webpack.config"));
 
+// fix css files 404 issue
+mix.webpackConfig({
+    devServer: {
+        proxy: {
+            '*': 'http://localhost:8000'
+        }
+    }
+});
 if (mix.inProduction()) {
     mix.version();
 }
