@@ -19,19 +19,22 @@
                                             >
                                                 <div v-if="form.image">
                                                     <img
-                                                        width="600"
+                                                        v-if="showurl"
+                                                        :src="showurl"
+                                                        class="w-full mt-4"
                                                         height="800"
-                                                        :src="form.image"
-                                                        class="rounded"
+                                                        width="600"
                                                     />
                                                 </div>
                                                 <label
-                                                    for="image"
                                                     class="block text-sm font-medium text-gray-700"
-                                                    >Immagine</label
+                                                    for="image"
+                                                >Immagine</label
                                                 >
                                                 <input
+                                                    ref="photo"
                                                     type="file"
+                                                    @change="previewImage"
                                                     @input="
                                                         form.image =
                                                             $event.target.files[0]
@@ -49,16 +52,16 @@
                                                     class="sm:col-span-6 col-span-3"
                                                 >
                                                     <label
-                                                        for="name"
                                                         class="block text-sm font-medium text-gray-700"
-                                                        >Titolo</label
+                                                        for="name"
+                                                    >Titolo</label
                                                     >
                                                     <input
-                                                        v-model="form.title"
-                                                        type="text"
-                                                        name="title"
                                                         id="title"
+                                                        v-model="form.title"
                                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        name="title"
+                                                        type="text"
                                                     />
                                                     <div v-if="errors.title">
                                                         {{ errors.title }}
@@ -68,16 +71,16 @@
                                                     class="sm:col-span-6 col-span-3 py-5"
                                                 >
                                                     <label
-                                                        for="url"
                                                         class="block text-sm font-medium text-gray-700"
-                                                        >Url</label
+                                                        for="url"
+                                                    >Url</label
                                                     >
                                                     <input
-                                                        v-model="form.url"
-                                                        type="text"
-                                                        name="url"
                                                         id="url"
+                                                        v-model="form.url"
                                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        name="url"
+                                                        type="text"
                                                     />
                                                     <div v-if="errors.url">
                                                         {{ errors.url }}
@@ -88,18 +91,18 @@
                                                     class="sm:col-span-6 col-span-3 py-5"
                                                 >
                                                     <label
-                                                        for="description"
                                                         class="block text-sm font-medium text-gray-700"
-                                                        >Descrizione</label
+                                                        for="description"
+                                                    >Descrizione</label
                                                     >
                                                     <textarea
+                                                        id="description"
                                                         v-model="
                                                             form.description
                                                         "
-                                                        name="description"
-                                                        id="description"
-                                                        rows="12"
                                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        name="description"
+                                                        rows="12"
                                                     >
                                                     </textarea>
                                                     <div
@@ -117,37 +120,37 @@
                                                         class="sm:col-span-2 col-span-2 py-5"
                                                     >
                                                         <label
-                                                            for="full_price"
                                                             class="block text-sm font-medium text-gray-700"
-                                                            >Prezzo pieno</label
+                                                            for="full_price"
+                                                        >Prezzo pieno</label
                                                         >
                                                         <input
+                                                            id="full_price"
                                                             v-model="
                                                                 form.full_price
                                                             "
-                                                            type="number"
-                                                            name="full_price"
-                                                            id="full_price"
                                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                            name="full_price"
+                                                            type="number"
                                                         />
                                                     </div>
                                                     <div
                                                         class="sm:col-span-2 col-span-2 py-5"
                                                     >
                                                         <label
-                                                            for="half_price"
                                                             class="block text-sm font-medium text-gray-700"
-                                                            >Prezzo
+                                                            for="half_price"
+                                                        >Prezzo
                                                             ridotto</label
                                                         >
                                                         <input
+                                                            id="half_price"
                                                             v-model="
                                                                 form.half_price
                                                             "
-                                                            name="half_price"
-                                                            id="half_price"
-                                                            type="number"
                                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                            name="half_price"
+                                                            type="number"
                                                         />
                                                     </div>
                                                 </div>
@@ -164,8 +167,8 @@
                                             Torna alla lista
                                         </a>
                                         <button
-                                            type="submit"
                                             class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            type="submit"
                                         >
                                             Salva
                                         </button>
@@ -183,8 +186,6 @@
 <script>
 import Container from "@/Layouts/Container";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
-import { useForm } from "@inertiajs/inertia-vue3";
-import { Link } from "@inertiajs/inertia-vue3";
 
 export default {
     components: {
@@ -199,6 +200,7 @@ export default {
 
     data() {
         return {
+            showurl: null,
             form: this.$inertia.form({
                 title: null,
                 description: null,
@@ -212,9 +214,16 @@ export default {
 
     methods: {
         create() {
+            if (this.$refs.photo) {
+                this.form.image = this.$refs.photo.files[0];
+            }
             this.form.post(this.route("shows.store", this.form), {
                 onSuccess: () => this.form.reset(),
             });
+        },
+        previewImage(e) {
+            const file = e.target.files[0];
+            this.showurl = URL.createObjectURL(file);
         },
     },
 };

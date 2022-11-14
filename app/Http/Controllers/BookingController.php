@@ -3,240 +3,275 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Customer;
 use App\Models\Show;
 use App\Models\ShowEvent;
-use App\Models\Viewer;
-use Faker\Factory;
-use Illuminate\View\View;
-use Validator;
-use Log;
+use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request as Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class BookingController extends Controller
 {
-
-    public function index ($url) {
-
-        if(!$url){
-            return view('404');
-        }
-
-        /** @var \App\Show $show */
-        $show = Show::where('url', '=', $url)->firstOrFail();
-        $events = $show->getEvents();
-
-        return view('helper.bookingList', ['show' => $show, 'events' => $events, ]);
-    }
-
-    public function show($code){		
-        $booking = Booking::where('public_code', $code)->get();
-        return view('crud/prenotazioni.show', array('booking' => $booking));
+    /**
+     * index showing bookings total grouped by show events
+     * @param Request $request
+     * @return Response
+     */
+    public function index(Request $request): Response
+    {
+        return Inertia::render('Bookings', [
+            'shows' => Show::get()
+                ->map(function (Show $show) {
+                    return [
+                        'id' => $show->id,
+                        'title' => $show->title,
+                        'description' => Str::limit($show->description, 120),
+                        'edit' => route('shows.edit', ['show' => $show->id])
+                    ];
+                }),
+            'bookings' => DB::table('bookings')
+                ->rightJoin('show_events', 'bookings.show_event_id', '=', 'show_events.id')
+                ->join('shows', 'show_events.show_id', '=', 'shows.id')
+                ->selectRaw('count(bookings.id) as booking_nr, shows.title, show_events.show_date, show_events.id as event_id')
+                ->where([['show_events.show_id', '=', $request->show_id],
+                    ['show_date', '>=', now()]])
+                ->groupBy('show_events.show_date', 'shows.title', 'show_events.id')
+                ->get()
+                ->map(function ($item) use ($request) {
+                    return [
+                        'id' => $item->event_id,
+                        'total' => $item->booking_nr,
+                        'show' => $item->title,
+                        'date' => Carbon::createFromTimeString($item->show_date)->format('l d F Y - H:i'),
+                        'show_event_id' => $item->event_id,
+                        'detail' => URL::route('bookings.detail', ['show_event_id' => $item->event_id]),
+                        'create' => URL::route('bookings.create', ['show_id' => $request->show_id, 'show_event_id' => $item->event_id])
+                    ];
+                }),
+            'createLink' => URL::route('bookings.create')
+        ]);
     }
 
     /**
-     * @param $code
-     * @return $this
+     * showing booking detail
+     * @param int $show_event_id
+     * @return Response
      */
-    public function edit($code)
+    public function detail(int $show_event_id): Response
     {
-        $booking = Booking::wherePublicCode($code)->firstOrFail();
-        $events = Show::find($booking->show_id)->getEvents();
-        return view('crud/prenotazioni.edit', array('booking' => $booking, 'events' => $events));
+        Log::info("Returning booking map for event with id {$show_event_id}...");
+        $showEvent = ShowEvent::findOrFail($show_event_id);
+        $bookingsCollection = Booking::select(['id', 'customer_id', 'place_number', 'row_letter'])
+            ->where('show_event_id', '=', $show_event_id)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'customer' => Customer::select(['id', 'first_name', 'last_name'])->where('id', '=', $item->customer_id)->get()[0],
+                    'place_number' => $item->place_number,
+                    'row_letter' => $item->row_letter
+                ];
+            })
+            ->groupBy('row_letter')
+            ->toArray();
+
+
+        return Inertia::render(
+            'Bookings/Form',
+            [
+                'bookings' => $bookingsCollection,
+                'customers' => Customer::all()->map(function (Customer $customer) {
+                    return [
+                        'id' => $customer->id,
+                        'name' => $customer->fullName
+                    ];
+                }),
+                'show' => [
+                    'id' => $showEvent->show->id,
+                    'title' => $showEvent->show->title,
+                    'date' => Carbon::createFromTimeString($showEvent->show_date)->format('l d F Y - H:i')
+                ],
+                /*                'customers' => Customer::all()
+                                    ->keyBy('id')
+                                    ->map(function (Customer $customer) {
+                                        return [
+                                            'id' => $customer->id,
+                                            'name' => $customer->full_name
+                                        ];
+                                    }),*/
+                'show_event' => $showEvent,
+            ]
+        );
+    }
+
+    /**
+     * show the places map
+     * @param int $id the show event id
+     * @param Request $request
+     * @return Response
+     */
+    public function edit(int $id, Request $request): Response
+    {
+        $isAddingPlaces = $request->has('addPlace') && $request->addPlace;
+        $booking = Booking::findOrFail($id);
+        $showEvent = ShowEvent::findOrFail($booking->show_event_id);
+        $bookingsCollection = Booking::select(['id', 'customer_id', 'place_number', 'row_letter'])
+            ->where([
+                ['show_event_id', '=', $booking->show_event_id],
+            ])
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'customer' => Customer::select(['id', 'first_name', 'last_name'])->where('id', '=', $item->customer_id)->get()[0],
+                    'place_number' => $item->place_number,
+                    'row_letter' => $item->row_letter
+                ];
+            })
+            ->groupBy('row_letter')
+            ->toArray();
+
+
+        return Inertia::render(
+            'Bookings/Form',
+            [
+                'bookings' => $bookingsCollection,
+
+                'customerBooking' => Booking::where('id', '=', $id)->with(['customer' => function ($query) {
+                    return $query->select(['last_name', 'first_name', 'id']);
+                }])->get()->first(),
+                'show' => [
+                    'id' => $id,
+                    'title' => $showEvent->show->title,
+                    'date' => Carbon::createFromTimeString($showEvent->show_date)->format('l d F Y - H:i')
+                ],
+                'customers' => Customer::all()
+                    ->keyBy('id')
+                    ->map(function (Customer $customer) {
+                        return [
+                            'id' => $customer->id,
+                            'name' => $customer->full_name
+                        ];
+                    }),
+                'addPlace' => $isAddingPlaces,
+                '_method' => 'put',
+            ]
+        );
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return View
+     * @param Request $request
+     * @return Response
      */
-    public function create()
+    public function create(Request $request): Response
     {
-        //shows form create new
-        return view('crud/prenotazioni.create',
-            ['shows' => Show::pluck('name', 'id')]);
+        $showEventFromRequest = ShowEvent::findOrFail($request->get('show_event_id'));
+
+        return Inertia::render(
+            'Bookings/Form', [
+                'bookings' => [],
+                'show' => [
+                    'id' => $showEventFromRequest->show->id,
+                    'title' => $showEventFromRequest->show->title,
+                    'date' => Carbon::createFromTimeString($showEventFromRequest->show_date)->format('l d F Y - H:i')
+                ],
+                'customers' => Customer::all()
+                    ->map(function (Customer $customer) {
+                        return [
+                            'id' => $customer->id,
+                            'name' => $customer->full_name
+                        ];
+                    }),
+                'show_event' => $showEventFromRequest,
+                '_method' => 'POST']
+        );
     }
 
     /**
      * Update the specified resource in storage.
-     * @param $code
-     * @return mixed
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function update(Request $request, $code){
+    public function update(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'place' => 'required',
+            'row' => 'required',
+            'customer_id' => 'required|exists:customers,id',
+            'show_event_id' => 'required|exists:show_events,id',
+        ]);
 
-        $data = $request->all();
-
-        $event_id = $data['event_id'];
-        $full_price = $data['full_price_qnt'];
-        $half_price = $data['half_price_qnt'];
-        $paid = $data['paid'];
-        $place_code = $data['place_code'];
-
-
-        //validazione
-        $rules = array(
-            'event_id' => 'required',
-            'full_price_qnt' => 'required|numeric',
-            'half_price_qnt' => 'required|numeric',
-            'paid' => 'required',
-            'place_code' => 'required'
-        );
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if($validator->fails()){
-
-            return redirect('prenotazioni/'. $code . '/edit')
-                ->withErrors($validator);
-
-        } else {
-
-            /** @var Booking $booking */
-            $booking = Booking::wherePublicCode($code)->first();
-
-            if($booking) {
-
-                //pulling off places from show
-                $show = Show::find($booking->show_id);
-                $show->places += ($booking->full_price_qnt + $booking->half_price_qnt);
-
-                $booking->event_id = $event_id;
-                $booking->full_price_qnt = $full_price;
-                $booking->half_price_qnt = $half_price;
-                $booking->place_code = $place_code;
-                $booking->paid = $paid;
-
-                try {
-
-                    $booking->save();
-
-                } catch (\Exception $ex) {
-
-                    Log::error("cannot update booking: {$ex->getMessage()}");
-                    return redirect('prenotazioni/'. $code . '/edit');
-                }
-
-            return redirect('book/get/list/' . $show->url);
-            }
-            
+        try {
+            $booking = Booking::where('id', '=', $request->id)
+                ->firstOrFail();
+        } catch (\Exception $exception) {
+            Log::error("Cannot update booking: {$exception->getMessage()}");
+            return Redirect::back()->with('error', "Errori nella richiesta");
         }
 
+        Log::info("Updating booking with ID {$booking->id}: from place {$booking->row_letter}{$booking->place_number} to {$request->row}{$request->place}");
+        $booking->update([
+            'place_number' => $request->place,
+            'row_letter' => $request->row
+        ]);
+
+        return Redirect::back()->with('success', 'Dati Modificati correttamente');
     }
 
     /**
      * save booking
      * @param Request $request
-     * @return bool
+     * @return RedirectResponse
      */
-    public function store(Request $request){
+    public function store(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'customer_id' => 'required|exists:customers,id',
+            'show_event_id' => 'required',
+        ]);
 
-        $data = $request->all();
-
-        if(!$data || empty($data)) {
-            return false;
-        }
-
-        //vars
-        $returnVars = array();
-        $factory = Factory::create();
-        $factory->addProvider('Faker\Provider\Miscellaneous');
-        $paid = array_key_exists('paid', $data) ? true : false;
-
-        $token = new Booking();
-
-        $token->viewer_id = $data['viewer'];
-        $token->event_id = $data['date'];
-        $token->show_id = $data['show'];
-        $token->paid = $paid;
-        $token->full_price_qnt = $data['full_price_qnt'];
-        $token->half_price_qnt = $data['half_price_qnt'];
-        $token->total_qnt = $data['full_price_qnt'] + $data['half_price_qnt'];
-        $token->booking_date = new \DateTime();
-        $token->place_code = $data['place_code'];
-        $token->public_code = $this->createPublicCode();
-        $token->booking_code = $factory->sha256;
-
-
-        //TODO Controlli su disponibilità posti
-
-        //salva prenotazione
         try {
-            $token->save();
+            $booking = Booking::create([
+                'customer_id' => $request->customer_id,
+                'show_event_id' => $request->show_event_id,
+                'booking_code' => strtoupper(Str::random(8)),
+                'place_number' => $request->place,
+                'row_letter' => $request->row,
+                'number_of_places' => 1
+            ]);
         } catch (\Exception $ex) {
-            \Session::flash('save_error', $ex->getMessage());
-            Log::error("Booking not saved: " . $ex->getMessage());
-            return view('crud/prenotazioni/create');
-
+            Log::error("Cannot save booking: {$ex->getMessage()}");
+            return Redirect::back()->with('error', 'Invalid data');
         }
-
-        if($token->exists()) {
-
-            $returnVars['token'] = $token;
-
-            $event = ShowEvent::find($data['date']);
-            $show = Show::find($data['show']);
-
-            $returnVars['event'] = $event;
-            $returnVars['show'] = $show;
-            $returnVars['viewer'] = Viewer::find($data['viewer']);
-
-            //$afterBookingEventOps = $this->afterBookingEvent($event, $toRemoveArray);
-            //$afterBookingShowOps = $this->afterBookingShow($show, $toRemoveSum);
-
+        if (!$request->row || !$request->place) {
+            //request is coming from form not from map, should redirect to update
+            return Redirect::to('bookings/' . $booking->id . '/edit');
         }
-
-        return view('bookConfirm', ['data' => $returnVars]);
+        return Redirect::route('bookings.detail', ['show_event_id' => $request->show_event_id])->with('success', 'Dati Modificati correttamente');
     }
 
     /**
-     * @param $code
-     * @return bool|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @param Booking $booking
+     * @return RedirectResponse
      */
-    public function destroy($code){
-
-        if(!$code){
-            return false;
-        }
-        
+    public function destroy(Booking $booking): RedirectResponse
+    {
         try {
-            Booking::wherePublicCode($code)->delete();
+            $booking->delete();
         } catch (\Exception $ex) {
-
             Log::alert("Cannot delete booking: {$ex->getMessage()}");
-            return false;
+            Redirect::back()->with('error', 'Error while deleting booking');
         }
 
-        return redirect(\URL::to('/'));
-    }
-
-    /**
-     * @param $id
-     * @return bool|\Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
-     */
-    public function findByEvent($id){
-
-        /** @var \App\Booking $bookings */
-        $bookings = Booking::where('event_id', '=', $id);
-
-        if(!$bookings){
-            return false;
-        }
-
-        return response($bookings->toJson());
-
-    }
-
-
-    /**
-     * create public code for booking search optimization
-     * @return string
-     */
-    private function createPublicCode(){
-
-        $chars = str_split('abcdefghijklmnopqrstuvwxyz0123456789@!*_|&=');
-        $factory = Factory::create();
-        $code = $factory->randomElements($chars, 10);
-
-        return strtoupper(implode("",$code));
-
+        return Redirect::back();
     }
 }
