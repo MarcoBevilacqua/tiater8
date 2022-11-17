@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,8 +9,24 @@ class ShowEvent extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'show_id',
+        'show_date'
+    ];
+
+    const AVAILABLE_TIMES = [
+        "18:00",
+        "18:30",
+        "19:00",
+        "19:30",
+        "20:00",
+        "20:30",
+        "21:00",
+        "21:30",
+    ];
+
     public function show()
     {
-        $this->belongsTo(Show::class);
+        return $this->belongsTo(Show::class);
     }
 }

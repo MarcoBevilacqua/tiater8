@@ -27,7 +27,9 @@ class ShowController extends Controller
                     'id' => $show->id,
                     'title' => $show->title,
                     'description' => Str::limit($show->description, 120),
-                    'edit' => route('shows.edit', ['show' => $show->id])
+                    'dates' => $show->events()->count(),
+                    'edit' => route('shows.edit', ['show' => $show->id]),
+                    'add_date' => route('show-events.index', ['show' => $show->id])
                 ];
             }),
             'createLink' => URL::route('shows.create')

@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MailTestController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PublicSubscriptionController;
 use App\Http\Controllers\ShowController;
+use App\Http\Controllers\ShowEventController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -49,11 +51,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // changing status
     Route::patch('/subscriptions/{subscription}/status/{status}', [SubscriptionController::class, 'updateStatus'])->name('subscriptions.update-status');
 
+    //Bookings detail
+    Route::get('/bookings/show-event/{show_event_id}', [BookingController::class, 'detail'])->name('bookings.detail');
+
     Route::resource('/subscriptions', SubscriptionController::class);
     
     Route::resource('/customers', CustomerController::class);
 
+    Route::resource('/bookings', BookingController::class);
+
     Route::resource('/shows', ShowController::class);
+
+    Route::resource('/show-events', ShowEventController::class);
+
+    Route::get('/events/{showId}', [ShowEventController::class, 'forShow']);
 });
 
 require __DIR__.'/auth.php';
