@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Show;
+use App\Services\ShowService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use App\Services\ShowService;
 
 class ShowController extends Controller
 {
@@ -21,17 +21,17 @@ class ShowController extends Controller
     {
         return Inertia::render('Shows', [
             'shows' => Show::orderByDesc('id')
-            ->get()
-            ->map(function (Show $show) {
-                return [
-                    'id' => $show->id,
-                    'title' => $show->title,
-                    'description' => Str::limit($show->description, 120),
-                    'dates' => $show->events()->count(),
-                    'edit' => route('shows.edit', ['show' => $show->id]),
-                    'add_date' => route('show-events.index', ['show' => $show->id])
-                ];
-            }),
+                ->get()
+                ->map(function (Show $show) {
+                    return [
+                        'id' => $show->id,
+                        'title' => $show->title,
+                        'description' => Str::limit($show->description, 120),
+                        'dates' => $show->events()->count(),
+                        'edit' => route('shows.edit', ['show' => $show->id]),
+                        'add_date' => route('show-events.index', ['show' => $show->id])
+                    ];
+                }),
             'createLink' => URL::route('shows.create')
         ]);
     }
@@ -56,7 +56,6 @@ class ShowController extends Controller
         $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'url' => 'required|url',
             'full_price' => 'required',
             'half_price' => 'required'
         ]);
@@ -69,22 +68,22 @@ class ShowController extends Controller
         try {
             Show::create(
                 [
-            'title'         => $request->title,
-            'description'   => $request->description,
-            'url'           => $request->url,
-            'full_price'    => $request->full_price,
-            'half_price'    => $request->half_price,
-            'places'        => 50,
-            'image' => $request->hasFile('image') ?
-                asset('/img/' . $request->file('image')->getClientOriginalName()) :
-                ""
-            ]
+                    'title' => $request->title,
+                    'description' => $request->description,
+                    'url' => $request->url ?? "",
+                    'full_price' => $request->full_price,
+                    'half_price' => $request->half_price,
+                    'places' => 50,
+                    'image' => $request->hasFile('image') ?
+                        asset('/img/' . $request->file('image')->getClientOriginalName()) :
+                        ""
+                ]
             );
         } catch (\Exception $exception) {
             Log::error("Cannot create show: {$exception->getMessage()}");
-            Redirect::back()->with("error", "Errore durante l'elaborazione");
+            return Redirect::back()->with("error", "Errore durante l'elaborazione");
         }
-        
+
         return Redirect::route('shows.index')->with("success", "Operazione completata con succcesso");
     }
 
@@ -100,7 +99,7 @@ class ShowController extends Controller
         $show = Show::findOrFail($id);
         return Inertia::render('Shows/Form', [
             'show' => $show,
-            '_method'  => 'put',
+            '_method' => 'put',
         ]);
     }
 
@@ -112,7 +111,7 @@ class ShowController extends Controller
         //validate
         $request->validate(
             ['title' => 'required',
-            'description' => 'required']
+                'description' => 'required']
         );
 
         try {
@@ -129,22 +128,22 @@ class ShowController extends Controller
         }
 
         try {
-            $show->update(
-                ['title' => $request->title,
-            'description' => $request->description,
-            'url' => $request->url,
-            'full_price'    => $request->full_price,
-            'half_price'    => $request->half_price,
-            'image' => $request->hasFile('image') ?
-                asset('/img/' . $request->file('image')->getClientOriginalName()) :
-                $show->image
-            ]
+            $show->update([
+                    'title' => $request->title,
+                    'description' => $request->description,
+                    'url' => $request->url ?? "",
+                    'full_price' => $request->full_price,
+                    'half_price' => $request->half_price,
+                    'image' => $request->hasFile('image') ?
+                        asset('/img/' . $request->file('image')->getClientOriginalName()) :
+                        $show->image
+                ]
             );
         } catch (\Exception $ex) {
             Log::error("Cannot Update Show: {$ex->getMessage()}");
             return Redirect::route('shows.index')->with("error", "Impossibile aggiornare il record");
         }
-        
+
         return Redirect::route('shows.index')->with("success", "Dati aggiornati correttamente");
     }
 
