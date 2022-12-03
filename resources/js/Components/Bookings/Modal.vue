@@ -60,7 +60,7 @@
                                         <input v-model="form.customer_id" name="customer_id" type="hidden">
                                         <input
                                             id="row"
-                                            v-model="row"
+                                            v-model="this.$parent.row"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                             name="row"
                                             type="text"
@@ -70,7 +70,7 @@
                                         <label class="block text-sm font-medium text-gray-700" for="place">Posto</label>
                                         <input
                                             id="place"
-                                            v-model="place"
+                                            v-model="this.$parent.place"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                             name="place"
                                             type="number"
@@ -86,15 +86,16 @@
                                     </button>
                                 </div>
                             </form>
-                            <form @submit.prevent="delete">
-                                <input v-model="form.customer_id" name="customer_id" type="hidden">
-                                <button
-                                    class="w-full md:w-full inline-flex justify-center rounded-md border border-transparent px-5 py-2 text-red-600 font-medium hover:underline sm:w-1/2 sm:text-sm"
-                                    type="submit"
-                                >
-                                    Cancella
-                                </button>
-                            </form>
+
+
+                            <button
+                                class="w-full md:w-full inline-flex justify-center rounded-md border border-transparent px-5 py-2 text-red-600 font-medium hover:underline sm:w-1/2 sm:text-sm"
+                                type="submit"
+                                @click="deleteBooking"
+                            >
+                                Cancella
+                            </button>
+
                         </div>
                     </div>
                     <div v-else>
@@ -137,15 +138,15 @@
                                 </button>
                                 <button
                                     v-else
-                                    type="button"
                                     class="group relative w-full flex justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-400 hover:bg-indigo-600 transition ease-in-out duration-150 cursor-not-allowed"
                                     disabled=""
+                                    type="button"
                                 >
                                     <svg
                                         class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                                        xmlns="http://www.w3.org/2000/svg"
                                         fill="none"
                                         viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg"
                                     >
                                         <circle
                                             class="opacity-25"
@@ -157,8 +158,8 @@
                                         ></circle>
                                         <path
                                             class="opacity-75"
-                                            fill="currentColor"
                                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                            fill="currentColor"
                                         ></path>
                                     </svg>
                                     Operazione in corso...
@@ -188,8 +189,6 @@ import axios from "axios";
 export default {
     props: {
         booking: Object,
-        place: Number,
-        row: String,
         showEventId: Number
     },
     data() {
@@ -200,14 +199,14 @@ export default {
                 id: this.booking ? this.booking.id : null,
                 customer_id: this.booking ? this.booking.customer.id : null,
                 show_event_id: null,
-                place: null,
-                row: null,
+                place: this.$parent.place,
+                row: this.$parent.row,
             })
                 .transform((data) => ({
                     ...data,
                     show_event_id: this.showEventId,
-                    place: this.$props.place,
-                    row: this.$props.row,
+                    place: this.place,
+                    row: this.row,
                 })),
         };
     },
@@ -227,7 +226,7 @@ export default {
                 onError: () => this.$emit('close-modal'),
             });
         },
-        delete() {
+        deleteBooking() {
             this.form.delete(this.route("bookings.destroy", this.form), {
                 onSuccess: () => this.$emit('close-modal'),
                 onError: () => this.$emit('close-modal'),
@@ -242,7 +241,7 @@ export default {
     watch: {
         search: {
             handler: throttle(function () {
-                if(this.search.length > 3){
+                if (this.search.length > 3) {
                     axios.get(
                         '/api/customers', {
                             params:

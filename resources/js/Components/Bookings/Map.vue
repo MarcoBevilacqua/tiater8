@@ -102,8 +102,6 @@
     <Modal
         v-if="this.showModal"
         :booking="this.selectedBooking"
-        :place="this.place"
-        :row="this.row"
         :showEventId="this.showEventId"
         @show-modal="showModal"
         @close-modal="modalClose"
