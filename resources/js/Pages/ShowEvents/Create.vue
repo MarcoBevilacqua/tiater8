@@ -12,11 +12,6 @@
                                 <div
                                     class="shadow overflow-hidden sm:rounded-md"
                                 >
-                                    <input
-                                        type="hidden"
-                                        name="show_id"
-                                        v-model="show_id"
-                                    />
                                     <div class="px-4 py-5 bg-white sm:p-6">
                                         <div class="grid grid-cols-6 gap-6">
                                             <div
@@ -26,16 +21,16 @@
                                                     class="sm:col-span-6 col-span-3"
                                                 >
                                                     <label
-                                                        for="name"
                                                         class="block text-sm font-medium text-gray-700"
-                                                        >Data</label
+                                                        for="name"
+                                                    >Data</label
                                                     >
                                                     <input
-                                                        v-model="form.show_date"
-                                                        type="date"
-                                                        name="show_date"
                                                         id="show_date"
+                                                        v-model="form.show_date"
                                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        name="show_date"
+                                                        type="date"
                                                     />
                                                     <div
                                                         v-if="errors.show_date"
@@ -51,17 +46,17 @@
                                                     class="sm:col-span-6 col-span-3"
                                                 >
                                                     <label
-                                                        for="name"
                                                         class="block text-sm font-medium text-gray-700"
-                                                        >Orario</label
+                                                        for="name"
+                                                    >Orario</label
                                                     >
                                                     <select
-                                                        class="w-full mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                        name="customer"
                                                         id="customer"
                                                         v-model="
                                                             form.show_date_time
                                                         "
+                                                        class="w-full mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        name="customer"
                                                     >
                                                         <option
                                                             v-for="available_time in available_times"
@@ -71,9 +66,10 @@
                                                             :value="
                                                                 available_time
                                                             "
-                                                            >{{
+                                                        >{{
                                                                 available_time
-                                                            }}</option
+                                                            }}
+                                                        </option
                                                         >
                                                     </select>
                                                     <div
@@ -104,8 +100,8 @@
                                             Torna alla lista
                                         </a>
                                         <button
-                                            type="submit"
                                             class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            type="submit"
                                         >
                                             Salva
                                         </button>
@@ -123,8 +119,6 @@
 <script>
 import Container from "@/Layouts/Container";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
-import { useForm } from "@inertiajs/inertia-vue3";
-import { Link } from "@inertiajs/inertia-vue3";
 
 export default {
     components: {
