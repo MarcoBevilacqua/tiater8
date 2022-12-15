@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Customer;
-use App\Models\Show;
 use App\Models\ShowEvent;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -27,32 +26,34 @@ class BookingController extends Controller
     public function index(Request $request): Response
     {
         return Inertia::render('Bookings', [
-            'shows' => Show::get()
-                ->map(function (Show $show) {
-                    return [
-                        'id' => $show->id,
-                        'title' => $show->title,
-                        'description' => Str::limit($show->description, 120),
-                        'edit' => route('shows.edit', ['show' => $show->id])
-                    ];
-                }),
+            /*            'shows' => Show::get()
+                            ->map(function (Show $show) {
+                                return [
+                                    'id' => $show->id,
+                                    'title' => $show->title,
+                                    'description' => Str::limit($show->description, 120),
+                                    'edit' => route('shows.edit', ['show' => $show->id])
+                                ];
+                            }),*/
             'bookings' => DB::table('bookings')
                 ->rightJoin('show_events', 'bookings.show_event_id', '=', 'show_events.id')
                 ->join('shows', 'show_events.show_id', '=', 'shows.id')
                 ->selectRaw('count(bookings.id) as booking_nr, shows.title, show_events.show_date, show_events.id as event_id')
-                ->where([['show_events.show_id', '=', $request->show_id],
-                    ['show_date', '>=', now()]])
+                ->whereRaw('MONTH(show_events.show_date) = ?', Carbon::now()->month)
                 ->groupBy('show_events.show_date', 'shows.title', 'show_events.id')
                 ->get()
                 ->map(function ($item) use ($request) {
                     return [
                         'id' => $item->event_id,
                         'total' => $item->booking_nr,
-                        'show' => $item->title,
+                        'time' => [
+                            'start' => Carbon::createFromTimeString($item->show_date)->format('Y-m-d H:i'),
+                            'end' => Carbon::createFromTimeString($item->show_date)->format('Y-m-d H:i'),],
+                        'title' => $item->title,
                         'date' => Carbon::createFromTimeString($item->show_date)->format('l d F Y - H:i'),
                         'show_event_id' => $item->event_id,
-                        'detail' => URL::route('bookings.detail', ['show_event_id' => $item->event_id]),
-                        'create' => URL::route('bookings.create', ['show_id' => $request->show_id, 'show_event_id' => $item->event_id])
+                        'url' => ($item->event_id) ? URL::route('bookings.detail', ['show_event_id' => $item->event_id]) :
+                            URL::route('bookings.create', ['show_id' => $request->show_id, 'show_event_id' => $item->event_id])
                     ];
                 }),
             'createLink' => URL::route('bookings.create')
