@@ -15,8 +15,7 @@
                             class="font-medium text-indigo-500"
                         >Inserisci nuovo
                         </inertia-link>
-                    </small
-                    >
+                    </small>
                 </div>
                 <div class="flex justify-end">
                     <div>
@@ -40,111 +39,7 @@
         </template>
         <template #main>
             <container>
-                <div v-if="this.loading"
-                     class="relative w-1/2 h-auto mx-auto bg-gray-50 text-center sm:px-6">
-                    <div class="absolute inset-0 px-4 py-3">
-                        <svg
-                            class="animate-spin mx-auto h-10 w-10 text-indigo-500"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <circle
-                                class="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                stroke-width="4"
-                            ></circle>
-                            <path
-                                class="opacity-75"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                fill="currentColor"
-                            ></path>
-                        </svg>
-                    </div>
-                </div>
-                <div v-if="bookings.length == 0 && !this.loading">
-                    <div class="text-center mx-auto p-4 text-lg">
-                        <p>Seleziona uno spettacolo dal menu a tendina</p>
-                    </div>
-                </div>
-                <table v-if="!this.loading && bookings.length > 0" class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                    <tr>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                            scope="col"
-                        >
-                            Data
-                        </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                            scope="col"
-                        >
-                            Posti
-                        </th>
-                        <th
-                            class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"
-                            scope="col"
-                        >
-                            Azioni
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                    <tr v-for="booking in bookings" :key="booking.id">
-                        <td
-                            class="px-6 py-4 text-clip truncate whitespace-nowrap"
-                        >
-                            <div class="flex items-center">
-                                <div
-                                    class="text-sm font-medium text-gray-900"
-                                >
-                                    {{ booking.date }}
-                                </div>
-                            </div>
-                        </td>
-                        <td
-
-                            class="px-6 py-4 text-clip truncate whitespace-nowrap"
-                        >
-                            <div class="flex items-center">
-                                <div
-                                    class="text-sm font-medium text-gray-900"
-                                >
-                                    {{ booking.total }}/50
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py- 4 whitespace-nowrap">
-                            <div class="text-center">
-                                <div
-                                    class="text-sm font-medium text-gray-900"
-                                >
-                                    <inertia-link
-                                        v-if="booking.total > 0"
-                                        :href="booking.detail"
-                                        class="text-blue-700 inline-flex items-center font-semibold tracking-wide"
-                                        method="get"
-                                    >
-                                        Tutte le prenotazioni
-                                    </inertia-link>
-                                    <inertia-link
-                                        v-else
-                                        :data="{show_event_id: booking.show_event_id}"
-                                        :href="booking.create"
-                                        class="text-blue-700 inline-flex items-center font-semibold tracking-wide"
-                                        method="get"
-                                    >
-                                        Inserisci prenotazione
-                                    </inertia-link>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                <Qalendar :events="events"/>
             </container>
         </template>
     </breeze-authenticated-layout>
@@ -157,6 +52,9 @@ import Container from "@/Layouts/Container";
 import BreezeDropdown from "@/Components/Dropdown";
 import BreezeDropdownLink from "@/Components/DropdownLink";
 import TableSearch from "@/Shared/TableFilter";
+import {Qalendar} from "qalendar";
+
+import '../../../node_modules/qalendar/dist/style.css';
 
 export default {
     components: {
@@ -165,12 +63,26 @@ export default {
         BreezeAuthenticatedLayout,
         Container,
         TableSearch,
+        Qalendar,
     },
-
     props: {
         shows: Object,
         bookings: Object,
         createLink: String,
+        calendarItems: Object
+    },
+    data() {
+        return {
+            locale: 'it-IT',
+            events: this.bookings,
+            // if not set, the mode defaults to 'week'. The three available options are 'month', 'week' and 'day'
+            // Please note, that only day and month modes are available for the calendar in mobile-sized wrappers (~700px wide or less, depending on your root font-size)
+            defaultMode: 'day',
+            showCurrentTime: true, // Display a line indicating the current time
+            message: "",
+            showDate: new Date(),
+            show_id: null,
+        };
     },
     watch: {
         show_id: {
@@ -192,11 +104,19 @@ export default {
             }
         },
     },
-    data() {
-        return {
-            show_id: null,
-            loading: false
-        };
-    },
+
+    methods: {}
 };
 </script>
+
+<style>
+#calendar {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    height: 67vh;
+    width: 90vw;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+</style>
