@@ -8,7 +8,6 @@ use App\Models\ShowEvent;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request as Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
@@ -26,34 +25,16 @@ class BookingController extends Controller
     public function index(Request $request): Response
     {
         return Inertia::render('Bookings', [
-            /*            'shows' => Show::get()
-                            ->map(function (Show $show) {
-                                return [
-                                    'id' => $show->id,
-                                    'title' => $show->title,
-                                    'description' => Str::limit($show->description, 120),
-                                    'edit' => route('shows.edit', ['show' => $show->id])
-                                ];
-                            }),*/
-            'bookings' => DB::table('bookings')
-                ->rightJoin('show_events', 'bookings.show_event_id', '=', 'show_events.id')
+            'bookings' => ShowEvent::select(['show_events.id', 'shows.title', 'show_date'])
                 ->join('shows', 'show_events.show_id', '=', 'shows.id')
-                ->selectRaw('count(bookings.id) as booking_nr, shows.title, show_events.show_date, show_events.id as event_id')
-                ->whereRaw('MONTH(show_events.show_date) = ?', Carbon::now()->month)
-                ->groupBy('show_events.show_date', 'shows.title', 'show_events.id')
+                ->whereRaw('show_events.show_date BETWEEN ? AND ?', [Carbon::now(), Carbon::now()->add(new \DateInterval('P6M'))])
                 ->get()
                 ->map(function ($item) use ($request) {
                     return [
-                        'id' => $item->event_id,
-                        'total' => $item->booking_nr,
-                        'time' => [
-                            'start' => Carbon::createFromTimeString($item->show_date)->format('Y-m-d H:i'),
-                            'end' => Carbon::createFromTimeString($item->show_date)->format('Y-m-d H:i'),],
+                        'id' => $item->id,
                         'title' => $item->title,
-                        'date' => Carbon::createFromTimeString($item->show_date)->format('l d F Y - H:i'),
-                        'show_event_id' => $item->event_id,
-                        'url' => ($item->event_id) ? URL::route('bookings.detail', ['show_event_id' => $item->event_id]) :
-                            URL::route('bookings.create', ['show_id' => $request->show_id, 'show_event_id' => $item->event_id])
+                        'date' => Carbon::createFromTimeString($item->show_date)->format('Y-m-d H:i'),
+                        'url' => URL::route('bookings.detail', ['show_event_id' => $item->id])
                     ];
                 }),
             'createLink' => URL::route('bookings.create')
@@ -99,14 +80,6 @@ class BookingController extends Controller
                     'title' => $showEvent->show->title,
                     'date' => Carbon::createFromTimeString($showEvent->show_date)->format('l d F Y - H:i')
                 ],
-                /*                'customers' => Customer::all()
-                                    ->keyBy('id')
-                                    ->map(function (Customer $customer) {
-                                        return [
-                                            'id' => $customer->id,
-                                            'name' => $customer->full_name
-                                        ];
-                                    }),*/
                 'show_event' => $showEvent,
             ]
         );
