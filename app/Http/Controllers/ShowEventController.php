@@ -22,7 +22,7 @@ class ShowEventController extends Controller
                 ->map(function (ShowEvent $showEvent) {
                     return [
                         'id' => $showEvent->id,
-                        'date' => Carbon::createFromTimeString($showEvent->show_date)->format('d F Y'),
+                        'date' => Carbon::createFromTimeString($showEvent->show_date, config('app.timezone'))->format('d F Y'),
                         'time' => Carbon::createFromTimeString($showEvent->show_date)->format('H:i'),
                         'edit' => route('show-events.edit', ['show_event' => $showEvent->id]),
                     ];
@@ -34,7 +34,7 @@ class ShowEventController extends Controller
 
     /**
      * @param $id
-     * @return bool
+     * @return \Inertia\Response
      */
     public function edit($id)
     {
@@ -64,7 +64,8 @@ class ShowEventController extends Controller
     public function create(Request $request)
     {
         return Inertia::render('ShowEvents/Create', [
-            'show_id' => $request->show_id,
+            'shows' => Show::select(['id', 'title'])->get(),
+            'show_date' => $request->date,
             'available_times' => ShowEvent::AVAILABLE_TIMES,
             '_method' => 'post'
         ]);

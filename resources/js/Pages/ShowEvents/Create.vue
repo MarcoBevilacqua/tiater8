@@ -9,100 +9,53 @@
                     <div class="md:grid md:grid-cols-3 md:gap-6">
                         <div class="mt-10 md:mt-5 md:col-span-3">
                             <form @submit.prevent="create">
-                                <div
-                                    class="shadow overflow-hidden sm:rounded-md"
-                                >
+                                <div class="shadow overflow-hidden sm:rounded-md">
                                     <div class="px-4 py-5 bg-white sm:p-6">
                                         <div class="grid grid-cols-6 gap-6">
-                                            <div
-                                                class="sm:col-span-3 col-span-3"
-                                            >
-                                                <div
-                                                    class="sm:col-span-6 col-span-3"
-                                                >
-                                                    <label
-                                                        class="block text-sm font-medium text-gray-700"
-                                                        for="name"
-                                                    >Data</label
-                                                    >
-                                                    <input
-                                                        id="show_date"
-                                                        v-model="form.show_date"
-                                                        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                        name="show_date"
-                                                        type="date"
-                                                    />
-                                                    <div
-                                                        v-if="errors.show_date"
-                                                    >
-                                                        {{ errors.show_date }}
-                                                    </div>
+                                            <div class="sm:col-span-3 col-span-3">
+                                                <div class="sm:col-span-6 col-span-3">
+                                                    <label class="block text-gray-700">Seleziona spettacolo</label>
+                                                    <select
+                                                        id="show_id"
+                                                        v-model="form.show_id"
+                                                        class="w-72 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                        name="show_id">
+                                                        <option v-for="show in shows" :key="show.id" :value="show.id">
+                                                            {{ show.title }}
+                                                        </option>
+                                                    </select>
+                                                    <div v-if="errors.show_id">{{ errors.show_id }}</div>
                                                 </div>
                                             </div>
-                                            <div
-                                                class="sm:col-span-3 col-span-3"
-                                            >
-                                                <div
-                                                    class="sm:col-span-6 col-span-3"
-                                                >
+                                            <div class="sm:col-span-3 col-span-3">
+                                                <div class="sm:col-span-6 col-span-3">
                                                     <label
                                                         class="block text-sm font-medium text-gray-700"
-                                                        for="name"
-                                                    >Orario</label
-                                                    >
+                                                        for="name">Orario</label>
                                                     <select
                                                         id="customer"
-                                                        v-model="
-                                                            form.show_date_time
-                                                        "
+                                                        v-model="form.show_date_time"
                                                         class="w-full mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                        name="customer"
-                                                    >
+                                                        name="customer">
                                                         <option
                                                             v-for="available_time in available_times"
-                                                            :key="
-                                                                available_time
-                                                            "
-                                                            :value="
-                                                                available_time
-                                                            "
-                                                        >{{
-                                                                available_time
-                                                            }}
-                                                        </option
-                                                        >
+                                                            :key="available_time" :value="available_time">
+                                                            {{ available_time }}
+                                                        </option>
                                                     </select>
-                                                    <div
-                                                        v-if="
-                                                            errors.show_date_time
-                                                        "
-                                                    >
-                                                        {{
-                                                            errors.show_date_time
-                                                        }}
-                                                    </div>
+                                                    <div v-if="errors.show_date_time">{{ errors.show_date_time }}</div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div
-                                        class="px-4 py-3 bg-gray-50 text-right sm:px-6"
-                                    >
-                                        <a
-                                            :href="
-                                                route('show-events.index', {
-                                                    show: show_id,
-                                                })
-                                            "
-                                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mr-3"
-                                        >
+                                    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                                        <a :href="route('show-events.index', { show: show_id })"
+                                           class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mr-3">
                                             Torna alla lista
                                         </a>
                                         <button
                                             class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                            type="submit"
-                                        >
+                                            type="submit">
                                             Salva
                                         </button>
                                     </div>
@@ -128,9 +81,9 @@ export default {
 
     props: {
         errors: Object,
-        show_id: Number,
+        shows: Array,
+        show_date: String,
         available_times: Array,
-        show: Number,
         _method: String,
     },
 
@@ -138,13 +91,13 @@ export default {
         return {
             form: this.$inertia
                 .form({
-                    show_date: null,
+                    show_id: null,
                     show_date_time: null,
                     _method: this._method,
                 })
                 .transform((data) => ({
                     ...data,
-                    show_id: this.$props.show_id,
+                    show_date: this.$props.show_date,
                 })),
         };
     },

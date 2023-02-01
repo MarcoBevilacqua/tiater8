@@ -54,14 +54,14 @@ export default {
                 initialView: 'dayGridMonth',
                 dateClick: this.handleDateClick,
                 locale: "it-IT",
-                events: this.bookings
+                events: this.bookings,
             },
         };
     },
 
     methods: {
         handleDateClick: function (arg) {
-            console.log(arg.dateStr)
+            window.location.href = this.createLink + '?date=' + arg.dateStr
         },
     }
 };

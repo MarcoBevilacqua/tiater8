@@ -37,7 +37,7 @@ class BookingController extends Controller
                         'url' => URL::route('bookings.detail', ['show_event_id' => $item->id])
                     ];
                 }),
-            'createLink' => URL::route('bookings.create')
+            'createLink' => URL::route('show-events.create')
         ]);
     }
 
