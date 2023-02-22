@@ -64,7 +64,7 @@
             <Row
                 :bookedPlaces="getBookedPlacesForRow('Y')"
                 :custom="true"
-                :places="1"
+                :places="2"
                 :row="'Y'"
                 @show-modal="modalShow"
             />
