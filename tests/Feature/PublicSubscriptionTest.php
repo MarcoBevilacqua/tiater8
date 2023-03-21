@@ -15,12 +15,18 @@ class PublicSubscriptionTest extends TestCase
 
     private $admin;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        User::factory()->create();
-        $this->admin = User::first();
-    }
+    private $subscriptionData = [
+        'first_name' => 'Marco',
+        'last_name' => 'Bevilacqua',
+        'city' => 'my City',
+        'province' => 'FG',
+        'resident' => 'aaaa',
+        'birth' => '1982-07-20',
+        'phone' => 3333333,
+        'address' => 'Fake address',
+        'postal_code' => 989797,
+        'fiscal_code' => 'HKUIDIUHAISUFYIH'
+    ];
 
     /**
      * @test
@@ -56,7 +62,7 @@ class PublicSubscriptionTest extends TestCase
         $this->assertDatabaseCount('subscriptions', 1);
         $sub = Subscription::where('subscription_email', 'prova@prova.com')->first();
         $this->assertDatabaseHas('subscriptions', ['token' => $sub->token, 'status' => 0]);
-        $url = URL::signedRoute('subscriptions.fill', ['token' =>  $sub->token]);
+        $url = URL::signedRoute('subscriptions.fill', ['token' => $sub->token]);
         $getFormResponse = $this->get($url);
         $getFormResponse->assertStatus(200);
     }
@@ -75,12 +81,12 @@ class PublicSubscriptionTest extends TestCase
         $this->assertDatabaseHas('subscriptions', ['expires_at' => null]);
         //assert response
         $this->get(
-            URL::signedRoute('subscriptions.fill', ['token' =>  Subscription::first()->token])
+            URL::signedRoute('subscriptions.fill', ['token' => Subscription::first()->token])
         )->assertStatus(200);
         //assert subscription has changed
         $this->assertDatabaseHas('subscriptions', [
             'expires_at' => Carbon::now()->addMinutes(10)->format('Y-m-d H:i:s')
-            ]);
+        ]);
     }
 
     /**
@@ -91,76 +97,94 @@ class PublicSubscriptionTest extends TestCase
      */
     public function subscriptionSubmitShouldUpdateStatus()
     {
-        $subscriptionToBeCompleted = Subscription::factory()->toBeCompleted()->create();
+        $subToComplete = Subscription::factory()->toBeCompleted()->create();
 
         //subscription has to be confirmed, user should fill the form
         $this->assertDatabaseHas('subscriptions', ['status' => Subscription::TO_BE_COMPLETED]);
-        //user fills the form and hit "submit"
-        $subscriptionData = [
-            'first_name' => 'Marco',
-            'last_name' => 'Bevilacqua',
-            'email' => $subscriptionToBeCompleted->subscription_email,
-            'sub_token' => $subscriptionToBeCompleted->token,
-            'city' => 'my City',
-            'province' => 'FG',
-            'resident' => 'aaaa',
-            'birth' => '1982-07-20',
-            'phone' => 3333333,
-            'address' => 'Fake address',
-            'postal_code' => 989797,
-            'fiscal_code' => 'ABCUIO678TYHGC67'
-        ];
 
-        $this->post('/over/subscriptions/complete', $subscriptionData);
+        //user fills the form and hit "submit"
+        $this->post('/over/subscriptions/complete', $this->subscriptionData +
+            ['email' => $subToComplete->subscription_email,
+                'sub_token' => $subToComplete->token]);
 
         $this->assertDatabaseHas('customers', [
-            'email' => $subscriptionToBeCompleted->subscription_email,
+            'email' => $subToComplete->subscription_email,
             'first_name' => 'Marco',
             'last_name' => 'Bevilacqua',
             'password' => null,
-            
+
         ]);
 
         $this->assertDatabaseHas('subscriptions', [
             'status' => Subscription::TO_BE_CONFIRMED
         ]);
     }
-        
+
     /**
      * @test
      *
      *
      * @return void
      */
-    public function subscriptionFromPublicRouteShouldHaveProperYears()
+    public function subscriptionMadeAfterJuneShouldHaveProperYears()
     {
-        $subscriptionToBeCompleted = Subscription::factory()->toBeCompleted()->create();
+        //set test time to after june
+        Carbon::setTestNow(Carbon::createFromDate(date('Y'), 7, 22));
+
+        $subToComplete = Subscription::factory()->toBeCompleted()->create();
 
         //subscription has to be confirmed, user should fill the form
-        $this->assertDatabaseHas('subscriptions', ['status' => 1]);
-        //user fills the form and hit "submit"
-        $subscriptionData = [
-            'first_name' => 'Marco',
-            'last_name' => 'Bevilacqua',
-            'email' => $subscriptionToBeCompleted->subscription_email,
-            'sub_token' => $subscriptionToBeCompleted->token,
-            'city' => 'my City',
-            'province' => 'FG',
-            'resident' => 'aaaa',
-            'birth' => '1982-07-20',
-            'phone' => 3333333,
-            'address' => 'Fake address',
-            'postal_code' => 989797,
-            'fiscal_code' => 'HKUIDIUHAISUFYIH'
-        ];
+        $this->assertDatabaseHas('subscriptions', ['status' => Subscription::TO_BE_COMPLETED]);
 
-        //create subscription
-        $this->post('/over/subscriptions/complete', $subscriptionData);
+        //set token and email
+        $this->subscriptionData['token'] = $subToComplete->token;
+        $this->subscriptionData['email'] = $subToComplete->subscription_email;
+
+        //complete subscription
+        $this->post('/over/subscriptions/complete', $this->subscriptionData + [
+                'sub_token' => $subToComplete->token,
+                'email' => $subToComplete->email
+            ]);
 
         $this->assertDatabaseHas('subscriptions', [
-            'subscription_email' => $subscriptionToBeCompleted->subscription_email,
+            'subscription_email' => $subToComplete->subscription_email,
             'year_from' => Carbon::now()->year,
             'year_to' => Carbon::now()->year + 1
         ]);
+    }
+
+    /**
+     * @test
+     *
+     *
+     * @return void
+     */
+    public function subscriptionMadeInJuneShouldHaveProperYears()
+    {
+        Carbon::setTestNow(Carbon::createFromDate(date('Y'), 5, 22));
+
+        $subToComplete = Subscription::factory()->toBeCompleted()->create();
+
+        //subscription has to be confirmed, user should fill the form
+        $this->assertDatabaseHas('subscriptions', ['status' => 1]);
+
+        //create subscription
+        $this->post('/over/subscriptions/complete', $this->subscriptionData + [
+                'sub_token' => $subToComplete->token,
+                'email' => $subToComplete->email
+            ]);
+
+        $this->assertDatabaseHas('subscriptions', [
+            'subscription_email' => $subToComplete->subscription_email,
+            'year_from' => Carbon::now()->year - 1,
+            'year_to' => Carbon::now()->year
+        ]);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        User::factory()->create();
+        $this->admin = User::first();
     }
 }
