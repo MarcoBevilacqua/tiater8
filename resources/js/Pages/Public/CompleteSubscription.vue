@@ -4,9 +4,9 @@
             <div class="flex justify-items-center">
                 <div class="w-full">
                     <img
-                        class="mx-auto rounded-md"
                         :src="'/img/common/logo.jpg'"
                         alt="pci_logo"
+                        class="mx-auto rounded-md"
                     />
                 </div>
             </div>
@@ -19,7 +19,7 @@
                             >
                                 <p>Completa la tua iscrizione</p>
                                 <small
-                                    >(I campi contrassegnati con * sono
+                                >(I campi contrassegnati con * sono
                                     obbligatori)</small
                                 >
                             </div>
@@ -31,18 +31,18 @@
                                         class="col-span-12 md:col-span-2 lg:col-span-2"
                                     >
                                         <label
-                                            for="first_name"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Nome*</label
+                                            for="first_name"
+                                        >Nome*</label
                                         >
                                         <input
-                                            v-model="form.first_name"
-                                            type="text"
-                                            name="first_name"
                                             id="first_name"
-                                            required
+                                            v-model="form.first_name"
                                             autocomplete="given-name"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            name="first_name"
+                                            required
+                                            type="text"
                                         />
                                     </div>
 
@@ -50,18 +50,18 @@
                                         class="col-span-12 md:col-span-2 lg:col-span-2"
                                     >
                                         <label
-                                            for="last_name"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Cognome*</label
+                                            for="last_name"
+                                        >Cognome*</label
                                         >
                                         <input
-                                            v-model="form.last_name"
-                                            type="text"
-                                            name="last_name"
                                             id="last_name"
-                                            required
+                                            v-model="form.last_name"
                                             autocomplete="family-name"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            name="last_name"
+                                            required
+                                            type="text"
                                         />
                                     </div>
 
@@ -69,17 +69,17 @@
                                         class="col-span-12 md:col-span-2 lg:col-span-2"
                                     >
                                         <label
-                                            for="fiscal_code"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Codice Fiscale*</label
+                                            for="fiscal_code"
+                                        >Codice Fiscale*</label
                                         >
                                         <input
-                                            v-model="form.fiscal_code"
-                                            type="text"
-                                            name="fiscal_code"
                                             id="fiscal_code"
-                                            required
+                                            v-model="form.fiscal_code"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            name="fiscal_code"
+                                            required
+                                            type="text"
                                         />
                                         <div
                                             v-if="errors.fiscal_code"
@@ -93,17 +93,17 @@
                                         class="col-span-8 md:col-span-2 lg:col-span-2"
                                     >
                                         <label
-                                            for="city"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Nato a*</label
+                                            for="city"
+                                        >Nato a*</label
                                         >
                                         <input
-                                            v-model="form.city"
-                                            type="text"
-                                            name="city"
                                             id="city"
-                                            required
+                                            v-model="form.city"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            name="city"
+                                            required
+                                            type="text"
                                         />
                                     </div>
 
@@ -111,17 +111,17 @@
                                         class="col-span-4 md:col-span-1 lg:col-span-1"
                                     >
                                         <label
-                                            for="province"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Provincia*</label
+                                            for="province"
+                                        >Provincia*</label
                                         >
                                         <input
-                                            v-model="form.province"
-                                            type="text"
-                                            name="province"
                                             id="province"
-                                            required
+                                            v-model="form.province"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            name="province"
+                                            required
+                                            type="text"
                                         />
                                     </div>
 
@@ -129,17 +129,17 @@
                                         class="col-span-6 md:col-span-2 lg:col-span-2"
                                     >
                                         <label
-                                            for="birth"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Il*</label
+                                            for="birth"
+                                        >Il*</label
                                         >
                                         <input
-                                            v-model="form.birth"
-                                            type="date"
-                                            name="birth"
                                             id="birth"
-                                            required
+                                            v-model="form.birth"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            name="birth"
+                                            required
+                                            type="date"
                                         />
                                         <div
                                             v-if="errors.birth"
@@ -153,17 +153,17 @@
                                         class="col-span-6 sm:col-span-2 lg:col-span-2"
                                     >
                                         <label
-                                            for="resident"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Residente a*</label
+                                            for="resident"
+                                        >Residente a*</label
                                         >
                                         <input
-                                            v-model="form.resident"
-                                            type="text"
-                                            name="resident"
                                             id="resident"
-                                            required
+                                            v-model="form.resident"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            name="resident"
+                                            required
+                                            type="text"
                                         />
                                     </div>
 
@@ -171,18 +171,18 @@
                                         class="col-span-8 md:col-span-2 lg:col-span-2"
                                     >
                                         <label
-                                            for="address"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Indirizzo*</label
+                                            for="address"
+                                        >Indirizzo*</label
                                         >
                                         <input
-                                            v-model="form.address"
-                                            type="text"
-                                            name="address"
                                             id="address"
-                                            required
+                                            v-model="form.address"
                                             autocomplete="street-address"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            name="address"
+                                            required
+                                            type="text"
                                         />
                                     </div>
 
@@ -190,18 +190,18 @@
                                         class="col-span-4 md:col-span-1 lg:col-span-1"
                                     >
                                         <label
-                                            for="postal_code"
                                             class="block text-sm font-medium text-gray-700"
-                                            >CAP*</label
+                                            for="postal_code"
+                                        >CAP*</label
                                         >
                                         <input
-                                            v-model="form.postal_code"
-                                            type="number"
-                                            name="postal_code"
                                             id="postal_code"
-                                            required
+                                            v-model="form.postal_code"
                                             autocomplete="postal-code"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            name="postal_code"
+                                            required
+                                            type="number"
                                         />
                                     </div>
 
@@ -209,17 +209,17 @@
                                         class="col-span-8 md:col-span-2 lg:col-span-2"
                                     >
                                         <label
-                                            for="phone"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Telefono*</label
+                                            for="phone"
+                                        >Telefono*</label
                                         >
                                         <input
-                                            v-model="form.phone"
-                                            type="text"
-                                            name="phone"
                                             id="phone"
-                                            required
+                                            v-model="form.phone"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            name="phone"
+                                            required
+                                            type="text"
                                         />
                                     </div>
 
@@ -227,57 +227,57 @@
                                         class="col-span-6 md:col-span-2 lg:col-span-2"
                                     >
                                         <label
-                                            for="contact_type"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Contatto</label
+                                            for="contact_type"
+                                        >Contatto</label
                                         >
                                         <select
-                                            v-model="form.contact_type"
-                                            name="contact_type"
                                             id="contact_type"
+                                            v-model="form.contact_type"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            name="contact_type"
                                         >
                                             <option
                                                 v-for="(key, value) in contacts"
-                                                :value="value"
                                                 :key="value"
-                                                >{{ key }}</option
+                                                :value="value"
+                                            >{{ key }}
+                                            </option
                                             >
                                         </select>
                                     </div>
 
                                     <div
-                                        v-if="
-                                            form.contact_type != default_contact
-                                        "
+                                        v-if="form.contact_type != default_contact"
                                         class="col-span-6 md:col-span-2 lg:col-span-2"
                                     >
                                         <label
-                                            for="activity"
                                             class="block text-sm font-medium text-gray-700"
-                                            >Per attività riguardanti
+                                            for="activity"
+                                        >Per attività riguardanti
                                         </label>
                                         <select
-                                            v-model="form.activity"
-                                            name="activity"
                                             id="activity"
+                                            v-model="form.activity"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                            name="activity"
                                         >
                                             <option
                                                 v-for="(key,
                                                 value) in activities"
-                                                :value="value"
                                                 :key="value"
-                                                >{{ key }}</option
+                                                :value="value"
+                                            >{{ key }}
+                                            </option
                                             >
                                         </select>
                                     </div>
 
                                     <input
-                                        type="hidden"
+                                        id="sub_token"
                                         v-model="form.sub_token"
                                         name="sub_token"
-                                        id="sub_token"
+                                        type="hidden"
                                     />
                                 </div>
                             </div>
@@ -286,8 +286,8 @@
                                 class="px-4 py-3 bg-gray-50 text-center sm:px-6"
                             >
                                 <button
-                                    type="submit"
                                     class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    type="submit"
                                 >
                                     Completa il tuo tesseramento
                                 </button>
@@ -297,15 +297,15 @@
                                 class="px-4 py-3 bg-gray-50 text-center sm:px-6"
                             >
                                 <button
-                                    type="button"
                                     class="inline-flex justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-400 hover:bg-indigo-600 transition ease-in-out duration-150 cursor-not-allowed"
                                     disabled=""
+                                    type="button"
                                 >
                                     <svg
                                         class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                                        xmlns="http://www.w3.org/2000/svg"
                                         fill="none"
                                         viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg"
                                     >
                                         <circle
                                             class="opacity-25"
@@ -317,8 +317,8 @@
                                         ></circle>
                                         <path
                                             class="opacity-75"
-                                            fill="currentColor"
                                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                            fill="currentColor"
                                         ></path>
                                     </svg>
                                     Operazione in corso...
@@ -328,26 +328,26 @@
                     </form>
                 </div>
                 <div
-                    class="text-center col-span-3 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                    role="alert"
                     v-if="
                         $page.props.flash.error ||
                         (Object.keys($page.props.errors).length > 0 && show)
                     "
+                    class="text-center col-span-3 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                    role="alert"
                 >
                     <div v-if="$page.props.flash.error">
                         <span class="block sm:inline">{{
-                            $page.props.flash.error
-                        }}</span>
+                                $page.props.flash.error
+                            }}</span>
                     </div>
                     <div v-else>
                         <span
-                            class="block sm:inline"
                             v-if="Object.keys($page.props.errors).length === 1"
-                            >Errore nella compilazione dei dati</span
+                            class="block sm:inline"
+                        >Errore nella compilazione dei dati</span
                         >
                         <span v-else
-                            >Rilevati
+                        >Rilevati
                             {{ Object.keys($page.props.errors).length }}
                             errori nella compilazione dei dati.</span
                         >
@@ -359,8 +359,8 @@
                         <svg
                             class="fill-current h-6 w-6 text-red-500"
                             role="button"
-                            xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
                         >
                             <title>Close</title>
                             <path
@@ -376,8 +376,7 @@
 
 <script>
 import Container from "@/Layouts/Container";
-import { Inertia } from "@inertiajs/inertia";
-import { useForm } from "@inertiajs/inertia-vue3";
+import {useForm} from "@inertiajs/inertia-vue3";
 
 export default {
     components: {
@@ -422,14 +421,19 @@ export default {
         });
 
         function submit() {
-            form.post("/over/subscriptions/complete", {
-                preserveScroll: true,
-                preserveState: true,
-                onSuccess: () => form.reset(),
-            });
+            form
+                .transform((data) => ({
+                    ...data,
+                    activity: (data.contact_type === this.default_contact) ? data.activity : null,
+                }))
+                .post("/over/subscriptions/complete", {
+                    preserveScroll: true,
+                    preserveState: true,
+                    onSuccess: () => form.reset(),
+                });
         }
 
-        return { form, submit };
+        return {form, submit};
     },
 
     mounted() {
