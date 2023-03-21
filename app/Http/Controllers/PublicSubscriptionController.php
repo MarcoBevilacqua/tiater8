@@ -99,8 +99,8 @@ class PublicSubscriptionController extends Controller
         if (!$request->is('over/*')) {
             try {
                 Mail::to($request->customer_email)
-            ->send(new SubscriptionToComplete(URL::signedRoute('subscriptions.fill', [
-                'token' => $randomString])));
+                    ->send(new SubscriptionToComplete(URL::signedRoute('subscriptions.fill', [
+                        'token' => $randomString])));
             } catch (\Exception $exception) {
                 Log::error("Cannot send Mail to {$request->customer_email}: " . $exception->getMessage());
             }
@@ -112,9 +112,9 @@ class PublicSubscriptionController extends Controller
             return Redirect::route('subscriptions.index');
         }
 
-        
+
         return Redirect::to(URL::signedRoute('subscriptions.fill', [
-                'token' => $randomString]));
+            'token' => $randomString]));
     }
 
     /**
@@ -127,8 +127,8 @@ class PublicSubscriptionController extends Controller
     {
         try {
             $subscriptionToFill = Subscription::where('token', '=', $token)
-            ->where('status', Subscription::PENDING)
-            ->firstOrFail();
+                ->where('status', Subscription::PENDING)
+                ->firstOrFail();
         } catch (\Exception $modelNotFoundException) {
             Log::error("Cannot Find pending Subscription to fill: " . $modelNotFoundException->getMessage());
             abort(401);
@@ -174,7 +174,7 @@ class PublicSubscriptionController extends Controller
             'birth' => 'required',
             'resident' => 'required',
             'fiscal_code' => 'required|size:16'
-         ]);
+        ]);
 
         Log::info("Request validated, proceeding...");
 
@@ -188,7 +188,7 @@ class PublicSubscriptionController extends Controller
         //checking if data is correct
         $canHandleSubscription = SubscriptionService::subscriptionCanBeConfirmed($request->input('sub_token'));
 
-        if ($canHandleSubscription && !$canHandleSubscription->first()) {
+        if (!$canHandleSubscription->count()) {
             Log::error("Cannot find subscription with token " . $request->input('sub_token'));
             abort(400);
         }
@@ -199,7 +199,7 @@ class PublicSubscriptionController extends Controller
                 'first_name' => $request->input('first_name'),
                 'last_name' => $request->input('last_name'),
                 'city' => $request->input('city'),
-                'email' => $canHandleSubscription->last(), //should not be handled from the public form
+                'email' => $canHandleSubscription->subscription_email, //should not be handled from the public form
                 'phone' => $request->input('phone'),
                 'birth' => $request->input('birth'),
                 'province' => $request->input('province'),
@@ -216,9 +216,9 @@ class PublicSubscriptionController extends Controller
         Log::info("Customer with ID {$customer->id} successfully created", [__CLASS__, __FUNCTION__]);
 
         try {
-            Mail::to($canHandleSubscription->last())->send(new SubscriptionFilled());
+            Mail::to($canHandleSubscription->subscription_email)->send(new SubscriptionFilled());
         } catch (\Exception $exception) {
-            Log::error("Cannot send Mail to {$canHandleSubscription->last()}: " . $exception->getMessage());
+            Log::error("Cannot send Mail to {$canHandleSubscription->subscription_email}: " . $exception->getMessage());
         }
 
         //retrieve year_from and year_to
@@ -227,17 +227,17 @@ class PublicSubscriptionController extends Controller
 
         //complete the subscription
         Subscription::where('token', $request->input('sub_token'))
-         ->first()->update([
-             'customer_id' => $customer->id,
-             'status' => Subscription::TO_BE_CONFIRMED,
-             'contact_type' => $request->input('contact_type'),
-             'activity' => $request->input('activity'),
-             'year_from' => $years['from'],
-             'year_to' => $years['to'],
-         ]);
+            ->first()->update([
+                'customer_id' => $customer->id,
+                'status' => Subscription::TO_BE_CONFIRMED,
+                'contact_type' => $request->input('contact_type'),
+                'activity' => $request->input('activity'),
+                'year_from' => $years['from'],
+                'year_to' => $years['to'],
+            ]);
 
         Log::info("redirecting to subscriptions/" . $request->input('sub_token') . "/confirmed");
-        
+
         /** TODO: Redirect on public simple view */
         return Redirect::to('over/subscriptions/');
     }

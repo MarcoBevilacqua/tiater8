@@ -77,19 +77,14 @@ class SubscriptionService
      * Check if subscription can be confirmed
      * @param string $token
      *
-     * @return Collection
+     * @return Subscription
      */
-    public static function subscriptionCanBeConfirmed(string $token): Collection
+    public static function subscriptionCanBeConfirmed(string $token): Subscription
     {
-        $subscriptionByToken = Subscription::where('token', '=', $token)
-            ->first();
-
-        if (!$subscriptionByToken) {
-            return false;
-        }
-
-        return collect([$subscriptionByToken->expires_at > Carbon::now(), $subscriptionByToken->subscription_email]);
-        //&& $subscriptionByToken->status === Subscription::TO_BE_COMPLETED;
+        return Subscription::select('subscription_email')
+            ->where([['token', '=', $token], [
+                'expires_at', '>', Carbon::now()]
+            ])->first();
     }
 
     /**
@@ -100,12 +95,8 @@ class SubscriptionService
     public static function getSubscriptionYears()
     {
         $expirationMonth = config('app.subscriptions.expiration_month');
-        $renovationMonth = config('app.subscriptions.renovation_month');
 
-        $year = (Carbon::now()->month > $expirationMonth &&
-            Carbon::now()->month <= $renovationMonth) ?
-            Carbon::now()->year + 1 :
-            Carbon::now()->year;
+        $year = (Carbon::now()->month > $expirationMonth) ? Carbon::now()->year : Carbon::now()->year - 1;
 
         return collect(['from' => $year, 'to' => $year + 1]);
     }
