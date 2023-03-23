@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\SubscriptionService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,18 +10,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Subscription extends Model
 {
     use HasFactory, SoftDeletes;
-
-    protected $fillable = [
-        'customer_id',
-        'subscription_email',
-        'status',
-        'token',
-        'expires_at',
-        'contact_type',
-        'activity',
-        'year_from',
-        'year_to'
-    ];
 
     /**
      * the subscription statuses
@@ -39,32 +28,56 @@ class Subscription extends Model
     const ACTIVE = 3;
     const INACTIVE = 4;
     const EXPIRED = 5;
-
     /**
      * the activity constants
      */
     const ACTIVITY_CHILD = 0;
     const ACTIVITY_ADULT = 1;
     const ACTIVITY_BOTH = 2;
-
     /**
      * the contact options
      */
     const NO_CONTACT = 2;
     const PHONE_CONTACT = 0;
     const WHATSAPP_CONTACT = 1;
+    protected $fillable = [
+        'customer_id',
+        'subscription_email',
+        'status',
+        'token',
+        'expires_at',
+        'contact_type',
+        'activity',
+        'year_from',
+        'year_to'
+    ];
 
     /**
-     * subscription/customer relationshib
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'created_at' => 'datetime:Y/m/d'
+    ];
+
+    /**
+     * subscription/customer relationship
      */
     public function customer()
     {
         return $this->belongsTo(Customer::class);
     }
-    
+
     //add active scope
+
     public function scopeActive($query)
     {
         return $query->whereIn('status', [self::ACTIVE, self::TO_BE_CONFIRMED]);
+    }
+
+    public function getStatusAttribute($status)
+    {
+        return SubscriptionService::getSubFancyStatusLabel($status);
     }
 }

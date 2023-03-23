@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
-use App\Services\SubscriptionService;
 use App\Models\Subscription;
+use App\Services\SubscriptionService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
+use Inertia\Inertia;
 
 class SubscriptionController extends Controller
 {
@@ -30,31 +30,31 @@ class SubscriptionController extends Controller
             ]
         ];
     }
-    
+
     /**
      * the subscription index
-     * @return Inertia view
+     * @return \Inertia\Response view
      */
     public function index(Request $request)
     {
         return Inertia::render(
             'Subscriptions',
-            ['subscriptions' => Subscription::when($request->has('search'), function ($query) use ($request) {
-                $query->where('subscription_email', 'LIKE', '%' . $request->search . '%');
-            })
+            ['subscriptions' => Subscription::select(['id', 'subscription_email', 'status', 'created_at'])
+                ->when($request->has('search'), function ($query) use ($request) {
+                    $query->where('subscription_email', 'LIKE', '%' . $request->search . '%');
+                })
                 ->orderByDesc('id')
                 ->paginate(25)
                 ->through(function (Subscription $subscription) {
                     return [
-                    'id' => $subscription->id,
-                    'customer' => $subscription->subscription_email,
-                    'created' => $subscription->created_at->format('d/m/Y'),
-                    'statusID' => $subscription->status,
-                    'status' => SubscriptionService::getSubFancyStatusLabel($subscription->status),
-                    'edit' => URL::route('subscriptions.edit', $subscription)
-                ];
+                        'id' => $subscription->id,
+                        'customer' => $subscription->subscription_email,
+                        'created' => $subscription->created_at,
+                        'status' => $subscription->status,
+                        'edit' => URL::route('subscriptions.edit', $subscription)
+                    ];
                 }),
-            'createLink' => URL::route('subscriptions.create')
+                'createLink' => URL::route('subscriptions.create')
             ]
         );
     }
@@ -77,7 +77,7 @@ class SubscriptionController extends Controller
             'av_statuses' => SubscriptionService::getAllSubFancyStatusLabel(),
             'activities' => SubscriptionService::getAllFancyActivityLabels(),
             'contacts' => SubscriptionService::getAllFancyContactLabels(),
-            '_method'  => 'post',
+            '_method' => 'post',
         ]);
     }
 
@@ -99,12 +99,12 @@ class SubscriptionController extends Controller
 
     /**
      * @param int $id
-     * @return Inertia view
+     * @return \Inertia\Response view
      */
     public function edit(int $id)
     {
         $subscription = Subscription::findOrFail($id)->toArray();
-        
+
         return Inertia::render('Subscription/Form', [
             'subscription' => $subscription,
             'customers' => Customer::all()->map(function (Customer $customer) {
@@ -113,7 +113,7 @@ class SubscriptionController extends Controller
                     'name' => $customer->first_name . " " . $customer->last_name
                 ];
             }),
-            '_method'  => 'put',
+            '_method' => 'put',
             'av_statuses' => SubscriptionService::getAllSubFancyStatusLabel(),
             'activities' => SubscriptionService::getAllFancyActivityLabels(),
             'contacts' => SubscriptionService::getAllFancyContactLabels(),
@@ -136,17 +136,17 @@ class SubscriptionController extends Controller
         ]);
 
         $subscription = Subscription::where('id', '=', $request->id)->firstOrFail();
-        
+
         try {
             $subscription->update(
                 [
-            'status' => $request->input('status'),
-            'subscription_email' => $request->input('subscription_email'),
-            'activity' => $request->input('activity'),
-            'contact_type' => $request->input('contact_type'),
-            'year_from' => $request->input('year_from'),
-            'year_to' => $request->input('year_to')
-        ]
+                    'status' => $request->input('status'),
+                    'subscription_email' => $request->input('subscription_email'),
+                    'activity' => $request->input('activity'),
+                    'contact_type' => $request->input('contact_type'),
+                    'year_from' => $request->input('year_from'),
+                    'year_to' => $request->input('year_to')
+                ]
             );
         } catch (\Exception $exception) {
             Log::error("Cannot update subscription: {$exception->getMessage()}");
@@ -228,6 +228,6 @@ class SubscriptionController extends Controller
         Log::info("Pending Subscription for email {$request->customer_email} has been created!", [__CLASS__, __FUNCTION__]);
 
         return Redirect::to(URL::signedRoute('subscriptions.fill', [
-                'token' => $randomString]));
+            'token' => $randomString]));
     }
 }
