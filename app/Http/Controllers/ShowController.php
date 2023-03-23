@@ -20,14 +20,16 @@ class ShowController extends Controller
     public function index()
     {
         return Inertia::render('Shows', [
-            'shows' => Show::orderByDesc('id')
+            'shows' => Show::select(['id', 'title', 'description'])
+                ->withCount('events')
+                ->orderByDesc('id')
                 ->get()
                 ->map(function (Show $show) {
                     return [
                         'id' => $show->id,
                         'title' => $show->title,
                         'description' => Str::limit($show->description, 120),
-                        'dates' => $show->events()->count(),
+                        'dates' => $show->events_count,
                         'edit' => route('shows.edit', ['show' => $show->id]),
                         'add_date' => route('show-events.index', ['show' => $show->id])
                     ];
