@@ -119,7 +119,6 @@ export default {
     },
     props: {
         bookings: Object,
-        customers: Object,
         showEventId: Number,
     },
     methods: {

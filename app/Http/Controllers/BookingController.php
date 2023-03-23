@@ -50,13 +50,15 @@ class BookingController extends Controller
     {
         Log::info("Returning booking map for event with id {$show_event_id}...");
         $showEvent = ShowEvent::findOrFail($show_event_id);
-        $bookingsCollection = Booking::select(['id', 'customer_id', 'place_number', 'row_letter'])
+        $bookingsCollection = Booking::query()
+            ->with(['customer:id,first_name,last_name'])
+            ->select(['id', 'customer_id', 'place_number', 'row_letter'])
             ->where('show_event_id', '=', $show_event_id)
             ->get()
             ->map(function ($item) {
                 return [
                     'id' => $item->id,
-                    'customer' => Customer::select(['id', 'first_name', 'last_name'])->where('id', '=', $item->customer_id)->get()[0],
+                    'customer' => $item->customer,
                     'place_number' => $item->place_number,
                     'row_letter' => $item->row_letter
                 ];
@@ -64,19 +66,12 @@ class BookingController extends Controller
             ->groupBy('row_letter')
             ->toArray();
 
-
         return Inertia::render(
             'Bookings/Form',
             [
                 'bookings' => $bookingsCollection,
-                'customers' => Customer::all()->map(function (Customer $customer) {
-                    return [
-                        'id' => $customer->id,
-                        'name' => $customer->fullName
-                    ];
-                }),
                 'show' => [
-                    'id' => $showEvent->show->id,
+                    'id' => $showEvent->show_id,
                     'title' => $showEvent->show->title,
                     'date' => Carbon::createFromTimeString($showEvent->show_date)->format('l d F Y - H:i')
                 ],

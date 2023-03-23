@@ -19,7 +19,6 @@
                 <div class="container map-container">
                     <Map
                         :bookings="bookings"
-                        :customers="customers"
                         :showEventId="show_event.id"
                     />
                 </div>
@@ -43,7 +42,6 @@ export default {
         Map,
     },
     props: {
-        customers: Object,
         bookings: Object,
         show: Object,
         show_event: Object,
