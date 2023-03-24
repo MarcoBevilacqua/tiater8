@@ -7,11 +7,14 @@ use App\Models\Subscription;
 use App\Services\SubscriptionService;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class SubscriptionController extends Controller
 {
@@ -33,7 +36,7 @@ class SubscriptionController extends Controller
 
     /**
      * the subscription index
-     * @return \Inertia\Response view
+     * @return Response view
      */
     public function index(Request $request)
     {
@@ -62,18 +65,25 @@ class SubscriptionController extends Controller
     /**
      * creation form
      */
-    public function create()
+    public function create(Request $request): Response
     {
+        $customers = [];
+        if ($request->has('search')) {
+            
+            $customers = Customer::select(['id', 'first_name', 'last_name'])
+                ->where('first_name', 'LIKE', '%' . $request->search . '%')
+                ->orWhere('last_name', 'LIKE', '%' . $request->search . '%')
+                ->get()
+                ->map(function ($customerItem) {
+                    return [
+                        'id' => $customerItem->id,
+                        'name' => $customerItem->first_name . " " . $customerItem->last_name
+                    ];
+                });
+        }
+
         return Inertia::render('Subscription/Create', [
-            /**
-             * TODO: make this query lighter or cache the results
-             */
-            'customers' => Customer::all()->map(function (Customer $customer) {
-                return [
-                    'id' => $customer->id,
-                    'name' => $customer->first_name . " " . $customer->last_name
-                ];
-            }),
+            'customers' => $customers,
             'av_statuses' => SubscriptionService::getAllSubFancyStatusLabel(),
             'activities' => SubscriptionService::getAllFancyActivityLabels(),
             'contacts' => SubscriptionService::getAllFancyContactLabels(),
@@ -99,13 +109,14 @@ class SubscriptionController extends Controller
 
     /**
      * @param int $id
-     * @return \Inertia\Response view
+     * @return Response view
      */
     public function edit(int $id)
     {
         $subscription = Subscription::findOrFail($id)->toArray();
 
         return Inertia::render('Subscription/Form', [
+
             'subscription' => $subscription,
             'customers' => Customer::all()->map(function (Customer $customer) {
                 return [
@@ -113,6 +124,7 @@ class SubscriptionController extends Controller
                     'name' => $customer->first_name . " " . $customer->last_name
                 ];
             }),
+
             '_method' => 'put',
             'av_statuses' => SubscriptionService::getAllSubFancyStatusLabel(),
             'activities' => SubscriptionService::getAllFancyActivityLabels(),
@@ -123,9 +135,10 @@ class SubscriptionController extends Controller
     /**
      * update entity
      * @param Request $request
-     * @return Redirect
+     * @return RedirectResponse
+     * @throws ValidationException
      */
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         $this->validate($request, [
             'status' => 'required|numeric',

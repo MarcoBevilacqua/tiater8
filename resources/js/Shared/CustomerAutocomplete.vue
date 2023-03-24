@@ -1,31 +1,79 @@
 <template>
-    <div
-        class="md:col-start-3 md:col-span-4 sm:col-span-3 mb-4"
-    >
+    <div class="relative">
         <label
             class="block text-sm font-medium text-gray-700"
-            for="customer_id"
-        >Selezionare nominativo:</label
-        >
-        <select
-            id="customer_id"
-            v-model="form.customer_id"
+            for="search">Selezionare nominativo:</label>
+        <input
+            v-model="customer"
             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-            name="customer_id"
-            required
-        >
-            <option
-                v-for="customer in customers"
-                :value="customer.id"
-            >{{ customer.name }}
-            </option>
-        </select>
+            placeholder="Cerca un iscritto con nome o cognome..."
+            type="search"
+            @input="visit"
+        />
+
+        <div v-if="suggestions.length" class="w-full absolute left-0 bg-white" @focusout="">
+            <ul>
+                <li v-for="suggestion in this.suggestions"
+                    class="text-sm cursor-pointer text-gray-400 hover:bg-gray-100 px-2 py-1 border-b-2 border-r-2 border-l-2"
+                    @click="this.selectCustomer(suggestion.id, suggestion.name)">
+                    {{ suggestion.name }}
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 
 <script>
+
+import throttle from "lodash/throttle";
+import {Inertia} from "@inertiajs/inertia";
+
 export default {
     name: "CustomerAutocomplete",
-    props: {customers: Array},
+
+    data() {
+        return {
+            suggestions: [],
+            search: "",
+            customer: ""
+        }
+    },
+    methods: {
+        debounceVisit() {
+            throttle(function (e) {
+                this.visit(e)
+            }, 250)
+        },
+        visit(e) {
+            let term = e.target.value;
+            if (term.length < 3) return;
+
+            this.debounceVisit(e)
+            console.log("Searching for " + term + "...")
+            Inertia.get(
+                "/subscriptions/create",
+                {search: term},
+
+                {
+                    preserveState: true,
+                    replace: true,
+                    onError: (errors) => {
+                        console.log(errors)
+                    },
+                    onSuccess: (page) => {
+                        this.suggestions = page.props.customers
+                    }
+                }
+            );
+        },
+        selectCustomer(customerId, name) {
+            console.log(customerId)
+            this.$emit('customer-selected', customerId)
+            this.customer = name
+            this.suggestions = [];
+        }
+    },
+
+
 }
 </script>
