@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
 use App\Models\Customer;
 use App\Services\SubscriptionService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
+use Inertia\Inertia;
 
 class CustomerController extends Controller
 {
@@ -17,21 +17,23 @@ class CustomerController extends Controller
         return Inertia::render(
             'Customers',
             [
-            'customers' => Customer::when($request->has('search'), function ($query) use ($request) {
-                $query->where('first_name', 'LIKE', '%' . $request->search . '%')
-                ->orWhere('last_name', 'LIKE', '%' . $request->search . '%');
-            })
-            ->orderByDesc('id')
-            ->paginate(25)
-            ->through(function (Customer $customer) {
-                return [
-                    'first_name' => $customer->first_name,
-                    'last_name' => $customer->last_name,
-                    'email' => $customer->email,
-                    'edit' => URL::route('customers.edit', $customer)
-                ];
-            })
-        , 'createLink' => route('customers.create')]
+                'customers' => Customer::select(['id', 'first_name', 'last_name', 'email'])
+                    ->when($request->has('search'), function ($query) use ($request) {
+                        $query
+                            ->where('first_name', 'LIKE', '%' . $request->search . '%')
+                            ->orWhere('last_name', 'LIKE', '%' . $request->search . '%');
+                    })
+                    ->orderByDesc('id')
+                    ->paginate(25)
+                    ->through(function (Customer $customer) {
+                        return [
+                            'first_name' => $customer->first_name,
+                            'last_name' => $customer->last_name,
+                            'email' => $customer->email,
+                            'edit' => URL::route('customers.edit', $customer)
+                        ];
+                    })
+                , 'createLink' => route('customers.create')]
         );
     }
 
@@ -87,21 +89,21 @@ class CustomerController extends Controller
 
         return Inertia::render('Customers/Form', [
             'customer' => [
-            'id' => $customer->id,
-            'first_name' => $customer->first_name,
-            'last_name' => $customer->last_name,
-            'email' => $customer->email,
-            'address' => $customer->address,
-            'city' => $customer->city,
-            'phone' => $customer->phone,
-            'birth' => $customer->birth,
-            'fiscal_code' => $customer->fiscal_code,
-            'postal_code' => $customer->postal_code,
-            'province'=> $customer->province,
-            'resident' => $customer->resident
-        ],
-            '_method'  => 'put',
-    ]);
+                'id' => $customer->id,
+                'first_name' => $customer->first_name,
+                'last_name' => $customer->last_name,
+                'email' => $customer->email,
+                'address' => $customer->address,
+                'city' => $customer->city,
+                'phone' => $customer->phone,
+                'birth' => $customer->birth,
+                'fiscal_code' => $customer->fiscal_code,
+                'postal_code' => $customer->postal_code,
+                'province' => $customer->province,
+                'resident' => $customer->resident
+            ],
+            '_method' => 'put',
+        ]);
     }
 
     public function update(Request $request)
@@ -118,7 +120,7 @@ class CustomerController extends Controller
             'fiscal_code' => 'required',
             'postal_code' => 'required',
         ]);
-        
+
         Log::info("updating customer with id: {$request->input('id')}");
         try {
             Customer::updateOrCreate(

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Services\SubscriptionService;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -53,15 +54,6 @@ class Subscription extends Model
     ];
 
     /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'created_at' => 'datetime:Y/m/d'
-    ];
-
-    /**
      * subscription/customer relationship
      */
     public function customer()
@@ -79,5 +71,10 @@ class Subscription extends Model
     public function getStatusAttribute($status)
     {
         return SubscriptionService::getSubFancyStatusLabel($status);
+    }
+
+    public function getCreatedAtAttribute($createdAt)
+    {
+        return Carbon::parse($createdAt)->format('d/m/Y');
     }
 }

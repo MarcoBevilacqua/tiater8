@@ -2,12 +2,11 @@
 
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\MailTestController;
-use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PublicSubscriptionController;
 use App\Http\Controllers\ShowController;
 use App\Http\Controllers\ShowEventController;
+use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -55,7 +54,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/bookings/show-event/{show_event_id}', [BookingController::class, 'detail'])->name('bookings.detail');
 
     Route::resource('/subscriptions', SubscriptionController::class);
-    
+
     Route::resource('/customers', CustomerController::class);
 
     Route::resource('/bookings', BookingController::class);
@@ -67,4 +66,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/events/{showId}', [ShowEventController::class, 'forShow']);
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

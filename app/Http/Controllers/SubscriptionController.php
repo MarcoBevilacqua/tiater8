@@ -69,7 +69,7 @@ class SubscriptionController extends Controller
     {
         $customers = [];
         if ($request->has('search')) {
-            
+
             $customers = Customer::select(['id', 'first_name', 'last_name'])
                 ->where('first_name', 'LIKE', '%' . $request->search . '%')
                 ->orWhere('last_name', 'LIKE', '%' . $request->search . '%')
