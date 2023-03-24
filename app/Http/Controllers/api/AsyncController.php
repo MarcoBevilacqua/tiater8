@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Response;
 
 class AsyncController extends Controller
@@ -16,10 +17,18 @@ class AsyncController extends Controller
      */
     public function customers(Request $request)
     {
+
+        $searchTerm = Str::lower($request->term) . '%';
+
         return Customer::select(['id', 'first_name', 'last_name'])
-            ->where('first_name', 'LIKE', '%' . $request->term . '%')
-            ->orWhere('last_name', 'LIKE', '%' . $request->term . '%')
+            ->where('first_name', 'LIKE', $searchTerm)
+            ->orWhere('last_name', 'LIKE', $searchTerm)
             ->get()
-            ->toArray();
+            ->map(function ($customer) {
+                return [
+                    'id' => $customer->id,
+                    'name' => $customer->first_name . " " . $customer->last_name
+                ];
+            });
     }
 }

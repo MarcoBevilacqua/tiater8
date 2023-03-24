@@ -26,7 +26,7 @@
 <script>
 
 import throttle from "lodash/throttle";
-import {Inertia} from "@inertiajs/inertia";
+import axios from "axios";
 
 export default {
     name: "CustomerAutocomplete",
@@ -50,21 +50,14 @@ export default {
 
             this.debounceVisit(e)
             console.log("Searching for " + term + "...")
-            Inertia.get(
-                "/subscriptions/create",
-                {search: term},
-
-                {
-                    preserveState: true,
-                    replace: true,
-                    onError: (errors) => {
-                        console.log(errors)
-                    },
-                    onSuccess: (page) => {
-                        this.suggestions = page.props.customers
-                    }
-                }
-            );
+            axios.get(
+                "/api/customers",
+                {params: {term: term}},
+            ).then(res => {
+                this.suggestions = res.data
+            }).catch(err => {
+                console.log(err)
+            });
         },
         selectCustomer(customerId, name) {
             console.log(customerId)
@@ -73,7 +66,5 @@ export default {
             this.suggestions = [];
         }
     },
-
-
 }
 </script>

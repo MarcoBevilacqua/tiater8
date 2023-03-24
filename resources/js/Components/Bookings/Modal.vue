@@ -105,28 +105,7 @@
                         <div class="mt-2"></div>
                         <div class="px-6 pt-2 pb-4 sm:px-8">
                             <form @submit.prevent="create">
-                                <input id="customer_id" v-model="form.customer_id" type="hidden"
-                                />
-                                <input v-model="search"
-                                       autocomplete="false"
-                                       class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                       name="search"
-                                       placeholder="Cerca il nominativo..."
-                                       type="text"
-                                />
-                                <div id="suggestions" class="relative">
-                                    <div v-show="suggestions.length"
-                                         class="absolute top-100 mt-1 w-full border bg-white shadow-xl rounded">
-                                        <div class="p-3">
-                                            <ul v-for="suggestion in this.suggestions">
-                                                <li class="cursor-pointer p-2 flex block w-full rounded hover:bg-gray-100"
-                                                    @click="pickSuggestion(suggestion)">
-                                                    {{ suggestion.first_name }} {{ suggestion.last_name }}
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+                                <CustomerAutocomplete @customer-selected="this.customerSelected"/>
                                 <div class="my-4"></div>
 
                                 <button
@@ -183,10 +162,12 @@
 
 <script>
 
-import throttle from "lodash/throttle";
-import axios from "axios";
+import CustomerAutocomplete from "../../Shared/CustomerAutocomplete"
 
 export default {
+    components: {
+        CustomerAutocomplete
+    },
     props: {
         booking: Object,
         showEventId: Number
@@ -232,30 +213,10 @@ export default {
                 onError: () => this.$emit('close-modal'),
             });
         },
-        pickSuggestion(pickedSuggestion) {
-            this.form.customer_id = pickedSuggestion.id
-            this.search = pickedSuggestion.first_name + " " + pickedSuggestion.last_name
-            this.suggestions = []
+        customerSelected(customerId) {
+            this.form.customer_id = customerId
         }
     },
-    watch: {
-        search: {
-            handler: throttle(function () {
-                if (this.search.length > 3) {
-                    axios.get(
-                        '/api/customers', {
-                            params:
-                                {term: this.search}
-                        }
-                    ).then(res => {
-                        this.suggestions = res.data
-                    }).catch(err => {
-                        console.log(err)
-                    })
-                }
-            }, 150),
-            deep: true
-        }
-    }
+
 };
 </script>
