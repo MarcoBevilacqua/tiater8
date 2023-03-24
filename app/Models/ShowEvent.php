@@ -9,11 +9,6 @@ class ShowEvent extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'show_id',
-        'show_date'
-    ];
-
     const AVAILABLE_TIMES = [
         "18:00",
         "18:30",
@@ -23,6 +18,10 @@ class ShowEvent extends Model
         "20:30",
         "21:00",
         "21:30",
+    ];
+    protected $fillable = [
+        'show_id',
+        'show_date'
     ];
 
     public function show()

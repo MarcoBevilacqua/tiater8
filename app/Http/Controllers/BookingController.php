@@ -49,16 +49,22 @@ class BookingController extends Controller
     public function detail(int $show_event_id): Response
     {
         Log::info("Returning booking map for event with id {$show_event_id}...");
-        $showEvent = ShowEvent::findOrFail($show_event_id);
+
+        $showEvent = ShowEvent::query()
+            ->join('shows', 'shows.id', '=', 'show_events.show_id')
+            ->select(['show_events.id', 'shows.id as show_id', 'title', 'show_date'])
+            ->where('show_events.id', '=', $show_event_id)
+            ->firstOrFail();
+
         $bookingsCollection = Booking::query()
-            ->with(['customer:id,first_name,last_name'])
-            ->select(['id', 'customer_id', 'place_number', 'row_letter'])
+            ->join('customers', 'customers.id', '=', 'bookings.customer_id')
+            ->select(['bookings.id as id', 'customer_id', 'place_number', 'row_letter', 'first_name', 'last_name'])
             ->where('show_event_id', '=', $show_event_id)
             ->get()
             ->map(function ($item) {
                 return [
                     'id' => $item->id,
-                    'customer' => $item->customer,
+                    'customer' => ['id' => $item->customer_id, 'first_name' => $item->first_name, 'last_name' => $item->last_name],
                     'place_number' => $item->place_number,
                     'row_letter' => $item->row_letter
                 ];
@@ -72,7 +78,7 @@ class BookingController extends Controller
                 'bookings' => $bookingsCollection,
                 'show' => [
                     'id' => $showEvent->show_id,
-                    'title' => $showEvent->show->title,
+                    'title' => $showEvent->title,
                     'date' => Carbon::createFromTimeString($showEvent->show_date)->format('l d F Y - H:i')
                 ],
                 'show_event' => $showEvent,
