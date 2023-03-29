@@ -6,17 +6,27 @@
         <input
             v-model="customer"
             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+            minlength="3"
             placeholder="Cerca un iscritto con nome o cognome..."
+            required
             type="search"
             @input="visit"
+            @search="manageSearchInput"
         />
 
         <div v-if="suggestions.length" class="w-full absolute left-0 bg-white" @focusout="">
             <ul>
                 <li v-for="suggestion in this.suggestions"
-                    class="text-sm cursor-pointer text-gray-400 hover:bg-gray-100 px-2 py-1 border-b-2 border-r-2 border-l-2"
+                    class="text-sm cursor-pointer text-gray-400 hover:bg-gray-100 px-2 py-2 rounded-b-md border-b-2 border-r-2 border-l-2"
                     @click="this.selectCustomer(suggestion.id, suggestion.name)">
                     {{ suggestion.name }}
+                </li>
+            </ul>
+        </div>
+        <div v-if="this.noResults">
+            <ul>
+                <li class="text-sm text-red-700 px-2 py-2 border-red-500 rounded-b-md border-b-2 border-r-2 border-l-2">
+                    Nessun risultato
                 </li>
             </ul>
         </div>
@@ -35,10 +45,17 @@ export default {
         return {
             suggestions: [],
             search: "",
-            customer: ""
+            customer: "",
+            noResults: false
         }
     },
     methods: {
+        manageSearchInput(e) {
+            //manage search event
+            if (e.target.value.length === 0) {
+                this.suggestions = []
+            }
+        },
         debounceVisit() {
             throttle(function (e) {
                 this.visit(e)
@@ -54,6 +71,12 @@ export default {
                 "/api/customers",
                 {params: {term: term}},
             ).then(res => {
+                if (res.data.length === 0) {
+                    this.suggestions = []
+                    this.noResults = true //show message if no user is retrieved
+                    return
+                }
+                this.noResults = false
                 this.suggestions = res.data
             }).catch(err => {
                 console.log(err)

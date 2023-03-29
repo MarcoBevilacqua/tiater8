@@ -192,6 +192,8 @@ export default {
         av_statuses: Array,
         activities: Array,
         contacts: Array,
+        year_from: Number,
+        year_to: Number,
     },
 
     data() {
@@ -203,8 +205,8 @@ export default {
                 activity: null,
                 contact_type: null,
                 status: null,
-                year_from: null,
-                year_to: null,
+                year_from: this.$props.year_from,
+                year_to: this.$props.year_to,
                 _method: this._method,
             }),
         };

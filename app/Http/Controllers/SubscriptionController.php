@@ -65,25 +65,13 @@ class SubscriptionController extends Controller
     /**
      * creation form
      */
-    public function create(Request $request): Response
+    public function create(): Response
     {
-        $customers = [];
-        if ($request->has('search')) {
-
-            $customers = Customer::select(['id', 'first_name', 'last_name'])
-                ->where('first_name', 'LIKE', '%' . $request->search . '%')
-                ->orWhere('last_name', 'LIKE', '%' . $request->search . '%')
-                ->get()
-                ->map(function ($customerItem) {
-                    return [
-                        'id' => $customerItem->id,
-                        'name' => $customerItem->first_name . " " . $customerItem->last_name
-                    ];
-                });
-        }
+        $years = SubscriptionService::getSubscriptionYears()->toArray();
 
         return Inertia::render('Subscription/Create', [
-            'customers' => $customers,
+            'year_from' => $years['from'],
+            'year_to' => $years['to'],
             'av_statuses' => SubscriptionService::getAllSubFancyStatusLabel(),
             'activities' => SubscriptionService::getAllFancyActivityLabels(),
             'contacts' => SubscriptionService::getAllFancyContactLabels(),
