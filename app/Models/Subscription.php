@@ -4,13 +4,16 @@ namespace App\Models;
 
 use App\Services\SubscriptionService;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Subscription extends Model
 {
     use HasFactory, SoftDeletes;
+    use Prunable;
 
     /**
      * the subscription statuses
@@ -41,6 +44,7 @@ class Subscription extends Model
     const NO_CONTACT = 2;
     const PHONE_CONTACT = 0;
     const WHATSAPP_CONTACT = 1;
+
     protected $fillable = [
         'customer_id',
         'subscription_email',
@@ -52,6 +56,16 @@ class Subscription extends Model
         'year_from',
         'year_to'
     ];
+
+    /**
+     * Get the prunable model query.
+     *
+     * @return Builder
+     */
+    public function prunable()
+    {
+        return static::where('expires_at', '<=', now()->subMonths(6));
+    }
 
     /**
      * subscription/customer relationship
