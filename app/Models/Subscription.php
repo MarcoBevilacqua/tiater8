@@ -20,7 +20,7 @@ class Subscription extends Model
      *
      * Pending: link to the subscription form has been generated and sent to the customer
      * To Be Completed: a subscription that has to be filled by the customer
-     * To Be Confiermed: a subscription that has to be confirmed by the backoffice
+     * To Be Confirmed: a subscription that has to be confirmed by the backoffice
      * Active: a completed subscription
      * Inactive: a cancelled subscription
      * Expired: an expired subscription (user has not completed the subscription before the expiration)
@@ -64,7 +64,8 @@ class Subscription extends Model
      */
     public function prunable()
     {
-        return static::where('expires_at', '<=', now()->subMonths(6));
+        return static::where('expires_at', '<=', now()->subMonth())
+            ->whereNull('customer_id');
     }
 
     /**

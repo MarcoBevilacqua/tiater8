@@ -21,6 +21,7 @@ _ide_helper_models.php
 _ide_helper.php
 
 storage/*.key
+storage/debugbar/
 .env
 .env.production
 Homestead.yaml
