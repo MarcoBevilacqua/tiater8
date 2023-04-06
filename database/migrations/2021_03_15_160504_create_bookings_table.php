@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateBookingsTable extends Migration
 {
@@ -16,8 +16,8 @@ class CreateBookingsTable extends Migration
 
             $table->engine = 'InnoDB';
             $table->id();
-            $table->unsignedBigInteger('viewer_id');        
-            $table->enum('paid', array(0,1));
+            $table->unsignedBigInteger('viewer_id');
+            $table->enum('paid', array(0, 1));
             $table->integer('full_price_qnt');
             $table->integer('half_price_qnt');
             $table->integer('total_qnt');
@@ -27,7 +27,7 @@ class CreateBookingsTable extends Migration
             $table->string('public_code', 10);
             $table->timestamps();
 
-            $table->foreign('viewer_id')->references('id')->on('viewers');            
+            $table->foreign('viewer_id')->references('id')->on('viewers');
         });
     }
 
@@ -38,6 +38,6 @@ class CreateBookingsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('bookings');
+        Schema::dropIfExists('bookings');
     }
 }

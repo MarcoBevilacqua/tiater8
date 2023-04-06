@@ -16,6 +16,7 @@ class LoginTest extends DuskTestCase
      * A Dusk test example.
      *
      * @return void
+     * @throws \Throwable
      */
     public function testExample()
     {
@@ -28,7 +29,8 @@ class LoginTest extends DuskTestCase
                 ->type('email', $user->email)
                 ->type('password', 'password')
                 ->press('Login')
-                ->assertPathIs('/home');
+                ->waitForLocation('/dashboard', 8)
+                ->assertPathIs('/dashboard');
         });
     }
 }
