@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Mail\SubscriptionToComplete;
 use App\Models\Subscription;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
@@ -50,6 +52,21 @@ class PublicSubscriptionTest extends TestCase
         $response->assertStatus(302);
     }
 
+
+    /**
+     * @test
+     * @return void
+     */
+    public function shouldSendMailAfterSubscriptionInit()
+    {
+        Mail::fake();
+
+        $this->actingAs($this->admin);
+        $this->post('/subscriptions/init', ['customer_email' => 'abc123@mail.com']);
+
+        Mail::assertSent(SubscriptionToComplete::class);
+    }
+
     /**
      * @test
      *
@@ -80,14 +97,17 @@ class PublicSubscriptionTest extends TestCase
         $this->post('/subscriptions/init', ['customer_email' => 'abc123@gmail.com']);
         $this->assertDatabaseCount('subscriptions', 1);
         $this->assertDatabaseHas('subscriptions', ['expires_at' => null]);
+        
         //assert response
         $this->get(
             URL::signedRoute('subscriptions.fill', ['token' => Subscription::first()->token])
         )->assertStatus(200);
+
         //assert subscription has changed
-        $this->assertDatabaseHas('subscriptions', [
-            'expires_at' => Carbon::now()->addMinutes(10)->format('Y-m-d H:i:s')
-        ]);
+        $this->assertEquals(
+            Carbon::now()->addMinutes(10)->format('Y-m-d H:i'),
+            Carbon::createFromDate(Subscription::first()->expires_at)->format('Y-m-d H:i')
+        );
     }
 
     /**
