@@ -77,7 +77,6 @@ class Subscription extends Model
     }
 
     //add active scope
-
     public function scopeActive($query)
     {
         return $query->whereIn('status', [self::ACTIVE, self::TO_BE_CONFIRMED]);
