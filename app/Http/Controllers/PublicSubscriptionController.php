@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Subscription;
 use App\Services\SubscriptionService;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -31,26 +32,27 @@ class PublicSubscriptionController extends Controller
 
     /**
      * Renders "confirmed" page
+     * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         return Inertia::render('Public/Confirmed');
     }
 
     /**
      * render the view to generate invitation mail
-     * @return Inertia view
+     * @return Response
      */
-    public function create()
+    public function create(): Response
     {
         return Inertia::render('Public/SelfInvitation');
     }
 
     /**
      * render the view to generate invitation mail
-     * @return Inertia view
+     * @return Response
      */
-    public function show()
+    public function show(): Response
     {
         return Inertia::render('Subscription/GenerateSubscriptionLink');
     }
@@ -59,28 +61,23 @@ class PublicSubscriptionController extends Controller
      * the subscription init (return the form url)
      *
      * @param Request $request
-     * @return string
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'customer_email' => 'required|email:filter'
         ]);
 
         //check if email has already been taken
-        $shouldBeBlocked = SubscriptionService::getSubscriptionByEmail($request->customer_email);
-        if ($shouldBeBlocked) {
-            Log::error("Subscription with email {$request->customer_email} has already been stored");
-            return Redirect::back()->with('error', "Indirizzo email non disponibile");
-        }
 
         //the url to be returned
         $randomString = substr(str_shuffle(MD5(microtime())), 0, 22);
 
         //create a to-be-confirmed subscription
         try {
-            Subscription::updateOrCreate([
-                'subscription_email' => $request->customer_email], [
+            Subscription::create([
+                'subscription_email' => $request->customer_email,
                 'status' => Subscription::PENDING,
                 'token' => $randomString,
                 'customer_id' => null,
@@ -89,7 +86,7 @@ class PublicSubscriptionController extends Controller
             ]);
         } catch (\Exception $exception) {
             Log::error("Cannot create pending subscription with email {$request->customer_email} and token {$randomString}: {$exception->getMessage()}");
-            abort(500);
+            return Redirect::back()->with('error', "Indirizzo email non disponibile");
         }
 
         Log::info("Pending Subscription for email {$request->customer_email} has been created!", [__CLASS__, __FUNCTION__]);

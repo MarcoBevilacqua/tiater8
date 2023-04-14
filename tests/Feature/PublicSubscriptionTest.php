@@ -7,6 +7,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\URL;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class PublicSubscriptionTest extends TestCase
@@ -91,8 +92,31 @@ class PublicSubscriptionTest extends TestCase
 
     /**
      * @test
-     *
-     *
+     * @return void
+     */
+    public function cannotUseSameEmailForSubscription()
+    {
+        $subToComplete = Subscription::factory()
+            ->toBeCompleted()->create([
+                'year_from' => Carbon::now()->year,
+                'year_to' => Carbon::now()->year + 1
+            ]);
+
+        //subscription has to be confirmed, user should fill the form
+        $this->assertDatabaseHas('subscriptions', ['status' => Subscription::TO_BE_COMPLETED]);
+
+        //user fills the form and hit "submit"
+        $response = $this->post('/over/subscriptions/init',
+            ['customer_email' => $subToComplete->subscription_email]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+
+        //sub should not be permitted
+        $this->assertDatabaseCount('subscriptions', 1);
+    }
+
+    /**
+     * @test
      * @return void
      */
     public function subscriptionSubmitShouldUpdateStatus()
