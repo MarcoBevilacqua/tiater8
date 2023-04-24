@@ -97,7 +97,7 @@ class PublicSubscriptionTest extends TestCase
         $this->post('/subscriptions/init', ['customer_email' => 'abc123@gmail.com']);
         $this->assertDatabaseCount('subscriptions', 1);
         $this->assertDatabaseHas('subscriptions', ['expires_at' => null]);
-        
+
         //assert response
         $this->get(
             URL::signedRoute('subscriptions.fill', ['token' => Subscription::first()->token])
@@ -117,10 +117,7 @@ class PublicSubscriptionTest extends TestCase
     public function cannotUseSameEmailForSubscription()
     {
         $subToComplete = Subscription::factory()
-            ->toBeCompleted()->create([
-                'year_from' => Carbon::now()->year,
-                'year_to' => Carbon::now()->year + 1
-            ]);
+            ->toBeCompleted()->create();
 
         //subscription has to be confirmed, user should fill the form
         $this->assertDatabaseHas('subscriptions', ['status' => Subscription::TO_BE_COMPLETED]);

@@ -18,7 +18,7 @@ class AddUniqueIndexToSubscription extends Migration
         });
     }
 
-    /**php art
+    /**
      * Reverse the migrations.
      *
      * @return void

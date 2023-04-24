@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Subscription;
+use App\Services\SubscriptionService;
 use Carbon\Carbon;
-use Hash;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class SubscriptionFactory extends Factory
@@ -53,12 +53,13 @@ class SubscriptionFactory extends Factory
      */
     public function toBeCompleted()
     {
-        return $this->state(function (array $attributes) {
+        $years = SubscriptionService::getSubscriptionYears();
+        return $this->state(function (array $attributes) use ($years) {
             return [
                 'status' => Subscription::TO_BE_COMPLETED,
                 'expires_at' => Carbon::now()->addHour(),
-                'year_from' => '2021',
-                'year_to' => '2022',
+                'year_from' => $years['from'],
+                'year_to' => $years['to'],
             ];
         });
     }

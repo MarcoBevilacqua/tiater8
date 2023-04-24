@@ -74,6 +74,9 @@ class PublicSubscriptionController extends Controller
         //the url to be returned
         $randomString = substr(str_shuffle(MD5(microtime())), 0, 22);
 
+        //retrieve year_from and year_to
+        $years = SubscriptionService::getSubscriptionYears();
+
         //create a to-be-confirmed subscription
         try {
             Subscription::create([
@@ -81,8 +84,8 @@ class PublicSubscriptionController extends Controller
                 'status' => Subscription::PENDING,
                 'token' => $randomString,
                 'customer_id' => null,
-                'year_from' => Carbon::now()->year,
-                'year_to' => Carbon::now()->year + 1,
+                'year_from' => $years['from'],
+                'year_to' => $years['to'],
             ]);
         } catch (\Exception $exception) {
             Log::error("Cannot create pending subscription with email {$request->customer_email} and token {$randomString}: {$exception->getMessage()}");
@@ -218,10 +221,6 @@ class PublicSubscriptionController extends Controller
             Log::error("Cannot send Mail to {$canHandleSubscription->subscription_email}: " . $exception->getMessage());
         }
 
-        //retrieve year_from and year_to
-        $years = SubscriptionService::getSubscriptionYears();
-        Log::info("subscription years: " . implode(",", $years->toArray()));
-
         //complete the subscription
         Subscription::where('token', $request->input('sub_token'))
             ->first()->update([
@@ -229,8 +228,7 @@ class PublicSubscriptionController extends Controller
                 'status' => Subscription::TO_BE_CONFIRMED,
                 'contact_type' => $request->input('contact_type'),
                 'activity' => $request->input('activity'),
-                'year_from' => $years['from'],
-                'year_to' => $years['to'],
+
             ]);
 
         Log::info("redirecting to subscriptions/" . $request->input('sub_token') . "/confirmed");
