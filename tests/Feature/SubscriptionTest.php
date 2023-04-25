@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Customer;
 use App\Models\Subscription;
 use App\Models\User;
 use Carbon\Carbon;
@@ -93,6 +94,27 @@ class SubscriptionTest extends TestCase
             ->artisan('model:prune', ['--model' => Subscription::class])
             ->assertSuccessful()
             ->doesntExpectOutput("1 [App\Models\Subscription] records have been pruned.");
+
+        $this->assertDatabaseCount('subscriptions', 1);
+    }
+
+    /**
+     * @test
+     *
+     * should NOT prune old subscription
+     * @return void
+     */
+    public function shouldNotPruneValidSubscription()
+    {
+        $customer = Customer::factory()->create();
+        Subscription::factory()->toBeConfirmed()->create(['customer_id' => $customer]);
+
+        $this->assertDatabaseCount('subscriptions', 1);
+        $this->assertDatabaseHas('subscriptions', ['customer_id' => $customer->id]);
+        $this
+            ->artisan('model:prune', ['--model' => Subscription::class])
+            ->assertSuccessful()
+            ->expectsOutput("No prunable [App\Models\Subscription] records found.");
 
         $this->assertDatabaseCount('subscriptions', 1);
     }
