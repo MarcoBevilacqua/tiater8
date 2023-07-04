@@ -64,8 +64,8 @@ class Subscription extends Model
      */
     public function prunable()
     {
-        return static::where('expires_at', '<=', now()->subMonth())
-            ->whereNull('customer_id');
+        return static::where('created_at', '<', now()->subMonth())
+            ->whereNull(['customer_id']);
     }
 
     /**

@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('model:prune', [
             '--model' => [Subscription::class],
-        ])->dailyAt('02:00');
+        ])->monthly();
     }
 
     /**
