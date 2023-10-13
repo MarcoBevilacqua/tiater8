@@ -28,8 +28,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('model:prune', [
             '--model' => [Subscription::class],
             '--pretend'
-        ])->everyTenMinutes()
-            ->sendOutputTo('./app/console/schedule.log');
+        ])->everyMinute()
+            ->appendOutputTo('./storage/logs/schedule.log');
     }
 
     /**
