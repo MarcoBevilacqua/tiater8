@@ -49,9 +49,9 @@ class SubscriptionFactory extends Factory
     /**
      * A pending subscription
      *
-     * @return array
+     * @return SubscriptionFactory
      */
-    public function toBeCompleted()
+    public function toBeCompleted(): SubscriptionFactory
     {
         $years = SubscriptionService::getSubscriptionYears();
         return $this->state(function (array $attributes) use ($years) {
@@ -67,15 +67,16 @@ class SubscriptionFactory extends Factory
     /**
      * A subscription to be confirmed
      *
-     * @return array
+     * @return SubscriptionFactory
      */
-    public function toBeConfirmed()
+    public function toBeConfirmed(): SubscriptionFactory
     {
-        return $this->state(function (array $attributes) {
+        $years = SubscriptionService::getSubscriptionYears();
+        return $this->state(function (array $attributes) use ($years) {
             return [
                 'status' => Subscription::TO_BE_CONFIRMED,
-                'year_from' => '2021',
-                'year_to' => '2022',
+                'year_from' => $years['from'],
+                'year_to' => $years['to'],
             ];
         });
     }

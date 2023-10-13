@@ -202,12 +202,12 @@ class PublicSubscriptionTest extends TestCase
      */
     public function subscriptionMadeInJuneShouldHaveProperYears()
     {
-        Carbon::setTestNow(Carbon::createFromDate(date('Y'), 5, 22));
+        Carbon::setTestNow(Carbon::createFromDate(Carbon::now()->year, 5, 22));
 
-        $subToComplete = Subscription::factory()->toBeCompleted()->create();
+        $subToComplete = Subscription::factory()->toBeConfirmed()->create();
 
         //subscription has to be confirmed, user should fill the form
-        $this->assertDatabaseHas('subscriptions', ['status' => 1]);
+        $this->assertDatabaseHas('subscriptions', ['status' => Subscription::TO_BE_CONFIRMED]);
 
         //create subscription
         $this->post('/over/subscriptions/complete', $this->subscriptionData + [

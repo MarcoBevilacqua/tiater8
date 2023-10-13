@@ -25,10 +25,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
         $schedule->command('model:prune', [
             '--model' => [Subscription::class],
-        ])->monthly();
+            '--pretend'
+        ])->everyTenMinutes()
+            ->sendOutputTo('./app/console/schedule.log');
     }
 
     /**
