@@ -27,7 +27,6 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('model:prune', [
             '--model' => [Subscription::class],
-            '--pretend'
         ])->weekly()
             ->appendOutputTo('./storage/logs/schedule.log');
     }
