@@ -177,14 +177,16 @@ class SubscriptionController extends Controller
         return Redirect::to('subscriptions')->with('success', 'Sottoscrizione aggiornata correttamente');
     }
 
-    public function destroy(Subscription $subscription)
+    public function destroy(Subscription $subscription): RedirectResponse
     {
         try {
-            Subscription::findOrFail($subscription->id)->delete();
+            $sub = Subscription::findOrFail($subscription->id);
         } catch (\Exception $exception) {
             Log::error("Cannot find subscription with ID {$subscription->id}: {$exception->getMessage()}");
             return Redirect::to('subscriptions')->with('error', 'Impossibile cancellare la sottoscrizione');
         }
+
+        $sub->delete();
 
         Log::info("Subscription successfully deleted");
         return Redirect::to('subscriptions')->with('success', 'Cancellazione avvenuta correttamente');

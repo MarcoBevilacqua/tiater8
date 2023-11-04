@@ -165,7 +165,7 @@
                                             class="grid-col-span-1 px-4 py-3 bg-gray-50 text-left sm:px-6"
                                         >
                                             <button
-                                                @click="delete"
+                                                @click="this.delete"
                                                 type="button"
                                                 class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                                             >
@@ -268,7 +268,7 @@ export default {
         },
         delete() {
             this.form.delete(
-                this.route("subscriptions.destroy", this.subscription)
+                this.route("subscriptions.destroy", this.subscription.id)
             );
         },
     },
