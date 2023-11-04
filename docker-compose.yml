@@ -63,13 +63,12 @@ services:
     ports:
       - "13308:3306"
     volumes:
-      - testdbdata:/var/lib/mysql/
       - ./docker/mysql/conf/mysql-docker.cnf:/etc/mysql/my.cnf
     environment:
       MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
       MYSQL_DATABASE: "test"
-      MYSQL_USER: "${DB_USERNAME}"
-      MYSQL_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_USER: "test"
+      MYSQL_PASSWORD: "test"
       MYSQL_ROOT_HOST: "%"
     networks:
       - app-network
