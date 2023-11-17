@@ -46,7 +46,7 @@ class ExpireOldSubscriptions extends Command
                 'status' => Subscription::EXPIRED
             ]);
 
-        Log::info("{$oldSubscriptions->count()} subs found older than a year");
+        Log::info("{$oldSubscriptions} subs found older than a year");
 
         $this->line("{$oldSubscriptions} sub(s) older than a year are now expired");
         return 0;

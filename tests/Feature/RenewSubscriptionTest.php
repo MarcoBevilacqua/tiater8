@@ -25,7 +25,7 @@ class RenewSubscriptionTest extends TestCase
 
         $this->assertDatabaseCount('subscriptions', 1);
 
-        Carbon::setTestNow(now()->addDays(366));
+        Carbon::setTestNow(now()->addYear()->addDay());
 
         $this->artisan('subscriptions:expire-old')
             ->assertSuccessful();
@@ -60,7 +60,7 @@ class RenewSubscriptionTest extends TestCase
         $this->assertDatabaseCount('subscriptions', 2);
 
         //let pass a year...
-        Carbon::setTestNow(now()->addDays(366));
+        Carbon::setTestNow(now()->addYear()->addDay());
 
         $this->artisan('subscriptions:expire-old')
             ->assertSuccessful()
