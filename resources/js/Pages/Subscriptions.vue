@@ -6,7 +6,7 @@
                     <h2
                         class="font-semibold text-xl text-gray-800 leading-tight"
                     >
-                        Tessera socio
+                        Tessere socio
                     </h2>
                     <small>
                         <inertia-link

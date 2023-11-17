@@ -21,6 +21,7 @@
                                         />
                                         <div class="grid grid-cols-6 gap-6">
                                             <div
+                                                v-if="subscription.customer_id"
                                                 class="col-span-6 sm:col-span-3"
                                             >
                                                 <label
@@ -39,9 +40,16 @@
                                                     <option
                                                         v-for="customer in customers"
                                                         :value="customer.id"
-                                                        >{{ customer.name }}
+                                                    >{{ customer.name }}
                                                     </option>
                                                 </select>
+
+                                            </div>
+                                            <div v-else
+                                                class="col-span-6 sm:col-span-3"
+                                            >
+                                                <CustomerAutocomplete :suggestions="suggestions"
+                                                                      @customer-selected="this.customerSelected"/>
                                             </div>
                                             <div
                                                 class="col-span-3 sm:col-span-1"
@@ -220,11 +228,11 @@
 <script>
 import Container from "@/Layouts/Container";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated";
-import { useForm } from "@inertiajs/inertia-vue3";
-import { Link } from "@inertiajs/inertia-vue3";
+import CustomerAutocomplete from "@/Shared/CustomerAutocomplete.vue";
 
 export default {
     components: {
+        CustomerAutocomplete,
         Container,
         BreezeAuthenticatedLayout,
     },
@@ -241,6 +249,8 @@ export default {
 
     data() {
         return {
+            search: "",
+            suggestions: [],
             form: this.$inertia.form({
                 _method: this._method,
                 id: this.subscription.id,
@@ -258,6 +268,9 @@ export default {
     },
 
     methods: {
+        customerSelected(customerId) {
+            this.form.customer_id = customerId
+        },
         update() {
             this.form.post(
                 this.route("subscriptions.update", this.subscription.id),
