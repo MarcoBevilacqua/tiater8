@@ -36,6 +36,10 @@ Route::prefix('over')->group(function () {
     Route::post('/subscriptions/init', [PublicSubscriptionController::class, 'store']);
     //the subscription form visualization
     Route::get('/subscriptions/fill/{token}', [PublicSubscriptionController::class, 'edit'])->name('subscriptions.fill');
+    //the subscription renew form
+    Route::get('/subscriptions/renew/{customer_email}', [PublicSubscriptionController::class, 'modify'])->name('subscriptions.renew');
+    //the subscription renew action
+    Route::post('/subscriptions/renew', [PublicSubscriptionController::class, 'renew']);
     //the subscription submit
     Route::post('/subscriptions/complete', [PublicSubscriptionController::class, 'update'])->name('subscriptions.complete');
 });

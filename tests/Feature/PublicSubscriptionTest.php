@@ -136,6 +136,76 @@ class PublicSubscriptionTest extends TestCase
      * @test
      * @return void
      */
+    public function shouldRedirectOnConfirmFormOnRenew()
+    {
+        $subToComplete = Subscription::factory()->expired()->create();
+
+        //subscription has to be confirmed, user should fill the form
+        $this->assertDatabaseHas('subscriptions', ['status' => Subscription::EXPIRED]);
+
+        //user fills the form and hit "submit"
+        $response = $this->post('/over/subscriptions/init',
+            ['customer_email' => $subToComplete->subscription_email]);
+
+        $response->assertRedirect(URL::signedRoute('subscriptions.renew', ['customer_email' => $subToComplete->subscription_email]));
+    }
+
+
+    /**
+     * @test
+     * @return void
+     */
+    public function canRenewSubscriptionIfOldIsExpired()
+    {
+        $expiredSub = Subscription::factory()->expired()->create();
+
+        //subscription has to be confirmed, user should fill the form
+        $this->assertDatabaseHas('subscriptions', ['status' => Subscription::EXPIRED]);
+
+        //user fills the form and hit "submit"
+        $this->post('/over/subscriptions/init',
+            ['customer_email' => $expiredSub->subscription_email]);
+
+        //user confirms subscription email
+        $this->post('/over/subscriptions/renew', ['customer_email' => $expiredSub->subscription_email]);
+
+        //sub should be permitted
+        $this->assertDatabaseCount('subscriptions', 2);
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function shouldRenewOverSeveralOldSubscriptions()
+    {
+        $oldSubscription = Subscription::factory()->expired()->create();
+        $olderSubscription = Subscription::factory()->expired()->make();
+
+        $olderSubscription->decrement('year_from');
+        $olderSubscription->decrement('year_to');
+
+        $olderSubscription->save();
+
+        //subscription has to be confirmed, user should fill the form
+        $this->assertDatabaseHas('subscriptions', ['status' => Subscription::EXPIRED]);
+        $this->assertDatabaseCount('subscriptions', 2);
+
+        //user fills the form and hit "submit"
+        $this->post('/over/subscriptions/init',
+            ['customer_email' => $oldSubscription->subscription_email]);
+
+        //user renews subscription
+        $this->post('/over/subscriptions/renew', ['customer_email' => $oldSubscription->subscription_email]);
+
+        //sub should be permitted
+        $this->assertDatabaseCount('subscriptions', 3);
+    }
+
+    /**
+     * @test
+     * @return void
+     */
     public function subscriptionSubmitShouldUpdateStatus()
     {
         $subToComplete = Subscription::factory()->toBeCompleted()->create();

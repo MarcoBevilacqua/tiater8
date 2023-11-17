@@ -28,8 +28,8 @@ class SubscriptionTest extends TestCase
         $subscription = Subscription::factory()->create();
         $subscription->delete();
         $this->assertDatabaseCount('subscriptions', 1);
-        //$response = $this->delete('/subscriptions/' . 1);
-        //$response->assertRedirect();
+        $response = $this->delete('/subscriptions/' . 1);
+        $response->assertRedirect();
         $this->assertSoftDeleted('subscriptions', [
             'id' => $subscription->id,
             'subscription_email' => $subscription->subscription_email
@@ -118,6 +118,32 @@ class SubscriptionTest extends TestCase
             ->expectsOutput("No prunable [App\Models\Subscription] records found.");
 
         $this->assertDatabaseCount('subscriptions', 1);
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function shouldCreateNewSubscriptionOnRenew()
+    {
+        $oldSubscription = Subscription::factory()->expired()->create(
+            [
+                'year_from' => now()->subYear()->format('Y'),
+                'year_to' => now()->year,
+            ]
+        );
+
+        $newSubscription = new Subscription([
+            'status' => Subscription::PENDING,
+            'subscription_email' => $oldSubscription->subscription_email,
+            'year_from' => now()->year,
+            'year_to' => now()->addYear()->format('Y')
+        ]);
+
+        $newSubscription->save();
+
+        //sub should be created
+        $this->assertDatabaseCount('subscriptions', 2);
     }
 
     protected function setUp(): void

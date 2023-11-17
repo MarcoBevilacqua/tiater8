@@ -69,7 +69,15 @@ class PublicSubscriptionController extends Controller
             'customer_email' => 'required|email:filter'
         ]);
 
-        //check if email has already been taken
+        //check if sub should be renewed
+        $shouldRenew = SubscriptionService::subscriptionShouldBeRenewed($request->get('customer_email'));
+        if($shouldRenew) {
+            Log::info("Renewing subscription for {$request->get('customer_email')}...");
+            return Redirect::to(URL::signedRoute('subscriptions.renew', [
+                'customer_email' => $request->get('customer_email')]));
+        } else {
+            Log::info("New Subscription incoming...");
+        }
 
         //the url to be returned
         $randomString = substr(str_shuffle(MD5(microtime())), 0, 22);
@@ -153,9 +161,10 @@ class PublicSubscriptionController extends Controller
     /**
      * Completes the subscription and creates customer entry
      *
-     * @return Redirect
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         /**
          * 1. check if subscription is valid
@@ -235,5 +244,34 @@ class PublicSubscriptionController extends Controller
 
         /** TODO: Redirect on public simple view */
         return Redirect::to('over/subscriptions/');
+    }
+
+    //TODO: CHECK EMAIL MATCH
+    public function modify()
+    {
+        Log::info("Renew Form being displayed");
+        return Inertia::render('Public/Renew');
+    }
+
+    public function renew(Request $request) {
+        $sub = Subscription::where([
+            ['subscription_email', '=', $request->get('customer_email')],
+            ['status', '=', Subscription::EXPIRED]
+        ])->firstOrFail();
+
+        //retrieve year_from and year_to
+        $years = SubscriptionService::getSubscriptionYears();
+
+        $renewed = new Subscription([
+            'year_from' => $years['from'],
+            'year_to' => $years['to'],
+            'subscription_email' => $request->get('customer_email'),
+            'status' => Subscription::TO_BE_CONFIRMED,
+            'customer_id' => $sub->customer_id,
+            'contact_type' => $sub->contact_type,
+            'activity' => $sub->activity,
+        ]);
+
+        $renewed->save();
     }
 }
