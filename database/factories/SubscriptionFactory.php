@@ -27,8 +27,8 @@ class SubscriptionFactory extends Factory
             'subscription_email' => 'example@example.com',
             'token' => 'abc123',
             'expires_at' => Carbon::now()->addHour(),
-            'year_from' => '2021',
-            'year_to' => '2022',
+            'year_from' => now()->format('Y'),
+            'year_to' => now()->addYear()->format('Y'),
         ];
     }
 
@@ -77,6 +77,24 @@ class SubscriptionFactory extends Factory
                 'status' => Subscription::TO_BE_CONFIRMED,
                 'year_from' => $years['from'],
                 'year_to' => $years['to'],
+            ];
+        });
+    }
+
+    /**
+     * A subscription that is expired bc is older than a year
+     *
+     * @return SubscriptionFactory
+     */
+    public function expired(): SubscriptionFactory
+    {
+        $years = SubscriptionService::getSubscriptionYears();
+        return $this->state(function (array $attributes) use ($years) {
+            return [
+                'status' => Subscription::EXPIRED,
+                'year_from' => $years['from'] - 1,
+                'year_to' => $years['to'] - 1,
+                'created_at' => now()->subYear()->subDays(7)
             ];
         });
     }

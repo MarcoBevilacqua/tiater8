@@ -28,7 +28,11 @@ class Kernel extends ConsoleKernel
         $schedule->command('model:prune', [
             '--model' => [Subscription::class],
         ])->weekly()
-            ->appendOutputTo('./storage/logs/schedule.log');
+            ->appendOutputTo('./storage/logs/schedule_' . now()->format('Y-m-d') .'.log');
+
+        $schedule->command('subscriptions:expire-old')
+            ->dailyAt('00:00')
+            ->appendOutputTo('.storage/logs/expired_subs_' . now()->format('Y-m-d') . '.log');
     }
 
     /**

@@ -88,6 +88,22 @@ class SubscriptionService
     }
 
     /**
+     * Check if subscription should be renewed
+     *
+     * @param string $customerEmail
+     * @return bool
+     */
+    public static function subscriptionShouldBeRenewed(string $customerEmail): bool
+    {
+        //get last subscription in time order
+        $sub = Subscription::where('subscription_email', '=', $customerEmail)
+            ->orderBy('year_from', 'desc')
+            ->first();
+
+        return $sub && $sub->exists() && $sub->getRawOriginal('status') === Subscription::EXPIRED;
+    }
+
+    /**
      * get year_from and year_to for subscription
      *
      * @return Collection
