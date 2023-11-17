@@ -21,7 +21,6 @@
                                         />
                                         <div class="grid grid-cols-6 gap-6">
                                             <div
-                                                v-if="subscription.customer_id"
                                                 class="col-span-6 sm:col-span-3"
                                             >
                                                 <label
@@ -45,12 +44,12 @@
                                                 </select>
 
                                             </div>
-                                            <div v-else
-                                                class="col-span-6 sm:col-span-3"
-                                            >
-                                                <CustomerAutocomplete :suggestions="suggestions"
-                                                                      @customer-selected="this.customerSelected"/>
-                                            </div>
+<!--                                            <div v-else-->
+<!--                                                class="col-span-6 sm:col-span-3"-->
+<!--                                            >-->
+<!--                                                <CustomerAutocomplete v-model="subscription.customer_id" :suggestions="suggestions"-->
+<!--                                                                      @customer-selected="this.customerSelected"/>-->
+<!--                                            </div>-->
                                             <div
                                                 class="col-span-3 sm:col-span-1"
                                             >
