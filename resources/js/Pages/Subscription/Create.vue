@@ -7,7 +7,7 @@
             <container>
                 <div class="mt-10 sm:mt-5">
                     <div class="md:grid md:grid-cols-3 md:gap-6">
-                        <div class="mt-10 mx-auto w-3/4 md:mt-5 md:col-span-3">
+                        <div class="mt-10 mx-auto md:mt-5 md:col-span-3">
                             <form @submit.prevent="create">
                                 <div
                                     class="shadow overflow-hidden sm:rounded-md"
@@ -22,8 +22,7 @@
                                             <div
                                                 class="col-span-4 sm:col-span-4"
                                             >
-                                                <CustomerAutocomplete :suggestions="suggestions"
-                                                                      @customer-selected="this.customerSelected"/>
+                                                <CustomerAutocomplete @customer-selected="this.customerSelected"/>
                                             </div>
 
                                             <div

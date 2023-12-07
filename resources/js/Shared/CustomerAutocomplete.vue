@@ -2,7 +2,7 @@
     <div class="relative">
         <label
             class="block text-sm font-medium text-gray-700"
-            for="search">Selezionare nominativo:</label>
+            for="search">Nominativo</label>
         <input
             v-model="customer"
             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -23,7 +23,7 @@
                 </li>
             </ul>
         </div>
-        <div v-if="this.noResults" @focusout="this.removeAll">
+        <div v-if="this.noResults">
             <ul>
                 <li class="text-sm text-red-700 px-2 py-2 border-red-500 rounded-b-md border-b-2 border-r-2 border-l-2">
                     Nessun risultato
@@ -40,6 +40,10 @@ import axios from "axios";
 
 export default {
     name: "CustomerAutocomplete",
+
+    props: {
+        customerProp: Object
+    },
 
     data() {
         return {
@@ -93,5 +97,8 @@ export default {
             this.noResults = false
         }
     },
+    mounted() {
+        this.customer = this.customerProp
+    }
 }
 </script>

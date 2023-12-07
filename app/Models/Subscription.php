@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Services\SubscriptionService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -80,11 +79,6 @@ class Subscription extends Model
     public function scopeActive($query)
     {
         return $query->whereIn('status', [self::ACTIVE, self::TO_BE_CONFIRMED]);
-    }
-
-    public function getStatusAttribute($status)
-    {
-        return SubscriptionService::getSubFancyStatusLabel($status);
     }
 
     public function getCreatedAtAttribute($createdAt)

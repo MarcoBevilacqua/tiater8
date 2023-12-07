@@ -52,7 +52,7 @@ class SubscriptionController extends Controller
                         'customer' => $subscription->subscription_email,
                         'created' => $subscription->created_at,
                         'season' => $subscription->year_from . "/" . ($subscription->year_from + 1),
-                        'status' => $subscription->status,
+                        'status' => SubscriptionService::getSubFancyStatusLabel($subscription->status),
                         'edit' => URL::route('subscriptions.edit', $subscription)
                     ];
                 }),
@@ -100,18 +100,11 @@ class SubscriptionController extends Controller
      */
     public function edit(int $id)
     {
-        $subscription = Subscription::findOrFail($id)->toArray();
+        $subscription = Subscription::findOrFail($id);
 
         return Inertia::render('Subscription/Form', [
-
             'subscription' => $subscription,
-            'customers' => Customer::all()->map(function (Customer $customer) {
-                return [
-                    'id' => $customer->id,
-                    'name' => $customer->first_name . " " . $customer->last_name
-                ];
-            }),
-
+            'customer' => $subscription->customer_id ? $subscription->customer->fullName : "",
             '_method' => 'put',
             'av_statuses' => SubscriptionService::getAllSubFancyStatusLabel(),
             'activities' => SubscriptionService::getAllFancyActivityLabels(),
@@ -140,6 +133,7 @@ class SubscriptionController extends Controller
         try {
             $subscription->update(
                 [
+                    'customer_id' => $request->input('customer_id'),
                     'status' => $request->input('status'),
                     'subscription_email' => $request->input('subscription_email'),
                     'activity' => $request->input('activity'),

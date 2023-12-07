@@ -21,35 +21,9 @@
                                         />
                                         <div class="grid grid-cols-6 gap-6">
                                             <div
-                                                v-if="subscription.customer_id"
                                                 class="col-span-6 sm:col-span-3"
                                             >
-                                                <label
-                                                    for="customer"
-                                                    class="block text-sm font-medium text-gray-700"
-                                                    >Tessera di:</label
-                                                >
-                                                <select
-                                                    v-model="
-                                                        subscription.customer_id
-                                                    "
-                                                    name="customer_id"
-                                                    id="customer_id"
-                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                >
-                                                    <option
-                                                        v-for="customer in customers"
-                                                        :value="customer.id"
-                                                    >{{ customer.name }}
-                                                    </option>
-                                                </select>
-
-                                            </div>
-                                            <div v-else
-                                                class="col-span-6 sm:col-span-3"
-                                            >
-                                                <CustomerAutocomplete :suggestions="suggestions"
-                                                                      @customer-selected="this.customerSelected"/>
+                                                <CustomerAutocomplete :customer-prop="customer" @customer-selected="this.customerSelected"/>
                                             </div>
                                             <div
                                                 class="col-span-3 sm:col-span-1"
@@ -80,7 +54,7 @@
                                                     >Anno di fine</label
                                                 >
                                                 <input
-                                                    v-model="form.year_to"
+                                                    v-model="subscription.year_to"
                                                     type="text"
                                                     name="year_to"
                                                     id="year_to"
@@ -103,13 +77,14 @@
                                                     >Comunicazioni</label
                                                 >
                                                 <select
-                                                    v-model="form.contact_type"
+                                                    v-model="subscription.contact_type"
                                                     name="contact_type"
                                                     id="contact_type"
                                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                 >
+
                                                     <option
-                                                        :selected="contact_type"
+                                                        :selected="subscription.contact_type ?? ''"
                                                         v-for="(key,
                                                         value) in contacts"
                                                         :value="value"
@@ -133,6 +108,7 @@
                                                     id="activity"
                                                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                 >
+                                                    <option value="">Selezionare un valore</option>
                                                     <option
                                                         v-for="(key,
                                                         value) in activities"
@@ -239,12 +215,12 @@ export default {
 
     props: {
         errors: Object,
-        subscription: Array,
-        customers: Array,
+        subscription: Object,
+        customer: Object,
         _method: String,
-        av_statuses: Array,
-        contacts: Array,
-        activities: Array,
+        av_statuses: Object,
+        contacts: Object,
+        activities: Object,
     },
 
     data() {
@@ -254,6 +230,7 @@ export default {
             form: this.$inertia.form({
                 _method: this._method,
                 id: this.subscription.id,
+                customer_id: this.subscription.customer_id,
                 subscription_email: this.subscription.subscription_email,
                 status: this.subscription.status,
                 contact_type: this.subscription.contact_type,
@@ -266,9 +243,13 @@ export default {
             }),
         };
     },
+    mounted() {
+        console.log(this.subscription)
+    },
 
     methods: {
         customerSelected(customerId) {
+
             this.form.customer_id = customerId
         },
         update() {
