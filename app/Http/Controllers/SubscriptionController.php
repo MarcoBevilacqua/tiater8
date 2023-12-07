@@ -40,7 +40,7 @@ class SubscriptionController extends Controller
     {
         return Inertia::render(
             'Subscriptions',
-            ['subscriptions' => Subscription::select(['id', 'subscription_email', 'year_from', 'status', 'created_at'])
+            ['subscriptions' => Subscription::select(['id', 'customer_id', 'subscription_email', 'year_from', 'status', 'created_at'])
                 ->when($request->has('search'), function ($query) use ($request) {
                     $query->where('subscription_email', 'LIKE', '%' . $request->search . '%');
                 })
@@ -49,10 +49,11 @@ class SubscriptionController extends Controller
                 ->through(function (Subscription $subscription) {
                     return [
                         'id' => $subscription->id,
-                        'customer' => $subscription->subscription_email,
+                        'email' => $subscription->subscription_email,
+                        'customer' => $subscription->customer_id ? $subscription->customer->fullName : "",
                         'created' => $subscription->created_at,
                         'season' => $subscription->year_from . "/" . ($subscription->year_from + 1),
-                        'status' => $subscription->status,
+                        'status' => ['value' => $subscription->status, 'label' => SubscriptionService::getSubFancyStatusLabel($subscription->status)],
                         'edit' => URL::route('subscriptions.edit', $subscription)
                     ];
                 }),
@@ -100,18 +101,11 @@ class SubscriptionController extends Controller
      */
     public function edit(int $id)
     {
-        $subscription = Subscription::findOrFail($id)->toArray();
+        $subscription = Subscription::findOrFail($id);
 
         return Inertia::render('Subscription/Form', [
-
             'subscription' => $subscription,
-            'customers' => Customer::all()->map(function (Customer $customer) {
-                return [
-                    'id' => $customer->id,
-                    'name' => $customer->first_name . " " . $customer->last_name
-                ];
-            }),
-
+            'customer' => $subscription->customer_id ? $subscription->customer->fullName : "",
             '_method' => 'put',
             'av_statuses' => SubscriptionService::getAllSubFancyStatusLabel(),
             'activities' => SubscriptionService::getAllFancyActivityLabels(),
@@ -140,6 +134,7 @@ class SubscriptionController extends Controller
         try {
             $subscription->update(
                 [
+                    'customer_id' => $request->input('customer_id'),
                     'status' => $request->input('status'),
                     'subscription_email' => $request->input('subscription_email'),
                     'activity' => $request->input('activity'),
