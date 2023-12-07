@@ -40,7 +40,7 @@ class SubscriptionController extends Controller
     {
         return Inertia::render(
             'Subscriptions',
-            ['subscriptions' => Subscription::select(['id', 'subscription_email', 'year_from', 'status', 'created_at'])
+            ['subscriptions' => Subscription::select(['id', 'customer_id', 'subscription_email', 'year_from', 'status', 'created_at'])
                 ->when($request->has('search'), function ($query) use ($request) {
                     $query->where('subscription_email', 'LIKE', '%' . $request->search . '%');
                 })
@@ -49,7 +49,8 @@ class SubscriptionController extends Controller
                 ->through(function (Subscription $subscription) {
                     return [
                         'id' => $subscription->id,
-                        'customer' => $subscription->subscription_email,
+                        'email' => $subscription->subscription_email,
+                        'customer' => $subscription->customer_id ? $subscription->customer->fullName : "",
                         'created' => $subscription->created_at,
                         'season' => $subscription->year_from . "/" . ($subscription->year_from + 1),
                         'status' => ['value' => $subscription->status, 'label' => SubscriptionService::getSubFancyStatusLabel($subscription->status)],

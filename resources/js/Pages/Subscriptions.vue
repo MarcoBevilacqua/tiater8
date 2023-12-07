@@ -71,9 +71,9 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
                                 <div
-                                    class="text-sm font-medium text-gray-900"
-                                >
-                                    {{ subscription.customer }}
+                                    class="text-sm font-medium text-gray-900">
+                                    <p v-if="subscription.customer.length" class="text-sm font-semibold leading-6 text-gray-900">{{ subscription.customer }}</p>
+                                    <p class="truncate text-xs leading-5 text-gray-500">{{ subscription.email }}</p>
                                 </div>
                             </div>
                         </td>
@@ -82,7 +82,6 @@
                                 <div
                                     class="text-sm font-medium text-gray-900"
                                 >
-
                                     <subscription-status :status="subscription.status" />
                                 </div>
                             </div>
