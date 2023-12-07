@@ -14,16 +14,16 @@
             @search="manageSearchInput"
         />
 
-        <div v-if="suggestions.length" class="w-full absolute left-0 bg-white" @focusout="">
-            <ul>
+        <div v-if="suggestions.length" class="w-full absolute left-0 bg-white">
+            <ul class="bg-gray-100">
                 <li v-for="suggestion in this.suggestions"
-                    class="text-sm cursor-pointer text-gray-400 hover:bg-gray-100 px-2 py-2 rounded-b-md border-b-2 border-r-2 border-l-2"
+                    class="text-sm font-semibold cursor-pointer hover:bg-gray-200 px-2 py-2 rounded-b-md border-b-2 border-r-2 border-l-2"
                     @click="this.selectCustomer(suggestion.id, suggestion.name)">
                     {{ suggestion.name }}
                 </li>
             </ul>
         </div>
-        <div v-if="this.noResults">
+        <div v-if="this.noResults" @focusout="this.removeAll">
             <ul>
                 <li class="text-sm text-red-700 px-2 py-2 border-red-500 rounded-b-md border-b-2 border-r-2 border-l-2">
                     Nessun risultato
@@ -54,6 +54,7 @@ export default {
             //manage search event
             if (e.target.value.length === 0) {
                 this.suggestions = []
+                this.noResults = false
             }
         },
         debounceVisit() {
@@ -87,6 +88,9 @@ export default {
             this.$emit('customer-selected', customerId)
             this.customer = name
             this.suggestions = [];
+        },
+        removeAll() {
+            this.noResults = false
         }
     },
 }
