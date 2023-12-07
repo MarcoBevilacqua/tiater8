@@ -82,7 +82,8 @@
                                 <div
                                     class="text-sm font-medium text-gray-900"
                                 >
-                                    {{ subscription.status }}
+
+                                    <subscription-status :status="subscription.status" />
                                 </div>
                             </div>
                         </td>
@@ -186,6 +187,7 @@ import BreezeDropdown from "@/Components/Dropdown";
 import BreezeDropdownLink from "@/Components/DropdownLink";
 import Container from "@/Layouts/Container";
 import Pagination from "@/Shared/Pagination";
+import SubscriptionStatus from "@/Components/Subscriptions/SubscriptionStatus.vue";
 import throttle from "lodash/throttle";
 
 export default {
@@ -195,6 +197,7 @@ export default {
         BreezeDropdown,
         BreezeDropdownLink,
         Container,
+        SubscriptionStatus
     },
     props: {
         links: Array,

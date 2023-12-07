@@ -52,7 +52,7 @@ class SubscriptionController extends Controller
                         'customer' => $subscription->subscription_email,
                         'created' => $subscription->created_at,
                         'season' => $subscription->year_from . "/" . ($subscription->year_from + 1),
-                        'status' => SubscriptionService::getSubFancyStatusLabel($subscription->status),
+                        'status' => ['value' => $subscription->status, 'label' => SubscriptionService::getSubFancyStatusLabel($subscription->status)],
                         'edit' => URL::route('subscriptions.edit', $subscription)
                     ];
                 }),
