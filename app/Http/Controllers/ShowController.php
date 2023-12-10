@@ -57,9 +57,7 @@ class ShowController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'description' => 'required',
-            'full_price' => 'required',
-            'half_price' => 'required'
+            'full_price' => 'required'
         ]);
 
         //check if input has file
@@ -71,10 +69,10 @@ class ShowController extends Controller
             Show::create(
                 [
                     'title' => $request->title,
-                    'description' => $request->description,
+                    'description' => $request->description ?? "",
                     'url' => $request->url ?? "",
                     'full_price' => $request->full_price,
-                    'half_price' => $request->half_price,
+                    'half_price' => $request->half_price ?? 0,
                     'places' => 50,
                     'image' => $request->hasFile('image') ?
                         asset('/img/' . $request->file('image')->getClientOriginalName()) :

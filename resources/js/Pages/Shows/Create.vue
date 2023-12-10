@@ -54,7 +54,7 @@
                                                     <label
                                                         class="block text-sm font-medium text-gray-700"
                                                         for="name"
-                                                    >Titolo</label
+                                                    >Titolo*</label
                                                     >
                                                     <input
                                                         id="title"
@@ -62,8 +62,9 @@
                                                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                         name="title"
                                                         type="text"
+                                                        :class="[errors.title ? 'border-red-400' : '']"
                                                     />
-                                                    <div v-if="errors.title">
+                                                    <div v-if="errors.title" class="text-red-400 pt-2.5">
                                                         {{ errors.title }}
                                                     </div>
                                                 </div>
@@ -105,13 +106,6 @@
                                                         rows="12"
                                                     >
                                                     </textarea>
-                                                    <div
-                                                        v-if="
-                                                            errors.description
-                                                        "
-                                                    >
-                                                        {{ errors.description }}
-                                                    </div>
                                                 </div>
                                                 <div
                                                     class="grid grid-cols-4 gap-4"
@@ -122,7 +116,7 @@
                                                         <label
                                                             class="block text-sm font-medium text-gray-700"
                                                             for="full_price"
-                                                        >Prezzo pieno</label
+                                                        >Prezzo pieno*</label
                                                         >
                                                         <input
                                                             id="full_price"
@@ -133,6 +127,9 @@
                                                             name="full_price"
                                                             type="number"
                                                         />
+                                                        <div v-if="errors.full_price" class="text-red-400 pt-2.5" :class="[errors.full_price ? 'border-red-400' : '']">
+                                                            {{errors.full_price}}
+                                                        </div>
                                                     </div>
                                                     <div
                                                         class="sm:col-span-2 col-span-2 py-5"
@@ -206,7 +203,6 @@ export default {
                 description: null,
                 image: null,
                 url: null,
-                description: null,
                 _method: this._method,
             }),
         };
