@@ -4,14 +4,6 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Date Spettacoli "{{ show }}"
             </h2>
-            <small>
-                <inertia-link
-                    :href="createLink"
-                    class="font-medium text-indigo-500"
-                >Inserisci nuovo
-                </inertia-link>
-            </small
-            >
         </template>
         <template #main>
             <container>
@@ -38,7 +30,7 @@
                         </th>
                     </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody v-if="events.length" class="bg-white divide-y divide-gray-200">
                     <tr v-for="event in events" :key="event.id">
                         <td class="px-6 py-4 text-clip truncate whitespace-nowrap">
                             <div class="flex items-center">
@@ -60,6 +52,16 @@
                                         Modifica
                                     </inertia-link>
                                 </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tbody v-else>
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            <div class="py-2.5 text-red-400">
+                                <p>Nessuna data disponibile per la modifica.</p>
+                                <span>Per inserire una data procedere dal <inertia-link href="bookings" class="text-indigo-400 underline">calendario</inertia-link></span>
                             </div>
                         </td>
                     </tr>

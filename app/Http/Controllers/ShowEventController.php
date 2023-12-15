@@ -6,6 +6,7 @@ use App\Models\Show;
 use App\Models\ShowEvent;
 use App\Services\ShowEventService;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
@@ -101,9 +102,9 @@ class ShowEventController extends Controller
 
     /**
      * @param $id
-     * @return bool|int
+     * @return RedirectResponse
      */
-    public function destroy($id)
+    public function destroy($id): RedirectResponse
     {
         try {
             $showEvent = ShowEvent::findOrFail($id);
