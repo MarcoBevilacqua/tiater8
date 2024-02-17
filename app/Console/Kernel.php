@@ -25,9 +25,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('inspire', [
-            '--model' => [Subscription::class],
-        ])->everyMinute()
+        $schedule->command('inspire')->hourly()
             ->appendOutputTo('./storage/logs/schedule_inspire' . now()->format('Y-m-d') .'.log');
 
         $schedule->command('model:prune', [
