@@ -31,7 +31,7 @@ class Kernel extends ConsoleKernel
             ->appendOutputTo('./storage/logs/schedule_' . now()->format('Y-m-d') .'.log');
 
         $schedule->command('subscriptions:expire-old')
-            ->dailyAt('00:00')
+            ->dailyAt('01:00')
             ->appendOutputTo('.storage/logs/expired_subs_' . now()->format('Y-m-d') . '.log');
     }
 
