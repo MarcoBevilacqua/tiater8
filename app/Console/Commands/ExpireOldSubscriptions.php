@@ -22,6 +22,13 @@ class ExpireOldSubscriptions extends Command
     protected $description = 'Subscriptions older than a year are marked with the expired status';
 
     /**
+     * The number of record to limit the script
+     *
+     * @var int
+     */
+    const LIMIT = 25;
+
+    /**
      * Create a new command instance.
      *
      * @return void
@@ -42,7 +49,7 @@ class ExpireOldSubscriptions extends Command
         $oldSubscriptions = Subscription::whereNotNull('customer_id')
             ->whereDate('created_at', '<', now()->subYear()->subDay()->format('Y-m-d H:i:s'))
             ->where('status', '!=', Subscription::EXPIRED)
-            ->take(10)
+            ->take(self::LIMIT)
             ->get();
 
         if($oldSubscriptions->count() === 0) {
@@ -50,17 +57,22 @@ class ExpireOldSubscriptions extends Command
             return 0;
         }
 
-        $this->line("{$oldSubscriptions} sub(s) older than a year will be set to expired");
+        $this->line("{$oldSubscriptions->count()} sub(s) older than a year will be set to expired: ");
+        $this->newLine(2);
 
-        $oldSubscriptions = Subscription::whereNotNull('customer_id')
+        $oldSubscriptions->map(function ($sub) {
+            $this->line("{$sub->subscription_email} - created in {$sub->created_at->format('d-m-Y')}");
+        });
+
+        $updated = Subscription::whereNotNull('customer_id')
             ->whereDate('created_at', '<', now()->subYear()->subDay()->format('Y-m-d H:i:s'))
             ->where('status', '!=', Subscription::EXPIRED)
-            ->take(10)
+            ->take(self::LIMIT)
             ->update([
                 'status' => Subscription::EXPIRED
             ]);
 
-        $this->line("{$oldSubscriptions} sub(s) older than a year are now expired");
+        $this->line("{$updated} sub(s) older than a year are now expired");
         return 0;
     }
 }

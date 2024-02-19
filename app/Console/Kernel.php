@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Models\Subscription;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -24,13 +25,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-//        $schedule->command('model:prune', [
-//            '--model' => [Subscription::class],
-//        ])->weekly()
-//            ->appendOutputTo('./storage/logs/schedule_' . now()->format('Y-m-d') .'.log');
+        $schedule->command('model:prune', [
+            '--model' => [Subscription::class],
+        ])->weekly()
+            ->appendOutputTo('./storage/logs/schedule_' . now()->format('Y-m-d') .'.log');
 
         $schedule->command('subscriptions:expire-old')
-            ->everyFiveMinutes()
+            ->dailyAt('02:00')
             ->appendOutputTo('./storage/logs/expired_subs_' . now()->format('Y-m-d') . '.log');
     }
 
