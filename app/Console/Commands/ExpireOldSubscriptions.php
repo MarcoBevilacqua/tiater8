@@ -47,7 +47,7 @@ class ExpireOldSubscriptions extends Command
 
         if($oldSubscriptions->count() === 0) {
             $this->line("No subs found older than a year, exiting...");
-            //return 0;
+            return 0;
         }
 
         $this->line("{$oldSubscriptions} sub(s) older than a year will be set to expired");
