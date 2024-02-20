@@ -61,7 +61,7 @@ class ExpireOldSubscriptions extends Command
         $this->newLine(2);
 
         $oldSubscriptions->map(function ($sub) {
-            $this->line("{$sub->subscription_email} - created in {$sub->created_at->format('d-m-Y')}");
+            $this->line("{$sub->subscription_email} - created in {$sub->created_at}");
         });
 
         $updated = Subscription::whereNotNull('customer_id')
