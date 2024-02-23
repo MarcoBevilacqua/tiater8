@@ -26,7 +26,7 @@ class ExpireOldSubscriptions extends Command
      *
      * @var int
      */
-    const LIMIT = 25;
+    const LIMIT = 100;
 
     /**
      * Create a new command instance.
