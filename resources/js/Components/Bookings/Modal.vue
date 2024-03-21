@@ -6,6 +6,7 @@
         class="fixed z-10 inset-0 overflow-y-auto"
         role="dialog"
     >
+
         <div class="min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <!--
       Background overlay, show/hide based on modal state.
@@ -39,10 +40,18 @@
         From: "opacity-100 translate-y-0 sm:scale-100"
         To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
     -->
+
             <div
                 class="inline-block align-bottom bg-white rounded-lg text-center overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-1/4"
             >
-                <div class="bg-white px-8 pt-2 pb-2 sm:pt-6 sm:pb-4">
+
+                <a
+                    class="bg-gray-300 hover:bg-gray-400 rounded-md float-right mt-4 mr-2 py-1.5 px-3 cursor-pointer bg-transparent text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-2 sm:w-auto sm:text-md"
+                    @click="$emit('close-modal')"
+                >
+                    <b>X</b>
+                </a>
+                <div class="bg-white px-8 pt-4 pb-4 sm:pt-12 sm:pb-8">
                     <div v-if="booking"
                          class="text-center md:mt-0 md:pt-2 md:pb-2 sm:mt-0 sm:pt-2 sm:pb-4 sm:text-center">
                         <h2
@@ -99,13 +108,12 @@
                         </div>
                     </div>
                     <div v-else>
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">
-                            Selezionare nominativo</h3>
-                        <small>Fila {{ row }} Posto {{ place }}</small>
+                        <h4 class="text-lg leading-6 font-medium text-gray-900">
+                            Selezionare nominativo posto {{ this.$parent.row }}{{ this.$parent.place }}</h4>
                         <div class="mt-2"></div>
                         <div class="px-6 pt-2 pb-4 sm:px-8">
                             <form @submit.prevent="create">
-                                <CustomerAutocomplete @customer-selected="this.customerSelected"/>
+                                <CustomerAutocomplete @searching="this.form.processing = true" @customer-selected="this.customerSelected"/>
                                 <div class="my-4"></div>
 
                                 <button
@@ -147,14 +155,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-gray-50 hover:bg-gray-100 px-4 py-2 sm:px-6">
-                    <a
-                        class="cursor-pointer mt-3 w-full hover:bg-gray-100 inline-flex justify-center px-4 py-2 bg-transparent text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
-                        @click="$emit('close-modal')"
-                    >
-                        Annulla
-                    </a>
-                </div>
             </div>
         </div>
     </div>
@@ -170,7 +170,7 @@ export default {
     },
     props: {
         booking: Object,
-        showEventId: Number
+        showEventId: Number,
     },
     data() {
         return {
