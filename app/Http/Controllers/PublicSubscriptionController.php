@@ -10,6 +10,7 @@ use App\Services\SubscriptionService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
@@ -36,6 +37,10 @@ class PublicSubscriptionController extends Controller
      */
     public function index(): Response
     {
+        $cookie = Cookie::get('subscription-confirmed');
+        if(!$cookie) {
+            return Inertia::render('Public/SelfInvitation');
+        }
         return Inertia::render('Public/Confirmed');
     }
 
@@ -223,7 +228,8 @@ class PublicSubscriptionController extends Controller
         }
 
         Log::info("Customer with ID {$customer->id} successfully created", [__CLASS__, __FUNCTION__]);
-
+        //create cookie
+        $cookie = Cookie::make('subscription-confirmed', true, 1);
         try {
             Mail::to($canHandleSubscription->subscription_email)->send(new SubscriptionFilled());
         } catch (\Exception $exception) {
@@ -243,7 +249,7 @@ class PublicSubscriptionController extends Controller
         Log::info("redirecting to subscriptions/" . $request->input('sub_token') . "/confirmed");
 
         /** TODO: Redirect on public simple view */
-        return Redirect::to('over/subscriptions/');
+        return Redirect::to('over/subscriptions/')->cookie($cookie);
     }
 
     //TODO: CHECK EMAIL MATCH
