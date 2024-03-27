@@ -246,10 +246,10 @@ class PublicSubscriptionController extends Controller
 
             ]);
 
-        Log::info("redirecting to subscriptions/" . $request->input('sub_token') . "/confirmed");
+        Log::info("redirecting to subscriptions/confirmed");
 
         /** TODO: Redirect on public simple view */
-        return Redirect::to('over/subscriptions/')->cookie($cookie);
+        return Redirect::to('over/subscriptions')->cookie($cookie);
     }
 
     //TODO: CHECK EMAIL MATCH
