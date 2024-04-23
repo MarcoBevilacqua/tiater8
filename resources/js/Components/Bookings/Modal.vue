@@ -8,39 +8,16 @@
     >
 
         <div class="min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <!--
-      Background overlay, show/hide based on modal state.
-
-      Entering: "ease-out duration-300"
-        From: "opacity-0"
-        To: "opacity-100"
-      Leaving: "ease-in duration-200"
-        From: "opacity-100"
-        To: "opacity-0"
-    -->
             <div
                 aria-hidden="true"
-                class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-            ></div>
-
+                class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity">
+            </div>
             <!-- This element is to trick the browser into centering the modal contents. -->
             <span
                 aria-hidden="true"
                 class="hidden sm:inline-block sm:align-middle sm:h-screen"
             >&#8203;</span
             >
-
-            <!--
-      Modal panel, show/hide based on modal state.
-
-      Entering: "ease-out duration-300"
-        From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-        To: "opacity-100 translate-y-0 sm:scale-100"
-      Leaving: "ease-in duration-200"
-        From: "opacity-100 translate-y-0 sm:scale-100"
-        To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-    -->
-
             <div
                 class="inline-block align-bottom bg-white rounded-lg text-center overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-1/4"
             >
@@ -52,7 +29,7 @@
                     <b>X</b>
                 </a>
                 <div class="bg-white px-8 pt-4 pb-4 sm:pt-12 sm:pb-8">
-                    <div v-if="booking"
+                    <div v-if="booking.customer"
                          class="text-center md:mt-0 md:pt-2 md:pb-2 sm:mt-0 sm:pt-2 sm:pb-4 sm:text-center">
                         <h2
                             class="text-lg leading-6 font-medium font-bold text-gray-900">
@@ -69,7 +46,7 @@
                                         <input v-model="form.customer_id" name="customer_id" type="hidden">
                                         <input
                                             id="row"
-                                            v-model="this.$parent.row"
+                                            v-model="this.booking.row_letter"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                             name="row"
                                             type="text"
@@ -79,7 +56,7 @@
                                         <label class="block text-sm font-medium text-gray-700" for="place">Posto</label>
                                         <input
                                             id="place"
-                                            v-model="this.$parent.place"
+                                            v-model="this.booking.place_number"
                                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                             name="place"
                                             type="number"
@@ -108,11 +85,14 @@
                         </div>
                     </div>
                     <div v-else>
-                        <h4 class="text-lg leading-6 font-medium text-gray-900">
-                            Selezionare nominativo posto {{ this.$parent.row }}{{ this.$parent.place }}</h4>
+<!--                        <h4 class="text-lg leading-6 font-medium text-gray-900">-->
+<!--                            Selezionare nominativo posto {{ booking.row_letter }}{{ booking.place_number }}</h4>-->
                         <div class="mt-2"></div>
                         <div class="px-6 pt-2 pb-4 sm:px-8">
                             <form @submit.prevent="create">
+                                <input type="hidden" v-model="booking.place_letter" name="place">
+                                <input type="hidden" v-model="booking.row_number" name="row">
+
                                 <CustomerAutocomplete @searching="this.form.processing = true" @customer-selected="this.customerSelected"/>
                                 <div class="my-4"></div>
 
@@ -178,16 +158,15 @@ export default {
             suggestions: [],
             form: this.$inertia.form({
                 id: this.booking ? this.booking.id : null,
-                customer_id: this.booking ? this.booking.customer.id : null,
+                customer_id: this.booking.customer ? this.booking.customer.id : null,
                 show_event_id: null,
-                place: this.$parent.place,
-                row: this.$parent.row,
+
             })
                 .transform((data) => ({
                     ...data,
                     show_event_id: this.showEventId,
-                    place: this.place,
-                    row: this.row,
+                    place: this.booking.place_number,
+                    row: this.booking.row_letter,
                 })),
         };
     },

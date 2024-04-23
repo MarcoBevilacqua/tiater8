@@ -9,6 +9,7 @@
             />
         </div>
     </div>
+    <pre>{{this.selectedBooking}}</pre>
     <div class="grid grid-cols-2 gap-x-6 bg-white-500">
         <div class="col-span-1 left">
             <Row
@@ -87,6 +88,7 @@
                 :row="'Z'"
                 @show-modal="modalShow"
             />
+
             <div class="col-span-1 mx-auto w-full mx-auto p-4 text-left">
                 <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-1 bg-yellow-600 w-8 h-4 mt-1 rounded-md"></div>
@@ -99,6 +101,8 @@
             </div>
         </div>
     </div>
+
+    <transition>
     <Modal
         v-if="this.showModal"
         :booking="this.selectedBooking"
@@ -106,7 +110,20 @@
         @show-modal="showModal"
         @close-modal="modalClose"
     />
+    </transition>
 </template>
+
+<style>
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.3s ease-out;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
+</style>
 
 <script>
 import Row from "@/Components/Bookings/Row";
@@ -123,11 +140,14 @@ export default {
     },
     methods: {
         modalShow(row, place) {
-            this.place = place;
-            this.row = row;
-            this.selectedBooking = this.bookings[row]?.filter(obj => {
+            let customer = this.bookings[row]?.filter(obj => {
                 return obj.place_number === place
-            })[0] || null
+            })[0]
+            this.selectedBooking = {
+                place_number: place,
+                row_letter: row,
+                ...customer
+            }
             this.showModal = true;
         },
         modalClose() {
@@ -144,6 +164,7 @@ export default {
     },
     data() {
         return {
+            show:false,
             showModal: false,
             place: null,
             row: null,
