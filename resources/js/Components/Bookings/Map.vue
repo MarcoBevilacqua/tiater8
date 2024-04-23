@@ -9,7 +9,7 @@
             />
         </div>
     </div>
-    <pre>{{this.selectedBooking}}</pre>
+
     <div class="grid grid-cols-2 gap-x-6 bg-white-500">
         <div class="col-span-1 left">
             <Row

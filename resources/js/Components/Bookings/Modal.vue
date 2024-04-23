@@ -19,16 +19,16 @@
             >&#8203;</span
             >
             <div
-                class="inline-block align-bottom bg-white rounded-lg text-center overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-1/4"
+                class="inline-block rounded-lg align-bottom bg-white text-center shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-1/4"
             >
 
                 <a
-                    class="bg-gray-300 hover:bg-gray-400 rounded-md float-right mt-4 mr-2 py-1.5 px-3 cursor-pointer bg-transparent text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-2 sm:w-auto sm:text-md"
+                    class="bg-gray-300 hover:bg-gray-400 rounded-lg rounded-md float-right mt-4 mr-2 py-1.5 px-3 cursor-pointer bg-transparent text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-2 sm:w-auto sm:text-md"
                     @click="$emit('close-modal')"
                 >
                     <b>X</b>
                 </a>
-                <div class="bg-white px-8 pt-4 pb-4 sm:pt-12 sm:pb-8">
+                <div class="bg-white px-8 pt-4 pb-4 sm:pt-12 sm:pb-8 rounded-lg">
                     <div v-if="booking.customer"
                          class="text-center md:mt-0 md:pt-2 md:pb-2 sm:mt-0 sm:pt-2 sm:pb-4 sm:text-center">
                         <h2
@@ -65,11 +65,38 @@
                                 </div>
                                 <div class="mx-12">
                                     <button
+                                        v-if="!form.processing"
                                         class="w-full md:w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-5 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-1/2 sm:text-sm"
                                         type="submit"
                                     >
                                         Conferma
                                     </button>
+                                    <button
+                                        v-else
+                                        class="group relative w-full flex justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-400 hover:bg-blue-600 transition ease-in-out duration-150 cursor-not-allowed"
+                                        disabled=""
+                                        type="button"
+                                    >                                    <svg
+                                        class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <circle
+                                            class="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            stroke-width="4"
+                                        ></circle>
+                                        <path
+                                            class="opacity-75"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                            fill="currentColor"
+                                        ></path>
+                                    </svg>
+                                        Operazione in corso...</button>
                                 </div>
                             </form>
 

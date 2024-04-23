@@ -19,7 +19,7 @@
                 <spinner :size="5" :color="'gray'"></spinner>
             </div>
             <div v-else>
-                <ul v-if="suggestions.length" class="bg-gray-100">
+                <ul v-if="suggestions.length" class="bg-gray-50">
                     <li v-for="suggestion in this.suggestions"
                         class="text-sm font-semibold cursor-pointer hover:bg-gray-200 px-2 py-2 rounded-b-md border-b-2 border-r-2 border-l-2"
                         @click="this.selectCustomer(suggestion.id, suggestion.name)">
