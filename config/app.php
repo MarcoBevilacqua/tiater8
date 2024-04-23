@@ -244,6 +244,9 @@ return [
     'subscriptions' => [
         'expiration_month' => env('SUBSCRIPTION_EXPIRATION_MONTH', 6),
         'renovation_month' => env('SUBSCRIPTION_RENOVATION_MONTH', 10)
+    ],
+    'cookie' => [
+        'subscription_confirmed' => env('SUBSCRIPTION_CONFIRMED_COOKIE', 'subscription_confirmed')
     ]
 
 ];
