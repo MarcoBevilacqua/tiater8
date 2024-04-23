@@ -59,10 +59,15 @@
                         >There is one form error.</span
                     >
                     <span v-else
-                        >There are
-                        {{ Object.keys($page.props.errors).length }} form
-                        errors.</span
-                    >
+                        >
+                        {{ Object.keys($page.props.errors).length }} errori rilevati::</span>
+                    <div>
+                        <ul>
+                            <li v-for="err in $page.props.errors">
+                                <small >{{err}}</small>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <button type="button" class="group mr-2 p-2" @click="show = false">
