@@ -21,8 +21,9 @@ class AsyncController extends Controller
         $searchTerm = Str::lower($request->term) . '%';
 
         return Customer::select(['id', 'first_name', 'last_name'])
-            ->where('first_name', 'LIKE', $searchTerm)
-            ->orWhere('last_name', 'LIKE', $searchTerm)
+            ->whereRaw('LOWER(first_name) LIKE ?', $searchTerm . "%")
+            ->orWhereRaw('LOWER(last_name) LIKE ?', $searchTerm . "%")
+            ->take(10)
             ->get()
             ->map(function ($customer) {
                 return [

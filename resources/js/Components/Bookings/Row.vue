@@ -7,7 +7,7 @@
                         :class="[custom ? 'rounded-full' : 'rounded-lg', 'rounded-lg', isPlaceBooked(place) ? 'bg-yellow-600 hover:bg-yellow-800' : 'bg-green-600 hover:bg-green-800']"
                         class="block focus:ring-4 focus:ring-blue-300 text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                         type="button"
-                        @click="$emit('show-modal', row, place)">
+                        @click="placeClicked(row, place)">
                         <span class="text-sm">{{ row }}{{ place }}</span>
                     </button>
                 </div>
@@ -34,10 +34,15 @@ export default {
     },
     data() {
         return {
+            customer: {},
             showInfo: false
         }
     },
     methods: {
+        placeClicked(row, place) {
+
+            this.$emit('show-modal', row, place);
+        },
         isPlaceBooked(place) {
             return this.bookedPlaces.filter(bookedPlace => {
                 return bookedPlace.place_number === place
@@ -53,12 +58,9 @@ export default {
                 return info[0].customer['last_name'];
             }
         },
-        showRefInfo() {
-            console.log(this.$refs)
-        },
         getBookedCustomer() {
             return this.bookedPlaces[0]?.customer_id;
         },
-    },
+    }
 };
 </script>
