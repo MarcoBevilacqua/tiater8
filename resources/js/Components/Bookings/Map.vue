@@ -1,102 +1,112 @@
 <template>
-    <div class="grid grid-cols-2 mr-6">
-        <div class="col-span-1 center text-left">
-            <Row
-                :bookedPlaces="getBookedPlacesForRow('X')"
-                :places="2"
-                :row="'X'"
-                @show-modal="modalShow"
-            />
+    <div id="printable">
+        <small class="print:text-xs screen:hidden">{{ showObj.title }} / {{ showObj.date }}</small>
+        <div class="grid grid-cols-2 mr-6">
+            <div class="col-span-1 center text-left">
+                <Row
+                    :bookedPlaces="getBookedPlacesForRow('X')"
+                    :places="2"
+                    :row="'X'"
+                    @show-modal="modalShow"
+                />
+            </div>
         </div>
-    </div>
 
-    <div class="grid grid-cols-2 gap-x-6 bg-white-500">
-        <div class="col-span-1 left">
-            <Row
-                :bookedPlaces="getBookedPlacesForRow('A')"
-                :places="6"
-                :row="'A'"
-                @show-modal="modalShow"
-            />
-            <Row
-                :bookedPlaces="getBookedPlacesForRow('B')"
-                :places="6"
-                :row="'B'"
-                @show-modal="modalShow"
-            />
-            <Row
-                :bookedPlaces="getBookedPlacesForRow('C')"
-                :places="4"
-                :row="'C'"
-                @show-modal="modalShow"
-            />
-            <Row
-                :bookedPlaces="getBookedPlacesForRow('D')"
-                :places="4"
-                :row="'D'"
-                @show-modal="modalShow"
-            />
-            <Row
-                :bookedPlaces="getBookedPlacesForRow('E')"
-                :places="3"
-                :row="'E'"
-                @show-modal="modalShow"
-            />
-            <Row
-                :bookedPlaces="getBookedPlacesForRow('F')"
-                :places="3"
-                :row="'F'"
-                @show-modal="modalShow"
-            />
-            <Row
-                :bookedPlaces="getBookedPlacesForRow('G')"
-                :places="4"
-                :row="'G'"
-                @show-modal="modalShow"
-            />
-            <Row
-                :bookedPlaces="getBookedPlacesForRow('H')"
-                :places="4"
-                :row="'H'"
-                @show-modal="modalShow"
-            />
-        </div>
-        <div class="col-span-1 right">
-            <Row
-                :bookedPlaces="getBookedPlacesForRow('Y')"
-                :custom="true"
-                :places="2"
-                :row="'Y'"
-                @show-modal="modalShow"
-            />
-            <Row
-                :bookedPlaces="getBookedPlacesForRow('I')"
-                :places="4"
-                :row="'I'"
-                @show-modal="modalShow"
-            />
-            <Row
-                :bookedPlaces="getBookedPlacesForRow('L')"
-                :places="4"
-                :row="'L'"
-                @show-modal="modalShow"
-            />
-            <Row
-                :bookedPlaces="getBookedPlacesForRow('Z')"
-                :custom="true"
-                :places="3"
-                :row="'Z'"
-                @show-modal="modalShow"
-            />
+        <div class="grid grid-cols-2 gap-x-6 bg-white-500">
+            <div class="col-span-1 left">
+                <Row
+                    :bookedPlaces="getBookedPlacesForRow('A')"
+                    :places="6"
+                    :row="'A'"
+                    @show-modal="modalShow"
+                />
+                <Row
+                    :bookedPlaces="getBookedPlacesForRow('B')"
+                    :places="6"
+                    :row="'B'"
+                    @show-modal="modalShow"
+                />
+                <Row
+                    :bookedPlaces="getBookedPlacesForRow('C')"
+                    :places="4"
+                    :row="'C'"
+                    @show-modal="modalShow"
+                />
+                <Row
+                    :bookedPlaces="getBookedPlacesForRow('D')"
+                    :places="4"
+                    :row="'D'"
+                    @show-modal="modalShow"
+                />
+                <Row
+                    :bookedPlaces="getBookedPlacesForRow('E')"
+                    :places="3"
+                    :row="'E'"
+                    @show-modal="modalShow"
+                />
+                <Row
+                    :bookedPlaces="getBookedPlacesForRow('F')"
+                    :places="3"
+                    :row="'F'"
+                    @show-modal="modalShow"
+                />
+                <Row
+                    :bookedPlaces="getBookedPlacesForRow('G')"
+                    :places="4"
+                    :row="'G'"
+                    @show-modal="modalShow"
+                />
+                <Row
+                    :bookedPlaces="getBookedPlacesForRow('H')"
+                    :places="4"
+                    :row="'H'"
+                    @show-modal="modalShow"
+                />
+            </div>
+            <div class="col-span-1 right">
+                <Row
+                    :bookedPlaces="getBookedPlacesForRow('Y')"
+                    :custom="true"
+                    :places="2"
+                    :row="'Y'"
+                    @show-modal="modalShow"
+                />
+                <Row
+                    :bookedPlaces="getBookedPlacesForRow('I')"
+                    :places="4"
+                    :row="'I'"
+                    @show-modal="modalShow"
+                />
+                <Row
+                    :bookedPlaces="getBookedPlacesForRow('L')"
+                    :places="4"
+                    :row="'L'"
+                    @show-modal="modalShow"
+                />
+                <Row
+                    :bookedPlaces="getBookedPlacesForRow('Z')"
+                    :custom="true"
+                    :places="3"
+                    :row="'Z'"
+                    @show-modal="modalShow"
+                />
 
-            <div class="col-span-1 mx-auto w-full mx-auto p-4 text-left">
-                <div class="grid grid-cols-12 gap-4">
-                    <div class="col-span-1 bg-yellow-600 w-8 h-4 mt-1 rounded-md"></div>
-                    <div class="col-span-10"><p>Posto prenotato</p></div>
+                <div class="print:hidden col-span-1 mx-auto w-full mx-auto p-4 text-left">
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-1 bg-yellow-600 w-8 h-4 mt-1 rounded-md"></div>
+                        <div class="col-span-10"><p>Posto prenotato</p></div>
+                    </div>
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-1 bg-green-600 w-8 h-4 mt-1 rounded-md"></div>
+                        <div class="col-span-10"><p>Posto libero</p></div>
+                    </div>
                 </div>
-                <div class="grid grid-cols-12 gap-4">
-                    <div class="col-span-1 bg-green-600 w-8 h-4 mt-1 rounded-md"></div>
-                    <div class="col-span-10"><p>Posto libero</p></div>
+                <div class="print:hidden">
+                    <button
+                        onclick="window.print()"
+                        class="bg-white mr-4 py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Anteprima
+                    </button>
                 </div>
             </div>
         </div>
@@ -135,6 +145,7 @@ export default {
         Row
     },
     props: {
+        showObj: Object,
         bookings: Object,
         showEventId: Number,
     },

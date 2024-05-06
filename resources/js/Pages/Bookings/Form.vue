@@ -2,7 +2,7 @@
     <breeze-authenticated-layout>
         <template #header>
             <div class="grid grid-cols-1">
-                <div>
+                <div class="print:hidden">
                     <h2
                         class="font-semibold text-xl text-gray-800 leading-tight"
                     >
@@ -18,6 +18,7 @@
             <container>
                 <div class="container map-container">
                     <Map
+                        :show-obj="this.show"
                         :bookings="bookings"
                         :showEventId="show_event.id"
                     />
