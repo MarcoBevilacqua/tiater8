@@ -3,19 +3,10 @@
         <template #header>
             <div class="grid grid-cols-2">
                 <div>
-                    <h2
-                        class="font-semibold text-xl text-gray-800 leading-tight"
-                    >
-                        Prenotazioni
-                    </h2>
-                    <small>
-                        <inertia-link
-                            :data="{show_id: this.show_id}"
-                            :href="createLink"
-                            class="font-medium text-indigo-500">
-                            Inserisci nuovo
-                        </inertia-link>
-                    </small>
+                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">Prenotazioni</h2>
+                        <small>
+                            Inserisci nuova data cliccando su un giorno del calendario
+                        </small>
                 </div>
             </div>
         </template>
