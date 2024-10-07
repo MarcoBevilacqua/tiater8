@@ -48,6 +48,7 @@ class BookingController extends Controller
      */
     public function detail(int $show_event_id): Response
     {
+        Carbon::setLocale('it');
         Log::info("Returning booking map for event with id {$show_event_id}...");
 
         $showEvent = ShowEvent::query()
@@ -79,7 +80,7 @@ class BookingController extends Controller
                 'show' => [
                     'id' => $showEvent->show_id,
                     'title' => $showEvent->title,
-                    'date' => Carbon::createFromTimeString($showEvent->show_date)->format('l d F Y - H:i')
+                    'date' => Carbon::createFromTimeString($showEvent->show_date)->translatedFormat('l d F Y - H:i')
                 ],
                 'show_event' => $showEvent,
             ]

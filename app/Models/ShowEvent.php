@@ -24,6 +24,8 @@ class ShowEvent extends Model
         'show_date'
     ];
 
+    protected $dates = ['show_date'];
+
     public function show()
     {
         return $this->belongsTo(Show::class);
