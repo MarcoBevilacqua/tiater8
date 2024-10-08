@@ -22,8 +22,11 @@ _ide_helper.php
 
 storage/*.key
 storage/debugbar/
+
 .env
 .env.production
+.env.testing
+
 Homestead.yaml
 Homestead.json
 /.vagrant
