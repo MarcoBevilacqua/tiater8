@@ -22,8 +22,11 @@ _ide_helper.php
 
 storage/*.key
 storage/debugbar/
+
 .env
 .env.production
+.env.testing
+
 Homestead.yaml
 Homestead.json
 /.vagrant
@@ -34,3 +37,5 @@ Homestead.json
 _ide_helper.php
 _ide_helper_models.php
 .idea
+
+composer.lock
