@@ -13,7 +13,9 @@ jobs:
       mysql:
         image: mysql:5.7
         ports:
-          - 13308
+          - 13306
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
@@ -25,7 +27,7 @@ jobs:
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
       - uses: actions/checkout@v2
       - name: Copy .env
-        run: php -r "file_exists('.env') || copy('.env.testing', '.env');"
+        run: php -r "file_exists('.env') || copy('.env.ci', '.env');"
       - name: Copy phpunit file
         run: php -r "copy('phpunit.ci.xml', 'phpunit.xml');"
       - name: Install Dependencies
