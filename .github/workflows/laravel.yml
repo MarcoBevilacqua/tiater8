@@ -25,6 +25,7 @@ jobs:
     steps:
 
       - uses: actions/checkout@v2
+      - uses: nanasess/setup-php@v4
         with:
           php-version: "8.3"
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, mysql, mysqli, pdo_mysql, bcmath, soap, intl, gd, exif, iconv, imagick
