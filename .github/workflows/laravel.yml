@@ -12,12 +12,8 @@ jobs:
     services:
       mysql:
         image: mysql:5.7
-        env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_DATABASE: test
-          MYSQL_USER: dev
         ports:
-          - 13309
+          - 13308
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
@@ -25,7 +21,6 @@ jobs:
         with:
           php-version: "8.3"
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, mysql, mysqli, pdo_mysql, bcmath, soap, intl, gd, exif, iconv, imagick
-          configuration: ./phpunit.ci.xml
         env:
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
       - uses: actions/checkout@v2
