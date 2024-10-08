@@ -41,4 +41,3 @@ jobs:
           configuration: ./phpunit.ci.xml
         env:
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
-        run: vendor/bin/phpunit
