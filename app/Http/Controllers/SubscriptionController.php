@@ -102,10 +102,10 @@ class SubscriptionController extends Controller
     public function edit(int $id)
     {
         $subscription = Subscription::findOrFail($id);
-
+        
         return Inertia::render('Subscription/Form', [
             'subscription' => $subscription,
-            'customer' => $subscription->customer_id ? $subscription->customer->fullName : "",
+            'customer' => $subscription->customer->fullName ?? "",
             '_method' => 'put',
             'av_statuses' => SubscriptionService::getAllSubFancyStatusLabel(),
             'activities' => SubscriptionService::getAllFancyActivityLabels(),

@@ -110,6 +110,7 @@
                                                 >
                                                     <option value="">Selezionare un valore</option>
                                                     <option
+                                                        :selected="subscription.activity === value"
                                                         v-for="(key,
                                                         value) in activities"
                                                         :value="value"

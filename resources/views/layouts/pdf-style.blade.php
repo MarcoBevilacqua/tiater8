@@ -1,7 +1,17 @@
     <style>
-          .container.row{
-                color: red;
-                font-family: 'Open Sans', 'sans-serif';
-                line-height: 1.2em;
+        * {
+            font-family:'nunito, sans-serif';
+
+        }
+        p, span {
+            font-size: 16px;
+        }
+
+        .container {
+            margin: 20px 25px;
+        }
+
+        .row {
+
           }
     </style>
