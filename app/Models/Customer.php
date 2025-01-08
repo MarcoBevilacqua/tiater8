@@ -43,4 +43,16 @@ class Customer extends Model
     {
         return "{$this->first_name} {$this->last_name}";
     }
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'birth' => 'datetime:Y-m-d',
+        ];
+    }
 }
