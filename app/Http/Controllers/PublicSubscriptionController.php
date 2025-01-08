@@ -243,7 +243,6 @@ class PublicSubscriptionController extends Controller
                 'status' => Subscription::TO_BE_CONFIRMED,
                 'contact_type' => $request->input('contact_type'),
                 'activity' => $request->input('activity'),
-
             ]);
 
         Log::info("redirecting to subscriptions/confirmed");

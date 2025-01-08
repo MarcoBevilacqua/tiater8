@@ -21,9 +21,10 @@ class PDFController extends Controller
                 'now_date' => Carbon::now()->format('d/m/y'),
                 'year' => $subscription->year_from . "/" . $subscription->year_to,
                 'contact_type' => $subscriptionContactType,
-                'activity' => SubscriptionService::getFancyActivityLabel($subscription->activity)
+                'activity' => $subscription->activity,
+                'activity_list' => SubscriptionService::getAllFancyActivityLabels()
             ])
             ->setOptions(['isHtml5ParserEnabled' => true, 'defaultFont' => 'nunito']);
-        return $pdf->stream();
+        return $pdf->stream('pci_tessera_' . $subscription->id);
     }
 }

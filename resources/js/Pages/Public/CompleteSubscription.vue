@@ -424,7 +424,7 @@ export default {
             form
                 .transform((data) => ({
                     ...data,
-                    activity: (data.contact_type === this.default_contact) ? data.activity : null,
+                    activity: (data.contact_type !== this.default_contact) ? data.activity : null,
                 }))
                 .post("/over/subscriptions/complete", {
                     preserveScroll: true,
