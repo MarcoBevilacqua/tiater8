@@ -5,17 +5,17 @@
 </div>
 <div class="container">
     <div class="row">
-        <p>Il/La sottoscritto/a {{$customer->first_name}} {{$customer->last_name}}</p>
-        <p>nato/a a {{$customer->city}} ({{ $customer->province }}) il {{$customer->birth->format('d-m-Y')}}</p>
-        <p>residente a {{$customer->resident}} in {{$customer->address}} cap {{ $customer->postal_code}}</p>
-        <p>telefono {{ $customer->phone}} email {{ $customer->email}}</p>
+        <p>Il/La sottoscritto/a <b>{{$customer->first_name}} {{$customer->last_name}}</b></p>
+        <p>nato/a a <b>{{$customer->city}} ({{ $customer->province }})</b> il <b>{{$customer->birth->format('d/m/Y')}}</b></p>
+        <p>residente a <b>{{$customer->resident}}</b> in <b>{{$customer->address}}</b> CAP <b>{{ $customer->postal_code}}</b></p>
+        <p>telefono <b>{{ $customer->phone}}</b> email <b>{{ $customer->email}}</b></p>
     </div>
 
     <div class="font-bold my-6">
         <h3>chiede</h3>
     </div>
     <div class=my-6>
-        <p>di aderire all’Associazione Culturale “piccola compagnia impertinente” in qualità di socio/a ordinario/a per l’anno sociale {{ $year }}.</p>
+        <p>di aderire all’Associazione Culturale “piccola compagnia impertinente” in qualità di socio/a ordinario/a per l’anno sociale <b>{{ $year }}</b>.</p>
     </div>
     @if ($contact_type == "")
         <div class="my-8 font-bold">
@@ -24,11 +24,24 @@
     @else
     <div class="row font-bold">
         <span class="leading-5">di essere contattato <b>{{$contact_type}}</b>
-            per comunicazioni riguardanti <b>{{ lcfirst($activity) }}</b>
+            per comunicazioni riguardanti:
         </span>
+        <div>
+            <ul style="list-style-type: none">
+                @foreach($activity_list as $activity_idx => $activity_item)
+                    <li>
+                        @if($activity_idx === $activity)
+                            [<b>X</b>] {{ $activity_item }}
+                        @else
+                            [  ]  {{ $activity_item }}
+                        @endif
+                    </li>
+                @endforeach
+            </ul>
+        </div>
     </div>
     @endif
-    <div style="margin-bottom: 30px"></div>
+    <div style="margin-bottom: 10px"></div>
     <div class="my-4">
         <p>Conferma di avere preso visione dello Statuto e di condividere le finalità dell’Associazione.</p>
     </div>
