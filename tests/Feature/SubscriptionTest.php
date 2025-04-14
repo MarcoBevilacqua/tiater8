@@ -22,7 +22,7 @@ class SubscriptionTest extends TestCase
      * should softly delete subscription
      * @return void
      */
-    public function shoulDeleteSubscription()
+    public function shouldDeleteSubscription()
     {
         $this->actingAs($this->admin);
         $subscription = Subscription::factory()->create();

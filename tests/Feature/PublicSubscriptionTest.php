@@ -204,6 +204,39 @@ class PublicSubscriptionTest extends TestCase
 
     /**
      * @test
+     *
+     * @return void
+     */
+    public function subscriptionUpdateShouldHaveFirstName(): void
+    {
+        $subToComplete = Subscription::factory()->toBeCompleted()->create();
+        $wrongData = $this->subscriptionData;
+        unset($wrongData['first_name']);
+
+        //user fills the form and hit "submit"
+        $this->post('/over/subscriptions/complete', $wrongData +
+            ['sub_token' => $subToComplete->token]
+        )->assertStatus(Response::HTTP_FOUND);
+
+        $this->assertDatabaseEmpty('customers');
+    }
+
+    /**
+     * @test
+     *
+     * @return void
+     */
+    public function subscriptionUpdateShouldHaveToken(): void
+    {
+        //user fills the form and hit "submit"
+        $this->post('/over/subscriptions/complete', $this->subscriptionData
+        )->assertStatus(Response::HTTP_FOUND);
+
+        $this->assertDatabaseEmpty('customers');
+    }
+
+    /**
+     * @test
      * @return void
      */
     public function subscriptionSubmitShouldUpdateStatus()
@@ -223,7 +256,7 @@ class PublicSubscriptionTest extends TestCase
             'first_name' => 'Marco',
             'last_name' => 'Bevilacqua',
             'password' => null,
-
+            'province' => $this->subscriptionData['province']
         ]);
 
         $this->assertDatabaseHas('subscriptions', [
@@ -266,7 +299,6 @@ class PublicSubscriptionTest extends TestCase
 
     /**
      * @test
-     *
      *
      * @return void
      */
