@@ -10,7 +10,6 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^3.0",
-        "barryvdh/laravel-ide-helper": "^3.1",
         "guzzlehttp/guzzle": "^7.0.1",
         "inertiajs/inertia-laravel": "^1.0",
         "intervention/image": "^2.7",
@@ -21,13 +20,14 @@
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "*",
-        "spatie/laravel-ignition": "^2.0",
         "fakerphp/faker": "^1.9.1",
+        "larastan/larastan": "3.0",
         "laravel/breeze": "^2.0",
         "laravel/dusk": "^8.0",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^8.1",
         "phpunit/phpunit": "^10.0",
+        "spatie/laravel-ignition": "^2.0",
         "spatie/phpunit-watcher": "^1.23"
     },
     "config": {
@@ -64,6 +64,12 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "phpstan": [
+            "./vendor/bin/phpstan analyse --memory-limit=2G"
         ]
+    },
+    "scripts-descriptions": {
+        "phpstan": "Run PHPStan static analysis against your application."
     }
 }
