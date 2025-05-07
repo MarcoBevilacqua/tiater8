@@ -10,6 +10,7 @@ use App\Services\SubscriptionService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Mail\SentMessage;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -111,13 +112,14 @@ class PublicSubscriptionController extends Controller
         //otherwise, just make the redirect to the subscription.fill route
         if (!$request->is('over/*')) {
             try {
-                Mail::to($request->customer_email)
+                /** @var SentMessage $sent */
+                $sent = Mail::to($request->customer_email)
                     ->send(new SubscriptionToComplete(URL::signedRoute('subscriptions.fill', [
                         'token' => $randomString])));
             } catch (\Exception $exception) {
                 Log::error("Cannot send Mail to {$request->customer_email}: " . $exception->getMessage());
             }
-            if (Mail::failures()) {
+            if (!$sent) {
                 Log::error("Cannot send email!!!");
             } else {
                 Log::info("Mail to {$request->customer_email} has been sent! Redirecting...", [__CLASS__, __FUNCTION__]);
