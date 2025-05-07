@@ -32,7 +32,7 @@ class Booking extends Model
      */
     public function showEvent(): BelongsTo
     {
-        return $this->belongsTo(ShowEvent::class);
+        return $this->belongsTo(ShowEvent::class, 'show_event_id');
     }
 
     /**

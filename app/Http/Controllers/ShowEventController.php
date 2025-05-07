@@ -41,6 +41,7 @@ class ShowEventController extends Controller
     public function edit($id): Response|RedirectResponse
     {
         try {
+            /** @var ShowEvent $showEvent */
             $showEvent = ShowEvent::findOrFail($id);
         } catch (\Exception $exception) {
             Log::error("Cannot find event with id {$id}: {$exception->getMessage()}");

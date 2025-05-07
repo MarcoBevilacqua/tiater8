@@ -9,7 +9,9 @@
 namespace App\Observers;
 
 use App\Models\Booking;
-use Log;
+use App\Models\Show;
+use App\Models\ShowEvent;
+use Illuminate\Support\Facades\Log;
 
 class BookingObserver
 {
@@ -24,21 +26,26 @@ class BookingObserver
     public function saving(Booking $booking): bool
     {
         Log::info("Trying to save booking: {$booking}");
-        if(!$booking->showEvent()->show->places > 0) {
-            Log::error(__METHOD__ . "|Event {$booking->showEvent()->id} has no free places for booking");
+        /** @var ShowEvent $showEvent */
+        $showEvent = $booking->showEvent;
+
+        /** @var Show $show */
+        $show = $showEvent->show;
+
+        if($show->places == 0) {
+            Log::error(__METHOD__ . "|Event {$showEvent->id} has no free places for booking");
             return false;
         }
 
-        Log::info(__METHOD__ . "|Show {$booking->showEvent()->show->id} has still free places, Event {$booking->showEvent()->id} will take them");
+        Log::info(__METHOD__ . "|Show {$show->id} has still free places, Event {$showEvent->id} will take them");
         return true;
     }
 
     /**
      * TODO: cannot check place availability bc a user can only book one place at the time
      * @param Booking $booking
-     * @throws \Exception
      */
-    public function updating(Booking $booking){
+    public function updating(Booking $booking) {
 
         //check if places has been changed
 //        if(($booking->getOriginal('full_price_qnt') != $booking->full_price_qnt) ||
@@ -61,7 +68,12 @@ class BookingObserver
     public function saved(Booking $booking): void
     {
         //remove places from event
-        Log::info(__METHOD__ . "::Booking obj in observer: " . $booking->showEvent()->getResults());
-        $booking->showEvent()->show->decrementPlaces();
+        Log::info(__METHOD__ . "::Booking obj in observer: " . $booking->id);
+        /** @var ShowEvent $showEvent */
+        $showEvent = $booking->showEvent;
+        /** @var Show $show */
+        $show = $showEvent->show;
+        // decrement
+        $show->decrement('places');
     }
 }

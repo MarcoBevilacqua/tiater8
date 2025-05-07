@@ -27,8 +27,11 @@ class ShowEvent extends Model
 
     protected $dates = ['show_date'];
 
+    /**
+     * @return BelongsTo
+     */
     public function show(): BelongsTo
     {
-        return $this->belongsTo(Show::class);
+        return $this->belongsTo(Show::class, 'show_id');
     }
 }
