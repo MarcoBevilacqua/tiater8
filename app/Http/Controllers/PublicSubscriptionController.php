@@ -22,14 +22,14 @@ use Inertia\Response;
 class PublicSubscriptionController extends Controller
 {
     /**
-     * PAIRINGS WITH SUBSCRIPTION CONTROLLER METHODS
+     * MATCH WITH SUBSCRIPTION CONTROLLER METHODS
      *
-     * INDEX --> CONFIRMED
-     * CREATE --> START
-     * SHOW --> GENERATE
-     * STORE --> INIT
-     * EDIT --> FILL
-     * UPDATE --> COMPLETE
+     * INDEX --> SUB CONFIRMED
+     * CREATE --> SUB CREATION START
+     * SHOW --> SUB IS GENERATED
+     * STORE --> SUB INIT
+     * EDIT --> SUB FILL WITH PERSONAL DATA
+     * UPDATE --> SUB IS COMPLETE
      */
 
     /**
@@ -39,7 +39,7 @@ class PublicSubscriptionController extends Controller
     public function index(): Response
     {
         $cookie = Cookie::get('subscription-confirmed');
-        if(!$cookie) {
+        if (!$cookie) {
             return Inertia::render('Public/SelfInvitation');
         }
         return Inertia::render('Public/Confirmed');
@@ -82,19 +82,19 @@ class PublicSubscriptionController extends Controller
         $shouldRenew = SubscriptionService::subscriptionShouldBeRenewed($request->get('customer_email'));
 
         // redirect
-        if($shouldRenew) {
+        if ($shouldRenew) {
             Log::info("Renewing subscription for {$request->get('customer_email')}...");
             return Redirect::to(URL::signedRoute('subscriptions.renew', [
                 'customer_email' => $request->get('customer_email')]));
-        } else {
-            Log::info("New Subscription incoming...");
         }
 
-        //create a to-be-confirmed subscription
+        Log::info("New Subscription incoming...");
+
+        // create sub with status
         try {
             PublicSubscriptionService::createToBeConfirmed($request->customer_email, $token);
         } catch (\Exception $exception) {
-            Log::error("Cannot create pending subscription with email {$request->customer_email} and token {$token}: {$exception->getMessage()}");
+            Log::error("Cannot create subscription with email {$request->customer_email}: {$exception->getMessage()}");
             return Redirect::back()->with('error', "Indirizzo email non disponibile");
         }
 
@@ -103,8 +103,13 @@ class PublicSubscriptionController extends Controller
          * otherwise, just make the redirect to the subscription.fill route
          */
         if (!$request->is('over/*')) {
-            // send email notification
-            MailService::sendToCompleteSubscription($request->customer_email, $token);
+            try {
+                // send email notification
+                MailService::sendToCompleteSubscription($request->customer_email, $token);
+            } catch (\Exception $exception) {
+                Log::error("Cannot send email to {$request->customer_email}: {$exception->getMessage()}");
+            }
+
             // return to internal subscription
             return Redirect::route('subscriptions.index');
         }
@@ -168,17 +173,21 @@ class PublicSubscriptionController extends Controller
 
         //Create the customer
         try {
+            //should not be handled from the public form
             $customer = Customer::create(
-                $validated + [
-                'email' => $canHandleSubscription->subscription_email, //should not be handled from the public form
-            ]);
+                $validated + ["email" => $canHandleSubscription->subscription_email]
+            );
         } catch (\Exception $ex) {
-            Log::error("Cannot create customer with data " . implode(",", $request->all()) . ": Error: {$ex->getMessage()}");
-            return Redirect::back()->with('error', "Errore durante l'elaborazione della richiesta, si prega di riprovare.");
+            Log::error("Cannot create customer with data " .
+                implode(",", $request->all()) .
+                ": Error: {$ex->getMessage()}");
+
+            return Redirect::back()
+                ->with("error", "Errore durante l'elaborazione della richiesta, si prega di riprovare.");
         }
 
         Log::info("Customer with ID {$customer->id} successfully created", [__CLASS__, __FUNCTION__]);
-        
+
         //create cookie
         $cookie = Cookie::make('subscription-confirmed', true, 1);
         try {
@@ -209,7 +218,8 @@ class PublicSubscriptionController extends Controller
         return Inertia::render('Public/Renew');
     }
 
-    public function renew(Request $request) {
+    public function renew(Request $request)
+    {
         $sub = Subscription::where([
             ['subscription_email', '=', $request->get('customer_email')],
             ['status', '=', Subscription::EXPIRED]

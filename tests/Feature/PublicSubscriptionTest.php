@@ -2,9 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Mail\SubscriptionFilled;
 use App\Mail\SubscriptionToComplete;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Services\MailService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
@@ -52,7 +54,6 @@ class PublicSubscriptionTest extends TestCase
         $response->assertStatus(302);
     }
 
-
     /**
      * @test
      * @return void
@@ -65,6 +66,45 @@ class PublicSubscriptionTest extends TestCase
         $this->post('/subscriptions/init', ['customer_email' => 'abc123@mail.com']);
 
         Mail::assertSent(SubscriptionToComplete::class);
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function shouldSendMailAfterSubscriptionComplete()
+    {
+        Mail::fake();
+
+        /** @var Subscription $subToComplete */
+        $subToComplete = Subscription::factory()
+            ->toBeCompleted()->create();
+
+        //user fills the form and hit "submit"
+        $this->post('/over/subscriptions/complete', $this->subscriptionData +
+            ['email' => $subToComplete->subscription_email,
+                'sub_token' => $subToComplete->token]);
+
+        Mail::assertSent(SubscriptionFilled::class);
+    }
+
+    /**
+     * should throw exception if email is not sent
+     * @test
+     * @return void
+     */
+    public function shouldThrowExceptionIfMailIsNotSent(): void
+    {
+        Mail::fake();
+        $this->expectException(\Exception::class);
+
+        /** @var Subscription $subToComplete */
+        $subToComplete = Subscription::factory()
+            ->toBeCompleted()->create();
+
+        MailService::sendToCompleteSubscription("aaa123", $subToComplete->token);
+
+        Mail::assertSent(SubscriptionFilled::class);
     }
 
     /**
@@ -123,8 +163,10 @@ class PublicSubscriptionTest extends TestCase
         $this->assertDatabaseHas('subscriptions', ['status' => Subscription::TO_BE_COMPLETED]);
 
         //user fills the form and hit "submit"
-        $response = $this->post('/over/subscriptions/init',
-            ['customer_email' => $subToComplete->subscription_email]);
+        $response = $this->post(
+            '/over/subscriptions/init',
+            ['customer_email' => $subToComplete->subscription_email]
+        );
 
         $response->assertStatus(Response::HTTP_FOUND);
 
@@ -144,8 +186,10 @@ class PublicSubscriptionTest extends TestCase
         $this->assertDatabaseHas('subscriptions', ['status' => Subscription::EXPIRED]);
 
         //user fills the form and hit "submit"
-        $response = $this->post('/over/subscriptions/init',
-            ['customer_email' => $subToComplete->subscription_email]);
+        $response = $this->post(
+            '/over/subscriptions/init',
+            ['customer_email' => $subToComplete->subscription_email]
+        );
 
         $response->assertRedirect(URL::signedRoute('subscriptions.renew', ['customer_email' => $subToComplete->subscription_email]));
     }
@@ -163,8 +207,10 @@ class PublicSubscriptionTest extends TestCase
         $this->assertDatabaseHas('subscriptions', ['status' => Subscription::EXPIRED]);
 
         //user fills the form and hit "submit"
-        $this->post('/over/subscriptions/init',
-            ['customer_email' => $expiredSub->subscription_email]);
+        $this->post(
+            '/over/subscriptions/init',
+            ['customer_email' => $expiredSub->subscription_email]
+        );
 
         //user confirms subscription email
         $this->post('/over/subscriptions/renew', ['customer_email' => $expiredSub->subscription_email]);
@@ -192,8 +238,10 @@ class PublicSubscriptionTest extends TestCase
         $this->assertDatabaseCount('subscriptions', 2);
 
         //user fills the form and hit "submit"
-        $this->post('/over/subscriptions/init',
-            ['customer_email' => $oldSubscription->subscription_email]);
+        $this->post(
+            '/over/subscriptions/init',
+            ['customer_email' => $oldSubscription->subscription_email]
+        );
 
         //user renews subscription
         $this->post('/over/subscriptions/renew', ['customer_email' => $oldSubscription->subscription_email]);
@@ -215,8 +263,7 @@ class PublicSubscriptionTest extends TestCase
 
         //user fills the form and hit "submit"
         $this->post('/over/subscriptions/complete', $wrongData +
-            ['sub_token' => $subToComplete->token]
-        )->assertStatus(Response::HTTP_FOUND);
+            ['sub_token' => $subToComplete->token])->assertStatus(Response::HTTP_FOUND);
 
         $this->assertDatabaseEmpty('customers');
     }
@@ -229,8 +276,7 @@ class PublicSubscriptionTest extends TestCase
     public function subscriptionUpdateShouldHaveToken(): void
     {
         //user fills the form and hit "submit"
-        $this->post('/over/subscriptions/complete', $this->subscriptionData
-        )->assertStatus(Response::HTTP_FOUND);
+        $this->post('/over/subscriptions/complete', $this->subscriptionData)->assertStatus(Response::HTTP_FOUND);
 
         $this->assertDatabaseEmpty('customers');
     }
