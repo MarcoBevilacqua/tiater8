@@ -21,6 +21,7 @@
     "require-dev": {
         "barryvdh/laravel-debugbar": "*",
         "fakerphp/faker": "^1.9.1",
+        "friendsofphp/php-cs-fixer": "^3.75",
         "larastan/larastan": "3.0",
         "laravel/breeze": "^2.0",
         "laravel/dusk": "^8.0",
@@ -28,7 +29,8 @@
         "nunomaduro/collision": "^8.1",
         "phpunit/phpunit": "^10.0",
         "spatie/laravel-ignition": "^2.0",
-        "spatie/phpunit-watcher": "^1.23"
+        "spatie/phpunit-watcher": "^1.23",
+        "squizlabs/php_codesniffer": "*"
     },
     "config": {
         "optimize-autoloader": true,
@@ -67,7 +69,8 @@
         ],
         "phpstan": [
             "./vendor/bin/phpstan analyse --memory-limit=2G"
-        ]
+        ],
+        "phpcs": "php-cs-fixer --rules=@PSR12"
     },
     "scripts-descriptions": {
         "phpstan": "Run PHPStan static analysis against your application."
