@@ -34,8 +34,6 @@ Homestead.json
 .phpstorm.meta.php
 
 .github
-_ide_helper.php
-_ide_helper_models.php
 .idea
 
 composer.lock

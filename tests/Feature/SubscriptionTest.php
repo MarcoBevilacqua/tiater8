@@ -52,7 +52,7 @@ class SubscriptionTest extends TestCase
         $this
             ->artisan('model:prune', ['--model' => Subscription::class])
             ->assertSuccessful()
-            ->expectsOutput("1 [App\Models\Subscription] records have been pruned.");
+            ->expectsOutputToContain("Pruning [App\Models\Subscription] records.");
 
         $this->assertDatabaseCount('subscriptions', 0);
     }
@@ -73,7 +73,7 @@ class SubscriptionTest extends TestCase
         $this
             ->artisan('model:prune', ['--model' => Subscription::class])
             ->assertSuccessful()
-            ->expectsOutput("1 [App\Models\Subscription] records have been pruned.");
+            ->expectsOutputToContain("Pruning [App\Models\Subscription] records.");
 
         $this->assertDatabaseCount('subscriptions', 0);
     }
@@ -115,7 +115,7 @@ class SubscriptionTest extends TestCase
         $this
             ->artisan('model:prune', ['--model' => Subscription::class])
             ->assertSuccessful()
-            ->expectsOutput("No prunable [App\Models\Subscription] records found.");
+            ->expectsOutputToContain("No prunable [App\Models\Subscription] records found.");
 
         $this->assertDatabaseCount('subscriptions', 1);
     }

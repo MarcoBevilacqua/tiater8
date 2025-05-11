@@ -7,9 +7,9 @@
  */
 
 namespace App\Observers;
-use App\Show as Show;
-use Intervention\Image\Facades\Image;
+use App\Models\Show;
 use File;
+use Intervention\Image\Facades\Image;
 use Log;
 
 class ShowObserver
@@ -25,7 +25,7 @@ class ShowObserver
     public function creating(Show $show){
 
         //check if url is already taken
-        $existing = Show::whereUrl($show->url)->count();
+        $existing = Show::where('url' , '=', $show->url)->count();
         if($existing > 0){
             //a show with same url exists, updating
             $show->url = $show->url.'-'.($existing);
@@ -42,8 +42,7 @@ class ShowObserver
                 //got to update image
                 $this->showImageManagement($show->image);
             } catch (\Exception $ex){
-                Log::alert("Cannot udpate image for show {$show->name}");
-                Log::error("Error: {$ex->getMessage()}");
+                Log::error("Cannot update image for show {$show->title}" . $ex->getMessage());
                 return false;
             } finally {
                 Log::debug("image updated");
@@ -83,8 +82,7 @@ class ShowObserver
 
                 $realImage = Image::make($realPath);
                 $sizeArray = explode("x", $directory);
-                $realImage->resize($sizeArray[0], $sizeArray[1])->save($store_path . $image);
-
+                $realImage->resize((int) $sizeArray[0], (int) $sizeArray[1])->save($store_path . $image);
             }
 
         } else {

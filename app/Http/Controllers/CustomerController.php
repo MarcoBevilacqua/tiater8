@@ -86,7 +86,7 @@ class CustomerController extends Controller
             Log::error("Cannot find customer with Id: {$id}");
             return Redirect::back()->with("error", "Errore durante l'elaborazione: {$ex->getMessage()}");
         }
-        
+
         return Inertia::render('Customers/Form', [
             'customer' => [
                 'id' => $customer->id,
@@ -96,7 +96,7 @@ class CustomerController extends Controller
                 'address' => $customer->address,
                 'city' => $customer->city,
                 'phone' => $customer->phone,
-                'birth' => $customer->birth->format('Y-m-d'),
+                'birth' => $customer->birth,
                 'fiscal_code' => $customer->fiscal_code,
                 'postal_code' => $customer->postal_code,
                 'province' => $customer->province,

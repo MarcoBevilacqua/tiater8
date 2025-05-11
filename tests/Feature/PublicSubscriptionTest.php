@@ -52,7 +52,6 @@ class PublicSubscriptionTest extends TestCase
         $response->assertStatus(302);
     }
 
-
     /**
      * @test
      * @return void
@@ -123,8 +122,10 @@ class PublicSubscriptionTest extends TestCase
         $this->assertDatabaseHas('subscriptions', ['status' => Subscription::TO_BE_COMPLETED]);
 
         //user fills the form and hit "submit"
-        $response = $this->post('/over/subscriptions/init',
-            ['customer_email' => $subToComplete->subscription_email]);
+        $response = $this->post(
+            '/over/subscriptions/init',
+            ['customer_email' => $subToComplete->subscription_email]
+        );
 
         $response->assertStatus(Response::HTTP_FOUND);
 
@@ -138,14 +139,17 @@ class PublicSubscriptionTest extends TestCase
      */
     public function shouldRedirectOnConfirmFormOnRenew()
     {
+        /** @var Subscription $subToComplete */
         $subToComplete = Subscription::factory()->expired()->create();
 
         //subscription has to be confirmed, user should fill the form
         $this->assertDatabaseHas('subscriptions', ['status' => Subscription::EXPIRED]);
 
         //user fills the form and hit "submit"
-        $response = $this->post('/over/subscriptions/init',
-            ['customer_email' => $subToComplete->subscription_email]);
+        $response = $this->post(
+            '/over/subscriptions/init',
+            ['customer_email' => $subToComplete->subscription_email]
+        );
 
         $response->assertRedirect(URL::signedRoute('subscriptions.renew', ['customer_email' => $subToComplete->subscription_email]));
     }
@@ -163,8 +167,10 @@ class PublicSubscriptionTest extends TestCase
         $this->assertDatabaseHas('subscriptions', ['status' => Subscription::EXPIRED]);
 
         //user fills the form and hit "submit"
-        $this->post('/over/subscriptions/init',
-            ['customer_email' => $expiredSub->subscription_email]);
+        $this->post(
+            '/over/subscriptions/init',
+            ['customer_email' => $expiredSub->subscription_email]
+        );
 
         //user confirms subscription email
         $this->post('/over/subscriptions/renew', ['customer_email' => $expiredSub->subscription_email]);
@@ -179,6 +185,7 @@ class PublicSubscriptionTest extends TestCase
      */
     public function shouldRenewOverSeveralOldSubscriptions()
     {
+        /** @var Subscription $oldSubscription */
         $oldSubscription = Subscription::factory()->expired()->create();
         $olderSubscription = Subscription::factory()->expired()->make();
 
@@ -192,8 +199,10 @@ class PublicSubscriptionTest extends TestCase
         $this->assertDatabaseCount('subscriptions', 2);
 
         //user fills the form and hit "submit"
-        $this->post('/over/subscriptions/init',
-            ['customer_email' => $oldSubscription->subscription_email]);
+        $this->post(
+            '/over/subscriptions/init',
+            ['customer_email' => $oldSubscription->subscription_email]
+        );
 
         //user renews subscription
         $this->post('/over/subscriptions/renew', ['customer_email' => $oldSubscription->subscription_email]);
