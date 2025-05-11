@@ -1,0 +1,709 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^PHPDoc type array of property App\\Exceptions\\Handler\:\:\$dontFlash is not covariant with PHPDoc type array\<int, string\> of overridden property Illuminate\\Foundation\\Exceptions\\Handler\:\:\$dontFlash\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Exceptions/Handler.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Exceptions\\Handler\:\:\$dontReport is not covariant with PHPDoc type array\<int, class\-string\<Throwable\>\> of overridden property Illuminate\\Foundation\\Exceptions\\Handler\:\:\$dontReport\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Exceptions/Handler.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Auth\\AuthenticatedSessionController\:\:create\(\) should return Illuminate\\View\\View but returns Inertia\\Response\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Auth/AuthenticatedSessionController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Auth\\ConfirmablePasswordController\:\:show\(\) should return Illuminate\\View\\View but returns Inertia\\Response\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Auth/ConfirmablePasswordController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Auth\\EmailVerificationNotificationController\:\:store\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 2
+			path: app/Http/Controllers/Auth/EmailVerificationNotificationController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Auth\\NewPasswordController\:\:create\(\) should return Illuminate\\View\\View but returns Inertia\\Response\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Auth/NewPasswordController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Auth\\PasswordResetLinkController\:\:create\(\) should return Illuminate\\View\\View but returns Inertia\\Response\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Auth/PasswordResetLinkController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Auth\\RegisteredUserController\:\:create\(\) should return Illuminate\\View\\View but returns Inertia\\Response\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Auth/RegisteredUserController.php
+
+		-
+			message: '#^Parameter \#1 \$user of class Illuminate\\Auth\\Events\\Verified constructor expects Illuminate\\Contracts\\Auth\\MustVerifyEmail, App\\Models\\User\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Auth/VerifyEmailController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Booking\:\:\$first_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/BookingController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Booking\:\:\$last_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/BookingController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\ShowEvent\:\:\$show\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/BookingController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\ShowEvent\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/BookingController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\ShowEvent\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\ShowEvent\>\:\:\$show\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/BookingController.php
+
+		-
+			message: '#^Anonymous function has an unused use \$request\.$#'
+			identifier: closure.unusedUse
+			count: 1
+			path: app/Http/Controllers/BookingController.php
+
+		-
+			message: '#^Called ''first'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 1
+			path: app/Http/Controllers/BookingController.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,App\\Models\\Booking\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Http/Controllers/BookingController.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,App\\Models\\ShowEvent\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Http/Controllers/BookingController.php
+
+		-
+			message: '#^Cannot call method format\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Http/Controllers/CustomerController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\HomeController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/HomeController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Subscription\:\:\$customer\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/PDFController.php
+
+		-
+			message: '#^Call to an undefined static method Illuminate\\Support\\Facades\\Mail\:\:failures\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Http/Controllers/PublicSubscriptionController.php
+
+		-
+			message: '#^Parameter \#2 \$value of static method Illuminate\\Support\\Facades\\Cookie\:\:make\(\) expects string, true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/PublicSubscriptionController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\ShowEvent\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\ShowEvent\>\:\:\$show\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/ShowEventController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ShowEventController\:\:edit\(\) should return Inertia\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/ShowEventController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ShowEventController\:\:store\(\) has invalid return type App\\Http\\Controllers\\Response\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/ShowEventController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ShowEventController\:\:store\(\) should return App\\Http\\Controllers\\Response\|bool but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 2
+			path: app/Http/Controllers/ShowEventController.php
+
+		-
+			message: '#^Parameter \#2 \$context of static method Illuminate\\Log\\Logger\:\:error\(\) expects array, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/ShowEventController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Subscription\:\:\$customer\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/SubscriptionController.php
+
+		-
+			message: '#^Access to property \$email on an unknown class App\\Viewer\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Access to property \$email on an unknown class Viewer\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Access to property \$first_name on an unknown class App\\Viewer\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Access to property \$first_name on an unknown class Viewer\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Access to property \$full_name on an unknown class App\\Viewer\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Access to property \$full_name on an unknown class Viewer\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Access to property \$id on an unknown class Viewer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Access to property \$last_name on an unknown class App\\Viewer\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Access to property \$last_name on an unknown class Viewer\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Access to property \$phone on an unknown class App\\Viewer\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Access to property \$phone on an unknown class Viewer\.$#'
+			identifier: class.notFound
+			count: 4
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Access to property \$quota on an unknown class App\\Viewer\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Access to property \$quota on an unknown class Viewer\.$#'
+			identifier: class.notFound
+			count: 4
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Access to property \$sign_date on an unknown class Viewer\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Call to method delete\(\) on an unknown class Viewer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Call to method getMessage\(\) on an unknown class App\\Http\\Controllers\\Exception\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Call to method hasBookings\(\) on an unknown class Viewer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Call to method save\(\) on an unknown class App\\Viewer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Call to method save\(\) on an unknown class Viewer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Call to method toJson\(\) on an unknown class Viewer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Call to static method findOrFail\(\) on an unknown class Viewer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Call to static method select\(\) on an unknown class Viewer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Caught class App\\Http\\Controllers\\Exception not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Instantiated class Viewer not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ViewerController\:\:edit\(\) should return bool but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 2
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$show contains unknown class App\\Show\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Parameter \$viewer of method App\\Http\\Controllers\\ViewerController\:\:destroy\(\) has invalid type Viewer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Parameter \$viewer of method App\\Http\\Controllers\\ViewerController\:\:update\(\) has invalid type App\\Viewer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Variable \$show in PHPDoc tag @var does not match assigned variable \$viewer\.$#'
+			identifier: varTag.differentVariable
+			count: 1
+			path: app/Http/Controllers/ViewerController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\api\\AsyncController\:\:customers\(\) should return Inertia\\Response but returns Illuminate\\Support\\Collection\<int, array\<string, int\|string\>\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/api/AsyncController.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Kernel\:\:\$middleware is not covariant with PHPDoc type array\<int, string\> of overridden property Illuminate\\Foundation\\Http\\Kernel\:\:\$middleware\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Kernel.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Kernel\:\:\$middlewareGroups is not covariant with PHPDoc type array\<string, array\<int, string\>\> of overridden property Illuminate\\Foundation\\Http\\Kernel\:\:\$middlewareGroups\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Kernel.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Kernel\:\:\$routeMiddleware is not covariant with PHPDoc type array\<string, string\> of overridden property Illuminate\\Foundation\\Http\\Kernel\:\:\$routeMiddleware\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Kernel.php
+
+		-
+			message: '#^Method App\\Http\\Middleware\\Authenticate\:\:redirectTo\(\) should return string\|null but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Middleware/Authenticate.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Middleware\\EncryptCookies\:\:\$except is not covariant with PHPDoc type array\<int, string\> of overridden property Illuminate\\Cookie\\Middleware\\EncryptCookies\:\:\$except\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Middleware/EncryptCookies.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Middleware\\PreventRequestsDuringMaintenance\:\:\$except is not covariant with PHPDoc type array\<int, string\> of overridden property Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance\:\:\$except\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Middleware/PreventRequestsDuringMaintenance.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Middleware\\TrimStrings\:\:\$except is not covariant with PHPDoc type array\<int, string\> of overridden property Illuminate\\Foundation\\Http\\Middleware\\TrimStrings\:\:\$except\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Middleware/TrimStrings.php
+
+		-
+			message: '#^PHPDoc type array\|string\|null of property App\\Http\\Middleware\\TrustProxies\:\:\$proxies is not covariant with PHPDoc type array\<int, string\>\|string\|null of overridden property Illuminate\\Http\\Middleware\\TrustProxies\:\:\$proxies\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Middleware/TrustProxies.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Http\\Middleware\\VerifyCsrfToken\:\:\$except is not covariant with PHPDoc type array\<int, string\> of overridden property Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken\:\:\$except\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Http/Middleware/VerifyCsrfToken.php
+
+		-
+			message: '#^Method App\\Models\\Booking\:\:customer\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasOne but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\Customer, \$this\(App\\Models\\Booking\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Booking.php
+
+		-
+			message: '#^Method App\\Models\\Booking\:\:showEvent\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasOne but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\ShowEvent, \$this\(App\\Models\\Booking\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Booking.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\User\:\:\$casts is not covariant with PHPDoc type array\<string, string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$casts\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\User\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\User\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Booking\:\:\$event\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Viewer.php
+
+		-
+			message: '#^PHPDoc tag @method for method App\\Models\\Viewer\:\:whereEmail\(\) return type contains unknown class App\\Viewer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Viewer.php
+
+		-
+			message: '#^PHPDoc tag @method for method App\\Models\\Viewer\:\:whereFirstName\(\) return type contains unknown class App\\Viewer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Viewer.php
+
+		-
+			message: '#^PHPDoc tag @method for method App\\Models\\Viewer\:\:whereFullName\(\) return type contains unknown class App\\Viewer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Viewer.php
+
+		-
+			message: '#^PHPDoc tag @method for method App\\Models\\Viewer\:\:whereId\(\) return type contains unknown class App\\Viewer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Viewer.php
+
+		-
+			message: '#^PHPDoc tag @method for method App\\Models\\Viewer\:\:whereLastName\(\) return type contains unknown class App\\Viewer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Viewer.php
+
+		-
+			message: '#^PHPDoc tag @method for method App\\Models\\Viewer\:\:wherePhone\(\) return type contains unknown class App\\Viewer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Viewer.php
+
+		-
+			message: '#^PHPDoc tag @method for method App\\Models\\Viewer\:\:whereQuota\(\) return type contains unknown class App\\Viewer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Viewer.php
+
+		-
+			message: '#^PHPDoc tag @method for method App\\Models\\Viewer\:\:whereSignDate\(\) return type contains unknown class App\\Viewer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Viewer.php
+
+		-
+			message: '#^Access to property \$event on an unknown class App\\Booking\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Observers/BookingObserver.php
+
+		-
+			message: '#^Access to property \$event_id on an unknown class App\\Booking\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Observers/BookingObserver.php
+
+		-
+			message: '#^Access to property \$full_price_qnt on an unknown class App\\Booking\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Observers/BookingObserver.php
+
+		-
+			message: '#^Access to property \$getEvent on an unknown class App\\Booking\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Observers/BookingObserver.php
+
+		-
+			message: '#^Access to property \$half_price_qnt on an unknown class App\\Booking\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Observers/BookingObserver.php
+
+		-
+			message: '#^Access to property \$show_id on an unknown class App\\Booking\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Observers/BookingObserver.php
+
+		-
+			message: '#^Call to method event\(\) on an unknown class App\\Booking\.$#'
+			identifier: class.notFound
+			count: 4
+			path: app/Observers/BookingObserver.php
+
+		-
+			message: '#^Call to method getOriginal\(\) on an unknown class App\\Booking\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Observers/BookingObserver.php
+
+		-
+			message: '#^Parameter \$booking of method App\\Observers\\BookingObserver\:\:saved\(\) has invalid type App\\Booking\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Observers/BookingObserver.php
+
+		-
+			message: '#^Parameter \$booking of method App\\Observers\\BookingObserver\:\:saving\(\) has invalid type App\\Booking\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Observers/BookingObserver.php
+
+		-
+			message: '#^Parameter \$booking of method App\\Observers\\BookingObserver\:\:updating\(\) has invalid type App\\Booking\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Observers/BookingObserver.php
+
+		-
+			message: '#^Access to property \$full_price_qnt on an unknown class App\\Show\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Observers/ShowEventObserver.php
+
+		-
+			message: '#^Access to property \$full_price_qnt on an unknown class App\\ShowEvent\.$#'
+			identifier: class.notFound
+			count: 3
+			path: app/Observers/ShowEventObserver.php
+
+		-
+			message: '#^Access to property \$half_price_qnt on an unknown class App\\Show\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Observers/ShowEventObserver.php
+
+		-
+			message: '#^Access to property \$half_price_qnt on an unknown class App\\ShowEvent\.$#'
+			identifier: class.notFound
+			count: 3
+			path: app/Observers/ShowEventObserver.php
+
+		-
+			message: '#^Access to property \$show_id on an unknown class App\\ShowEvent\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Observers/ShowEventObserver.php
+
+		-
+			message: '#^Access to property \$total_qnt on an unknown class App\\Show\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Observers/ShowEventObserver.php
+
+		-
+			message: '#^Access to property \$total_qnt on an unknown class App\\ShowEvent\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Observers/ShowEventObserver.php
+
+		-
+			message: '#^Call to static method findOrFail\(\) on an unknown class App\\Show\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Observers/ShowEventObserver.php
+
+		-
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
+			count: 1
+			path: app/Observers/ShowEventObserver.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$show contains unknown class App\\Show\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Observers/ShowEventObserver.php
+
+		-
+			message: '#^Parameter \$showEvent of method App\\Observers\\ShowEventObserver\:\:saved\(\) has invalid type App\\ShowEvent\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Observers/ShowEventObserver.php
+
+		-
+			message: '#^Access to property \$image on an unknown class App\\Show\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Observers/ShowObserver.php
+
+		-
+			message: '#^Access to property \$name on an unknown class App\\Show\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Observers/ShowObserver.php
+
+		-
+			message: '#^Access to property \$url on an unknown class App\\Show\.$#'
+			identifier: class.notFound
+			count: 4
+			path: app/Observers/ShowObserver.php
+
+		-
+			message: '#^Call to method getOriginal\(\) on an unknown class App\\Show\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Observers/ShowObserver.php
+
+		-
+			message: '#^Call to static method whereUrl\(\) on an unknown class App\\Show\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Observers/ShowObserver.php
+
+		-
+			message: '#^Parameter \#1 \$width of method Intervention\\Image\\Image\:\:resize\(\) expects int\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Observers/ShowObserver.php
+
+		-
+			message: '#^Parameter \#2 \$height of method Intervention\\Image\\Image\:\:resize\(\) expects int\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Observers/ShowObserver.php
+
+		-
+			message: '#^Parameter \$show of method App\\Observers\\ShowObserver\:\:creating\(\) has invalid type App\\Show\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Observers/ShowObserver.php
+
+		-
+			message: '#^Parameter \$show of method App\\Observers\\ShowObserver\:\:saved\(\) has invalid type App\\Show\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Observers/ShowObserver.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Providers\\AuthServiceProvider\:\:\$policies is not covariant with PHPDoc type array\<class\-string, class\-string\> of overridden property Illuminate\\Foundation\\Support\\Providers\\AuthServiceProvider\:\:\$policies\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Providers/AuthServiceProvider.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Providers\\EventServiceProvider\:\:\$listen is not covariant with PHPDoc type array\<string, array\<int, string\>\> of overridden property Illuminate\\Foundation\\Support\\Providers\\EventServiceProvider\:\:\$listen\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Providers/EventServiceProvider.php
+
+		-
+			message: '#^PHPDoc tag @var above a method has no effect\.$#'
+			identifier: varTag.misplaced
+			count: 1
+			path: app/Providers/RouteServiceProvider.php
+
+		-
+			message: '#^PHPDoc tag @var does not specify variable name\.$#'
+			identifier: varTag.noVariable
+			count: 1
+			path: app/Providers/RouteServiceProvider.php
