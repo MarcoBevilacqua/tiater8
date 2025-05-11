@@ -1,8 +1,8 @@
 <template>
     <div id="container" :class="
     'py-' + this.padding +
-    'md:py-' + this.mdPadding +
-    'lg:py-' + this.lgPadding">
+    ' md:py-' + this.mdPadding +
+    ' lg:py-' + this.lgPadding">
         <div class="max-w-7xl mx-auto md:px-8 lg:px-8">
             <FlashMessages />
             <slot />

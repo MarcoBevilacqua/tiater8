@@ -53,7 +53,7 @@ class SubscriptionController extends Controller
                     return [
                         'id' => $subscription->id,
                         'email' => $subscription->subscription_email,
-                        'customer' => $subscription->customer_id ? Customer::find($subscription->customer_id)->first()->get('fullName') : "",
+                        'customer' => $subscription->customer_id ? Customer::find($subscription->customer_id)->first()->fullName : "",
                         'created' => $subscription->created_at,
                         'season' => $subscription->year_from . "/" . ($subscription->year_from + 1),
                         'status' => ['value' => $subscription->status, 'label' => SubscriptionService::getSubFancyStatusLabel($subscription->status)],
