@@ -88,10 +88,8 @@ class PublicSubscriptionController extends Controller
                 'customer_email' => $request->get('customer_email')]));
         }
 
-        Log::info("New Subscription incoming...");
-
-        // create sub with status
         try {
+            // create sub with status
             PublicSubscriptionService::createToBeConfirmed($request->customer_email, $token);
         } catch (\Exception $exception) {
             Log::error("Cannot create subscription with email {$request->customer_email}: {$exception->getMessage()}");
@@ -104,14 +102,13 @@ class PublicSubscriptionController extends Controller
          */
         if (!$request->is('over/*')) {
             try {
-                // send email notification
+                // email notification
                 MailService::sendToCompleteSubscription($request->customer_email, $token);
+                // return to internal subscription
+                return Redirect::route('subscriptions.index');
             } catch (\Exception $exception) {
                 Log::error("Cannot send email to {$request->customer_email}: {$exception->getMessage()}");
             }
-
-            // return to internal subscription
-            return Redirect::route('subscriptions.index');
         }
         return Redirect::to(URL::signedRoute('subscriptions.fill', ['token' => $token]));
     }
@@ -158,10 +155,9 @@ class PublicSubscriptionController extends Controller
          * 4. return the response
          */
 
-        Log::info("Request validated, proceeding...");
-
         // get validated data
         $validated = $request->validated();
+        Log::info("Request validated, proceeding...");
 
         //checking if data is correct
         $canHandleSubscription = SubscriptionService::subscriptionCanBeConfirmed($validated['sub_token']);
@@ -209,35 +205,5 @@ class PublicSubscriptionController extends Controller
 
         /** TODO: Redirect on public simple view */
         return Redirect::to('over/subscriptions')->cookie($cookie);
-    }
-
-    //TODO: CHECK EMAIL MATCH
-    public function modify()
-    {
-        Log::info("Renew Form being displayed");
-        return Inertia::render('Public/Renew');
-    }
-
-    public function renew(Request $request)
-    {
-        $sub = Subscription::where([
-            ['subscription_email', '=', $request->get('customer_email')],
-            ['status', '=', Subscription::EXPIRED]
-        ])->firstOrFail();
-
-        //retrieve year_from and year_to
-        $years = SubscriptionService::getSubscriptionYears();
-
-        $renewed = new Subscription([
-            'year_from' => $years['from'],
-            'year_to' => $years['to'],
-            'subscription_email' => $request->get('customer_email'),
-            'status' => Subscription::TO_BE_CONFIRMED,
-            'customer_id' => $sub->customer_id,
-            'contact_type' => $sub->contact_type,
-            'activity' => $sub->activity,
-        ]);
-
-        $renewed->save();
     }
 }
