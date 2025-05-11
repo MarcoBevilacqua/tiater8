@@ -47,6 +47,13 @@ class SubscriptionStatusTest extends TestCase
             ->assertRedirect();
 
         $this->assertDatabaseHas('subscriptions', ['status' => Subscription::ACTIVE]);
+
+        $this
+            ->patch('/subscriptions/' . $active->id .
+                '/status/' . Subscription::PENDING)
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('subscriptions', ['status' => Subscription::ACTIVE]);
     }
 
     protected function setUp(): void

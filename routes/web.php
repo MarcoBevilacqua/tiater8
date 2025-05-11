@@ -8,6 +8,7 @@ use App\Http\Controllers\ShowController;
 use App\Http\Controllers\ShowEventController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SubscriptionRenewController;
+use App\Http\Controllers\SubscriptionStatusController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -58,8 +59,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //the subscription module PDF preview
     Route::get('/subscriptions/module/{subscriptionId}', [PDFController::class, 'subscriptionModule'])
         ->name('pdf.subscriptions.module');
+
     // changing status
-    Route::patch('/subscriptions/{subscription}/status/{status}', [SubscriptionController::class, 'updateStatus'])
+    Route::patch('/subscriptions/{subscription}/status/{status}', [SubscriptionStatusController::class, 'update'])
         ->name('subscriptions.update-status');
 
     //Bookings detail

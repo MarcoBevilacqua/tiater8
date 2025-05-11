@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateSubscriptionRequest;
 use App\Models\Customer;
 use App\Models\Subscription;
 use App\Services\SubscriptionService;
@@ -34,6 +35,8 @@ class SubscriptionController extends Controller
 
     /**
      * the subscription index
+     *
+     * @param Request $request
      * @return Response view
      */
     public function index(Request $request)
@@ -82,11 +85,15 @@ class SubscriptionController extends Controller
     /**
      * creation from form
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate($this->rules['store']);
+
+        /** @var string $subscriptionEmail */
+        $subscriptionEmail = Customer::findOrFail($validated['customer_id'])->email;
+
         try {
-            Subscription::create($validated + ['subscription_email' => Customer::findOrFail($validated['customer_id'])->email]);
+            Subscription::create($validated + ['subscription_email' => $subscriptionEmail]);
         } catch (\Exception $exception) {
             Log::error("Cannot create subscription: {$exception->getMessage()}");
             Redirect::back()->with("error", "Errore durante l'elaborazione");
@@ -96,12 +103,13 @@ class SubscriptionController extends Controller
     }
 
     /**
-     * @param int $id
+     * @param int $subscriptionId
      * @return Response view
      */
-    public function edit(int $id)
+    public function edit(int $subscriptionId): Response
     {
-        $subscription = Subscription::findOrFail($id);
+        /** @var Subscription $subscription */
+        $subscription = Subscription::findOrFail($subscriptionId);
 
         return Inertia::render('Subscription/Form', [
             'subscription' => $subscription,
@@ -115,20 +123,13 @@ class SubscriptionController extends Controller
 
     /**
      * update entity
-     * @param Request $request
+     * @param UpdateSubscriptionRequest $request
      * @return RedirectResponse
      * @throws ValidationException
      */
-    public function update(Request $request): RedirectResponse
+    public function update(UpdateSubscriptionRequest $request): RedirectResponse
     {
-        $this->validate($request, [
-            'status' => 'required|numeric',
-            'contact_type' => 'required|numeric',
-            'activity' => 'required|numeric',
-            'year_from' => 'required|numeric',
-            'year_to' => 'required|numeric'
-        ]);
-
+        /** @var Subscription $subscription */
         $subscription = Subscription::where('id', '=', $request->id)->firstOrFail();
 
         try {
@@ -145,31 +146,11 @@ class SubscriptionController extends Controller
             );
         } catch (\Exception $exception) {
             Log::error("Cannot update subscription: {$exception->getMessage()}");
-            Redirect::back()->with("error", "Impossibile aggiornare i dati");
+            Redirect::back()
+                ->with("error", "Impossibile aggiornare i dati");
         }
 
         return Redirect::route('subscriptions.index')->with("success", "Dati aggiornati correttamente");
-    }
-
-    /**
-     * update status (uses PATCH)
-     * @param Subscription $subscription
-     * @param int $status
-     * @return RedirectResponse
-     */
-    public function updateStatus(Subscription $subscription, int $status)
-    {
-        $oldStatus = $subscription->status;
-        if ($oldStatus == $status || !in_array($status, [Subscription::ACTIVE, Subscription::EXPIRED, Subscription::INACTIVE])) {
-            Log::info("Cannot change status from {$oldStatus} to {$status}");
-            return Redirect::to('subscriptions')->with('error', 'Impossibile modificare lo status della sottoscrizione');
-        }
-
-        $subscription->update([
-            'status' => $status
-        ]);
-
-        return Redirect::to('subscriptions')->with('success', 'Sottoscrizione aggiornata correttamente');
     }
 
     public function destroy(Subscription $subscription): RedirectResponse
