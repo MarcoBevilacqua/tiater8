@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ShowEventController extends Controller
 {
@@ -35,11 +36,12 @@ class ShowEventController extends Controller
 
     /**
      * @param $id
-     * @return \Inertia\Response
+     * @return Response
      */
-    public function edit($id)
+    public function edit($id): Response|RedirectResponse
     {
         try {
+            /** @var ShowEvent $showEvent */
             $showEvent = ShowEvent::findOrFail($id);
         } catch (\Exception $exception) {
             Log::error("Cannot find event with id {$id}: {$exception->getMessage()}");
@@ -93,7 +95,7 @@ class ShowEventController extends Controller
                 ['show_date' => $completeDate]
             );
         } catch (\Exception $exception) {
-            Log::error("Cannot save show event", $exception->getMessage());
+            Log::error("Cannot save show event: " .  $exception->getMessage());
             return Redirect::back()->with("error", "Impossibile aggiornare i dati");
         }
 
@@ -127,9 +129,9 @@ class ShowEventController extends Controller
     /**
      * add action function
      * @param Request $request
-     * @return bool|Response
+     * @return RedirectResponse
      */
-    protected function store(Request $request)
+    protected function store(Request $request): RedirectResponse
     {
         //validation
         $request->validate([

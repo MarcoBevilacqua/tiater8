@@ -185,7 +185,7 @@ class PublicSubscriptionController extends Controller
         Log::info("Customer with ID {$customer->id} successfully created", [__CLASS__, __FUNCTION__]);
 
         //create cookie
-        $cookie = Cookie::make('subscription-confirmed', true, 1);
+        $cookie = Cookie::make('subscription-confirmed', "true", 1);
         try {
             Mail::to($canHandleSubscription->subscription_email)->send(new SubscriptionFilled());
         } catch (\Exception $exception) {

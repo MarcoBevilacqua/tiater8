@@ -180,6 +180,7 @@ class PublicSubscriptionTest extends TestCase
      */
     public function shouldRedirectOnConfirmFormOnRenew()
     {
+        /** @var Subscription $subToComplete */
         $subToComplete = Subscription::factory()->expired()->create();
 
         //subscription has to be confirmed, user should fill the form
@@ -225,6 +226,7 @@ class PublicSubscriptionTest extends TestCase
      */
     public function shouldRenewOverSeveralOldSubscriptions()
     {
+        /** @var Subscription $oldSubscription */
         $oldSubscription = Subscription::factory()->expired()->create();
         $olderSubscription = Subscription::factory()->expired()->make();
 

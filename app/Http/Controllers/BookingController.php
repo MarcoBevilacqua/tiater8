@@ -19,17 +19,16 @@ class BookingController extends Controller
 {
     /**
      * index showing bookings total grouped by show events
-     * @param Request $request
      * @return Response
      */
-    public function index(Request $request): Response
+    public function index(): Response
     {
         return Inertia::render('Bookings', [
-            'bookings' => ShowEvent::select(['show_events.id', 'shows.title', 'show_date'])
+            'bookings' => ShowEvent::select(['show_events.id', 'shows.title as title', 'show_date as date'])
                 ->join('shows', 'show_events.show_id', '=', 'shows.id')
                 ->whereRaw('show_events.show_date BETWEEN ? AND ?', [Carbon::now(), Carbon::now()->add(new \DateInterval('P6M'))])
                 ->get()
-                ->map(function ($item) use ($request) {
+                ->map(function (ShowEvent $item) {
                     return [
                         'id' => $item->id,
                         'title' => $item->title,
@@ -62,7 +61,7 @@ class BookingController extends Controller
             ->select(['bookings.id as id', 'customer_id', 'place_number', 'row_letter', 'first_name', 'last_name'])
             ->where('show_event_id', '=', $show_event_id)
             ->get()
-            ->map(function ($item) {
+            ->map(function (Booking $item) {
                 return [
                     'id' => $item->id,
                     'customer' => ['id' => $item->customer_id, 'first_name' => $item->first_name, 'last_name' => $item->last_name],

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,9 +40,12 @@ class Customer extends Model
         return $this->hasMany(Subscription::class);
     }
 
-    public function getFullNameAttribute()
+    protected function fullName(): Attribute
     {
-        return "{$this->first_name} {$this->last_name}";
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) =>
+                $attributes['first_name'] . " " . $attributes['last_name']
+            );
     }
 
     /**
