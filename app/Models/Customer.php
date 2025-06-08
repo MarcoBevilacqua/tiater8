@@ -45,7 +45,7 @@ class Customer extends Model
         return Attribute::make(
             get: fn (mixed $value, array $attributes) =>
                 $attributes['first_name'] . " " . $attributes['last_name']
-            );
+        );
     }
 
     /**
