@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 class SubscriptionService
 {
     private static $statusLabels = [
-        Subscription::PENDING => 'Invito inviato (in attesa di risposta)',
+        Subscription::PENDING => 'In attesa di risposta',
         Subscription::TO_BE_COMPLETED => 'Modulo online da completare',
         Subscription::TO_BE_CONFIRMED => 'Pagamento da confermare',
         Subscription::ACTIVE => 'Attiva',
