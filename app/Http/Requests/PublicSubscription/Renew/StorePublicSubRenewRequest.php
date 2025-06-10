@@ -15,7 +15,7 @@ class StorePublicSubRenewRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email'],
+            'customer_email' => ['required', 'email:filter'],
         ];
     }
 }

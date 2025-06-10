@@ -64,16 +64,14 @@ class PublicSubscriptionController extends Controller
     }
 
     /**
-     * the subscription init (return the form url)
+     * the subscription init
      *
      * @param Request $request
      * @return RedirectResponse
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'customer_email' => 'required|email:filter'
-        ]);
+        $request->validate(['customer_email' => 'required|email:filter']);
 
         // create token
         $token = substr(str_shuffle(MD5(microtime())), 0, 22);

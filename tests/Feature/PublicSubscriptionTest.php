@@ -204,14 +204,15 @@ class PublicSubscriptionTest extends TestCase
     {
         $expiredSub = Subscription::factory()->expired()->create();
 
-        //subscription has to be confirmed, user should fill the form
+        // subscription has to be renewed, user should fill the form
         $this->assertDatabaseHas('subscriptions', ['status' => Subscription::EXPIRED]);
 
-        //user fills the form and hit "submit"
+        // user fills the form and hit "submit"
         $this->post(
             '/over/subscriptions/init',
             ['customer_email' => $expiredSub->subscription_email]
-        );
+        )->assertRedirect(URL::signedRoute('subscriptions.renew', [
+            'customer_email' => $expiredSub->subscription_email]));
 
         //user confirms subscription email
         $this->post('/over/subscriptions/renew', ['customer_email' => $expiredSub->subscription_email]);
