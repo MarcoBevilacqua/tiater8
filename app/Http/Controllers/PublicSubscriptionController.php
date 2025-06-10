@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdatePublicSubscriptionRequest;
+use App\Http\Requests\PublicSubscription\UpdatePublicSubscriptionRequest;
 use App\Mail\SubscriptionFilled;
 use App\Models\Customer;
 use App\Models\Subscription;

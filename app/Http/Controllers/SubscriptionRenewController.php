@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PublicSubscription\Renew\StorePublicSubRenewRequest;
 use App\Models\Subscription;
 use App\Services\SubscriptionService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -21,7 +21,7 @@ class SubscriptionRenewController extends Controller
         return Inertia::render('Public/Renew');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StorePublicSubRenewRequest $request): RedirectResponse
     {
         $sub = Subscription::where([
             ['subscription_email', '=', $request->get('customer_email')],
