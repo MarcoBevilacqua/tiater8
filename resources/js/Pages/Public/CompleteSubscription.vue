@@ -280,6 +280,11 @@
                                         type="hidden"
                                     />
                                 </div>
+                                <div class="py-3 bg-gray-50 text-left">
+                                    <input class="rounded mx-2" type="checkbox" name="consent" required>
+                                    <small>Autorizzo il trattamento dei dati personali qui o altrove dichiarati ai sensi della legge 675/96 e del D.L.196/2003, esclusivamente per lo svolgimento e la gestione delle attività legate agli scopi
+                                        dell’Associazione, senza possibilità di trasferimento a terzi dei dati medesimi.</small>
+                                </div>
                             </div>
                             <div
                                 v-if="!form.processing"
