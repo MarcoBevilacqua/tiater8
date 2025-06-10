@@ -123,7 +123,7 @@ class PublicSubscriptionController extends Controller
             PublicSubscriptionService::updatePendingSubscription($token);
         } catch (\Exception $ex) {
             Log::error("Cannot update pending Subscription: " . $ex->getMessage());
-            return \response()->abort(\Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED);
+            abort(\Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED);
         }
 
         Log::info("Subscription can be completed, redirecting...", [__CLASS__, __FUNCTION__]);
