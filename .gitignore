@@ -37,3 +37,6 @@ Homestead.json
 .idea
 
 composer.lock
+
+# csfixer
+.php-cs-fixer.cache

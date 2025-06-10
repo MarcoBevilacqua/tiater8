@@ -2,9 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Mail\SubscriptionFilled;
 use App\Mail\SubscriptionToComplete;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Services\MailService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
@@ -64,6 +66,45 @@ class PublicSubscriptionTest extends TestCase
         $this->post('/subscriptions/init', ['customer_email' => 'abc123@mail.com']);
 
         Mail::assertSent(SubscriptionToComplete::class);
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function shouldSendMailAfterSubscriptionComplete()
+    {
+        Mail::fake();
+
+        /** @var Subscription $subToComplete */
+        $subToComplete = Subscription::factory()
+            ->toBeCompleted()->create();
+
+        //user fills the form and hit "submit"
+        $this->post('/over/subscriptions/complete', $this->subscriptionData +
+            ['email' => $subToComplete->subscription_email,
+                'sub_token' => $subToComplete->token]);
+
+        Mail::assertSent(SubscriptionFilled::class);
+    }
+
+    /**
+     * should throw exception if email is not sent
+     * @test
+     * @return void
+     */
+    public function shouldThrowExceptionIfMailIsNotSent(): void
+    {
+        Mail::fake();
+        $this->expectException(\Exception::class);
+
+        /** @var Subscription $subToComplete */
+        $subToComplete = Subscription::factory()
+            ->toBeCompleted()->create();
+
+        MailService::sendToCompleteSubscription("aaa123", $subToComplete->token);
+
+        Mail::assertSent(SubscriptionFilled::class);
     }
 
     /**
@@ -163,14 +204,15 @@ class PublicSubscriptionTest extends TestCase
     {
         $expiredSub = Subscription::factory()->expired()->create();
 
-        //subscription has to be confirmed, user should fill the form
+        // subscription has to be renewed, user should fill the form
         $this->assertDatabaseHas('subscriptions', ['status' => Subscription::EXPIRED]);
 
-        //user fills the form and hit "submit"
+        // user fills the form and hit "submit"
         $this->post(
             '/over/subscriptions/init',
             ['customer_email' => $expiredSub->subscription_email]
-        );
+        )->assertRedirect(URL::signedRoute('subscriptions.renew', [
+            'customer_email' => $expiredSub->subscription_email]));
 
         //user confirms subscription email
         $this->post('/over/subscriptions/renew', ['customer_email' => $expiredSub->subscription_email]);
@@ -213,6 +255,37 @@ class PublicSubscriptionTest extends TestCase
 
     /**
      * @test
+     *
+     * @return void
+     */
+    public function subscriptionUpdateShouldHaveFirstName(): void
+    {
+        $subToComplete = Subscription::factory()->toBeCompleted()->create();
+        $wrongData = $this->subscriptionData;
+        unset($wrongData['first_name']);
+
+        //user fills the form and hit "submit"
+        $this->post('/over/subscriptions/complete', $wrongData +
+            ['sub_token' => $subToComplete->token])->assertStatus(Response::HTTP_FOUND);
+
+        $this->assertDatabaseEmpty('customers');
+    }
+
+    /**
+     * @test
+     *
+     * @return void
+     */
+    public function subscriptionUpdateShouldHaveToken(): void
+    {
+        //user fills the form and hit "submit"
+        $this->post('/over/subscriptions/complete', $this->subscriptionData)->assertStatus(Response::HTTP_FOUND);
+
+        $this->assertDatabaseEmpty('customers');
+    }
+
+    /**
+     * @test
      * @return void
      */
     public function subscriptionSubmitShouldUpdateStatus()
@@ -232,7 +305,7 @@ class PublicSubscriptionTest extends TestCase
             'first_name' => 'Marco',
             'last_name' => 'Bevilacqua',
             'password' => null,
-
+            'province' => $this->subscriptionData['province']
         ]);
 
         $this->assertDatabaseHas('subscriptions', [
@@ -275,7 +348,6 @@ class PublicSubscriptionTest extends TestCase
 
     /**
      * @test
-     *
      *
      * @return void
      */
