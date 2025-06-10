@@ -7,6 +7,8 @@ use App\Http\Controllers\PublicSubscriptionController;
 use App\Http\Controllers\ShowController;
 use App\Http\Controllers\ShowEventController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\SubscriptionRenewController;
+use App\Http\Controllers\SubscriptionStatusController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -31,28 +33,36 @@ Route::prefix('over')->group(function () {
     //the public email confirmation
     Route::get('/subscriptions', [PublicSubscriptionController::class, 'index']);
     //the public subscription entry point
-    Route::get('/subscriptions/start', [PublicSubscriptionController::class, 'create'])->name('subscriptions.start');
+    Route::get('/subscriptions/start', [PublicSubscriptionController::class, 'create'])
+        ->name('subscriptions.start');
     //the public init subscription
     Route::post('/subscriptions/init', [PublicSubscriptionController::class, 'store']);
     //the subscription form visualization
-    Route::get('/subscriptions/fill/{token}', [PublicSubscriptionController::class, 'edit'])->name('subscriptions.fill');
+    Route::get('/subscriptions/fill/{token}', [PublicSubscriptionController::class, 'edit'])
+        ->name('subscriptions.fill');
     //the subscription renew form
-    Route::get('/subscriptions/renew/{customer_email}', [PublicSubscriptionController::class, 'modify'])->name('subscriptions.renew');
+    Route::get('/subscriptions/renew/{customer_email}', [SubscriptionRenewController::class, 'index'])
+        ->name('subscriptions.renew');
     //the subscription renew action
-    Route::post('/subscriptions/renew', [PublicSubscriptionController::class, 'renew']);
+    Route::post('/subscriptions/renew', [SubscriptionRenewController::class, 'store']);
     //the subscription submit
-    Route::post('/subscriptions/complete', [PublicSubscriptionController::class, 'update'])->name('subscriptions.complete');
+    Route::post('/subscriptions/complete', [PublicSubscriptionController::class, 'update'])
+        ->name('subscriptions.complete');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
     //the init subscription generation link view
-    Route::get('/subscriptions/generate', [PublicSubscriptionController::class, 'show'])->name('subscriptions.generate');
+    Route::get('/subscriptions/generate', [PublicSubscriptionController::class, 'show'])
+        ->name('subscriptions.generate');
     //the init subscription
     Route::post('/subscriptions/init', [PublicSubscriptionController::class, 'store']);
     //the subscription module PDF preview
-    Route::get('/subscriptions/module/{subscriptionId}', [PDFController::class, 'subscriptionModule'])->name('pdf.subscriptions.module');
+    Route::get('/subscriptions/module/{subscriptionId}', [PDFController::class, 'subscriptionModule'])
+        ->name('pdf.subscriptions.module');
+
     // changing status
-    Route::patch('/subscriptions/{subscription}/status/{status}', [SubscriptionController::class, 'updateStatus'])->name('subscriptions.update-status');
+    Route::patch('/subscriptions/{subscription}/status/{status}', [SubscriptionStatusController::class, 'update'])
+        ->name('subscriptions.update-status');
 
     //Bookings detail
     Route::get('/bookings/show-event/{show_event_id}', [BookingController::class, 'detail'])->name('bookings.detail');
