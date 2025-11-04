@@ -6,8 +6,10 @@ use App\Models\Customer;
 use App\Models\Subscription;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 class SubscriptionTest extends TestCase
@@ -15,6 +17,29 @@ class SubscriptionTest extends TestCase
     use RefreshDatabase, WithoutMiddleware;
 
     private $admin;
+
+    /**
+     * @test
+     * @return void
+     */
+    public function shouldRenderSubscriptionIndexPage(): void
+    {
+        Subscription::factory()->count(3)
+            ->state(new Sequence(
+                ['subscription_email' => 'example@example.com'],
+                ['subscription_email' => 'example1@example.com'],
+                ['subscription_email' => 'example2@example.com'],
+            ))->create();
+
+        $response = $this->actingAs($this->admin)
+            ->get(route('subscriptions.index'));
+
+        $response
+            ->assertInertia(fn (AssertableInertia $page) =>
+            $page->component('Subscriptions')
+                ->has('subscriptions.data', 3)
+            );
+    }
 
     /**
      * @test

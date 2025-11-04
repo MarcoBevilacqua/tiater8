@@ -7,6 +7,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\URL;
+use Inertia\Testing\AssertableInertia;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
@@ -28,6 +29,33 @@ class PublicSubscriptionTest extends TestCase
         'postal_code' => 989797,
         'fiscal_code' => 'HKUIDIUHAISUFYIH'
     ];
+
+    /**
+     * @test
+     * @return void
+     */
+    public function shouldRenderSelfInvitationForm(): void
+    {
+        $this->get('over/subscriptions')
+            ->assertStatus(Response::HTTP_OK)
+            ->assertInertia(fn(AssertableInertia $page) => $page->component('Public/SelfInvitation'));
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function shouldRenderCompletedForm(): void
+    {
+        $response = $this->withCookie('subscription-confirmed', true)->get('over/subscriptions');
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertInertia(fn (AssertableInertia $assertableInertia) => $assertableInertia->component('Public/Confirmed'));
+    }
+
+    public function shouldRenderInitForm(): void
+    {
+        $this->get('over/subscriptions/start')->assertStatus(Response::HTTP_OK);
+    }
 
     /**
      * @test
