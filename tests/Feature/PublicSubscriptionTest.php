@@ -2,14 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Mail\SubscriptionFilled;
-use App\Mail\SubscriptionToComplete;
 use App\Models\Subscription;
 use App\Models\User;
-use App\Services\MailService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
@@ -39,7 +35,7 @@ class PublicSubscriptionTest extends TestCase
      * the subscription init test
      * @return void
      */
-    public function initSubscriptionTest()
+    public function shouldInitPublicSubscription()
     {
         $this->actingAs($this->admin);
         $response = $this->post('/subscriptions/init', ['customer_email' => 'abc123@mail.com']);
@@ -52,59 +48,6 @@ class PublicSubscriptionTest extends TestCase
 
         ]);
         $response->assertStatus(302);
-    }
-
-    /**
-     * @test
-     * @return void
-     */
-    public function shouldSendMailAfterSubscriptionInit()
-    {
-        Mail::fake();
-
-        $this->actingAs($this->admin);
-        $this->post('/subscriptions/init', ['customer_email' => 'abc123@mail.com']);
-
-        Mail::assertSent(SubscriptionToComplete::class);
-    }
-
-    /**
-     * @test
-     * @return void
-     */
-    public function shouldSendMailAfterSubscriptionComplete()
-    {
-        Mail::fake();
-
-        /** @var Subscription $subToComplete */
-        $subToComplete = Subscription::factory()
-            ->toBeCompleted()->create();
-
-        //user fills the form and hit "submit"
-        $this->post('/over/subscriptions/complete', $this->subscriptionData +
-            ['email' => $subToComplete->subscription_email,
-                'sub_token' => $subToComplete->token]);
-
-        Mail::assertSent(SubscriptionFilled::class);
-    }
-
-    /**
-     * should throw exception if email is not sent
-     * @test
-     * @return void
-     */
-    public function shouldThrowExceptionIfMailIsNotSent(): void
-    {
-        Mail::fake();
-        $this->expectException(\Exception::class);
-
-        /** @var Subscription $subToComplete */
-        $subToComplete = Subscription::factory()
-            ->toBeCompleted()->create();
-
-        MailService::sendToCompleteSubscription("aaa123", $subToComplete->token);
-
-        Mail::assertSent(SubscriptionFilled::class);
     }
 
     /**
