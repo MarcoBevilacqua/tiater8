@@ -248,7 +248,8 @@ class PublicSubscriptionTest extends TestCase
             'first_name' => 'Marco',
             'last_name' => 'Bevilacqua',
             'password' => null,
-            'province' => $this->subscriptionData['province']
+            'province' => $this->subscriptionData['province'],
+            'postal_code' => $this->subscriptionData['postal_code'],
         ]);
 
         $this->assertDatabaseHas('subscriptions', [
