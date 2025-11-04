@@ -40,3 +40,5 @@ composer.lock
 
 # csfixer
 .php-cs-fixer.cache
+
+tests/reports/
