@@ -24,7 +24,7 @@ class UpdatePublicSubscriptionRequest extends FormRequest
             'resident' => 'required',
             'fiscal_code' => 'required|size:16',
             'sub_token' => 'required',
-            'postal_code' => 'string',
+            'postal_code' => 'numeric',
         ];
     }
 }
